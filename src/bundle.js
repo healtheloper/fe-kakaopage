@@ -1498,7 +1498,7 @@ var getJson = /*#__PURE__*/function () {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return fetch("".concat(_constants_js__WEBPACK_IMPORTED_MODULE_3__.HEROKU_SERVER_URL).concat(dataName));
+            return fetch("".concat( true ? _constants_js__WEBPACK_IMPORTED_MODULE_3__.HEROKU_SERVER_URL : 0).concat(dataName));
 
           case 3:
             response = _context.sent;
