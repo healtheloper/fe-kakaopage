@@ -1,6 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const dotenv = require("dotenv");
 const webpack = require("webpack");
 
 module.exports = (env) => {
@@ -40,7 +39,6 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "index.html"),
         filename: path.resolve(__dirname, "build/index.html"),
-        publicPath: "src/",
       }),
       new webpack.DefinePlugin({
         DEPLOY,
