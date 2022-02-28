@@ -33,9 +33,6 @@ const init = async () => {
 
   genreList.setState({ genres: genres[category], category });
   categoryList.setState({ genreList });
-
-  const contentsBox = main.querySelector(".main__contentsBox");
-  new HomeGenre(contentsBox);
 };
 
 init();
