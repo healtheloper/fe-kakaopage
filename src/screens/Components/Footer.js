@@ -1,8 +1,8 @@
 import Component from "../Component.js";
 import { createExtendsRelation } from "../../utils.js";
 
-function Footer($target, state) {
-  Component.call(this, $target, state);
+function Footer(infoObject) {
+  Component.call(this, infoObject);
 }
 
 createExtendsRelation(Footer, Component);

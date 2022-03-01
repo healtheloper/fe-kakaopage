@@ -1,8 +1,8 @@
 import { createExtendsRelation } from "../../utils.js";
 import Component from "../Component.js";
 
-function GenreList($target, state) {
-  Component.call(this, $target, state);
+function GenreList(infoObject) {
+  Component.call(this, infoObject);
 }
 createExtendsRelation(GenreList, Component);
 

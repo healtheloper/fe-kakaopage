@@ -1,9 +1,10 @@
 import Component from "../Component.js";
 import { createExtendsRelation } from "../../utils.js";
 import GenreList from "./GenreList.js";
+import categories from "../../categories.js";
 
-function MainBox($target, state) {
-  Component.call(this, $target, state);
+function MainBox(infoObject) {
+  Component.call(this, infoObject);
 }
 
 createExtendsRelation(MainBox, Component);
@@ -12,22 +13,22 @@ MainBox.prototype.mount = function () {
   const $navGenre = this.$target.querySelector(".main__navGenre");
   const $contentsBox = this.$target.querySelector(".main__contentsBox");
   const { genres, selected, category } = this.state;
+  this.selected = "webtoon";
   if (category !== "home") {
     new GenreList({
       $target: $navGenre,
       state: {
         genres,
-        selected,
+        selected: "webtoon",
       },
       $props: {
         updateGenre: this.updateGenre.bind(this),
       },
     });
   }
-
-  //   new ContentsBox({
-  //     $target: $contentsBox,
-  //   });
+  new categories[category]["webtoon"]({
+    $target: $contentsBox,
+  });
 };
 
 MainBox.prototype.template = function () {

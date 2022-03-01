@@ -2,8 +2,8 @@ import Component from "../Component.js";
 import { createExtendsRelation } from "../../utils.js";
 import CategoryList from "./CategoryList.js";
 
-function Header($target, state) {
-  Component.call(this, $target, state);
+function Header(infoObject) {
+  Component.call(this, infoObject);
 }
 
 createExtendsRelation(Header, Component);

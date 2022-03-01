@@ -1,9 +1,8 @@
 import Component from "../Component.js";
-import { updateNodeClasses } from "../../serviceUtils.js";
-import { createExtendsRelation, getJson } from "../../utils.js";
+import { createExtendsRelation } from "../../utils.js";
 
-function CategoryList($target, state) {
-  Component.call(this, $target, state);
+function CategoryList(infoObject) {
+  Component.call(this, infoObject);
 }
 
 createExtendsRelation(CategoryList, Component);

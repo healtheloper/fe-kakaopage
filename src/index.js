@@ -1,9 +1,4 @@
-import CategoryList from "./screens/Components/CategoryList.js";
-import Category from "./screens/Components/Category.js";
 import { getJsons } from "./utils.js";
-import GenreList from "./screens/Components/GenreList.js";
-import Genre from "./screens/Components/Genre.js";
-import MainBox from "./screens/Components/MainBox.js";
 import App from "./screens/App.js";
 
 const init = async () => {

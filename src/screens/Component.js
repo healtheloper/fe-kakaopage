@@ -1,13 +1,8 @@
-import { getUniqueNodeId } from "../serviceUtils";
-
 function Component({ $target, state, $props }) {
   this.$target = $target;
   this.$props = $props;
   this.state = state || {};
   this.eventTypes = [];
-  if (this.state.nodeId) {
-    this.state.nodeId = getUniqueNodeId(this.state.nodeId);
-  }
   this.setup();
   this.render();
   this.setEvent();
