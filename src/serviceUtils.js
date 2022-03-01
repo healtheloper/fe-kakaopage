@@ -1,3 +1,5 @@
+import { getUniqueId } from "./utils";
+
 const formatUserCount = (userCount) => {
   return (userCount / 10000).toFixed(1) + "만명";
 };
@@ -16,4 +18,13 @@ const updateNodeClasses = (target, className) => {
   target.classList.add(className);
 };
 
-export { formatUserCount, getComponentsTemplate, updateNodeClasses };
+const getUniqueNodeId = (nodeId) => {
+  return `${nodeId}-${getUniqueId()}`;
+};
+
+export {
+  formatUserCount,
+  getComponentsTemplate,
+  updateNodeClasses,
+  getUniqueNodeId,
+};

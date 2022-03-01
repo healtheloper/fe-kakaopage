@@ -1,11 +1,19 @@
+import { getUniqueNodeId } from "../serviceUtils";
+
 function Component(target, state) {
   this.target = target;
   this.state = state || {};
   this.eventTypes = [];
+  if (this.state.nodeId) {
+    this.state.nodeId = getUniqueNodeId(this.state.nodeId);
+  }
   this.render();
 }
 
 Component.prototype = {
+  getElement() {
+    return this.target.querySelector(`#${this.state.nodeId}`);
+  },
   render() {
     this.target.innerHTML = this.template();
     this.removeEvent();

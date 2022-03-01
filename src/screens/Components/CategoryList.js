@@ -1,9 +1,6 @@
 import Component from "../Component.js";
+import { getComponentsTemplate } from "../../serviceUtils.js";
 import { createExtendsRelation } from "../../utils.js";
-import {
-  getComponentsTemplate,
-  updateNodeClasses,
-} from "../../serviceUtils.js";
 
 function CategoryList($target, state) {
   Component.call(this, $target, state);
@@ -27,7 +24,8 @@ CategoryList.prototype.setEvent = function () {
 };
 
 CategoryList.prototype.template = function () {
-  return getComponentsTemplate(this.state.categories);
+  const { categories } = this.state;
+  return categories ? getComponentsTemplate(categories) : "";
 };
 
 export default CategoryList;

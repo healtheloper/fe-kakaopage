@@ -2,25 +2,33 @@ import CategoryList from "./screens/Components/CategoryList.js";
 import Category from "./screens/Components/Category.js";
 import { getJsons } from "./utils.js";
 import GenreList from "./screens/Components/GenreList.js";
+import Genre from "./screens/Components/Genre.js";
 
 const init = async () => {
   const paths = ["categories", "genres"];
 
   const [{ results: categories }, { results: genres }] = await getJsons(paths);
 
-  localStorage.setItem("genres", JSON.stringify(genres));
-
   const $main = document.querySelector(".main");
   const $headerNav = document.querySelector(".header__nav");
 
   const categoryList = new CategoryList($headerNav, {
-    categories: categories.map(
-      (cInfo) => new Category($headerNav, { ...cInfo })
-    ),
+    nodeId: "category-list",
     selected: "webtoon",
   });
-  console.log(categoryList);
-  // const genreList = new GenreList($main, { genre: "home" });
+
+  categoryList.setState({
+    categories: categories.map(
+      (cInfo) => new Category(categoryList.getElement(), { ...cInfo })
+    ),
+  });
+
+  // const genreList = new GenreList($main, {
+  //   nodeId: "genre-list",
+  //   genres: genres.map((gInfo) => new Genre($main, { ...gInfo })),
+  //   category: categoryList.state.selected,
+  //   selected: "home",
+  // });
   // const category = categoryList.state.categories.find(
   //   ({ state: { selected } }) => selected
   // ).state.category;
