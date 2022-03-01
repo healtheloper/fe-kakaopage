@@ -8,6 +8,16 @@ function Header($target, state) {
 
 createExtendsRelation(Header, Component);
 
+Header.prototype.setEvent = function () {
+  this.addEvent("click", ".header__nav-item", ({ target }) => {
+    const { updateCategory } = this.$props;
+    const $eventTarget = target.closest(".header__nav-item");
+    const category = $eventTarget.dataset.category;
+    updateCategory(category);
+    this.setState({ selected: category });
+  });
+};
+
 Header.prototype.mount = function () {
   const $headerNav = this.$target.querySelector(".header__nav");
   new CategoryList({
@@ -15,9 +25,6 @@ Header.prototype.mount = function () {
     state: {
       selected: this.state.selected,
       categories: this.state.categories,
-    },
-    $props: {
-      updateCategory: this.updateCategory.bind(this),
     },
   });
 };
@@ -45,10 +52,6 @@ Header.prototype.template = function () {
     </div>
     <ul class="header__nav"></ul>
   `;
-};
-
-Header.prototype.updateCategory = function (category) {
-  this.setState({ selected: category });
 };
 
 export default Header;

@@ -8,14 +8,6 @@ function CategoryList($target, state) {
 
 createExtendsRelation(CategoryList, Component);
 
-CategoryList.prototype.setEvent = function () {
-  this.addEvent("click", ".header__nav-item", ({ target }) => {
-    const { updateCategory } = this.$props;
-    const $eventTarget = target.closest(".header__nav-item");
-    updateCategory($eventTarget.dataset.category);
-  });
-};
-
 CategoryList.prototype.template = function () {
   const { categories, selected } = this.state;
   return categories

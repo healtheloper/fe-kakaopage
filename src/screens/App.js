@@ -15,21 +15,24 @@ App.prototype.mount = function () {
   const $main = this.$target.querySelector(".main");
   const $footer = this.$target.querySelector("footer");
 
-  const { categories, genres } = this.state;
+  const { categories, genres, category } = this.state;
 
   new Header({
     $target: $header,
     state: {
-      selected: "webtoon",
+      selected: category,
       categories,
+    },
+    $props: {
+      updateCategory: this.updateCategory.bind(this),
     },
   });
 
   new MainBox({
     $target: $main,
     state: {
-      category: "webtoon",
-      genres: genres.webtoon,
+      category,
+      genres: genres[category],
       selected: "home",
     },
   });
@@ -37,6 +40,10 @@ App.prototype.mount = function () {
   new Footer({
     $target: $footer,
   });
+};
+
+App.prototype.updateCategory = function (category) {
+  this.setState({ category });
 };
 
 App.prototype.template = function () {

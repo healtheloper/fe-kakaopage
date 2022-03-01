@@ -14,7 +14,7 @@ const init = async () => {
 
   new App({
     $target: $app,
-    state: { categories, genres },
+    state: { categories, genres, category: "webtoon" },
   });
 };
 

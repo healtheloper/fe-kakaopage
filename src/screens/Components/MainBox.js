@@ -11,17 +11,19 @@ createExtendsRelation(MainBox, Component);
 MainBox.prototype.mount = function () {
   const $navGenre = this.$target.querySelector(".main__navGenre");
   const $contentsBox = this.$target.querySelector(".main__contentsBox");
-
-  new GenreList({
-    $target: $navGenre,
-    state: {
-      genres: this.state.genres,
-      selected: this.state.selected,
-    },
-    $props: {
-      updateGenre: this.updateGenre.bind(this),
-    },
-  });
+  const { genres, selected, category } = this.state;
+  if (category !== "home") {
+    new GenreList({
+      $target: $navGenre,
+      state: {
+        genres,
+        selected,
+      },
+      $props: {
+        updateGenre: this.updateGenre.bind(this),
+      },
+    });
+  }
 
   //   new ContentsBox({
   //     $target: $contentsBox,
@@ -29,8 +31,13 @@ MainBox.prototype.mount = function () {
 };
 
 MainBox.prototype.template = function () {
+  const { category } = this.state;
   return `
-    <ul class="mainBox mainNav main__navGenre"></ul>
+    ${
+      category !== "home"
+        ? '<ul class="mainBox mainNav main__navGenre"></ul>'
+        : ""
+    }
     <ul class="main__contentsBox"></ul>
     `;
 };
