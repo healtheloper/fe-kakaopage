@@ -2,6 +2,7 @@ function Component(target, state) {
   this.target = target;
   this.state = state || {};
   this.eventTypes = [];
+  this.render();
 }
 
 Component.prototype = {
