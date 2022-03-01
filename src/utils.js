@@ -20,15 +20,4 @@ const getJsons = (paths) => {
   return Promise.all(paths.map((path) => getJson(path)));
 };
 
-const getUniqueId = () => {
-  const START_ASCII_CODE = 97; // a
-  const END_ASCII_CODE = 122; // z
-  const ASCII_RANGE = END_ASCII_CODE - START_ASCII_CODE;
-  return "xxxx".replace(/[x]/g, () => {
-    return String.fromCharCode(
-      START_ASCII_CODE + parseInt(Math.random() * ASCII_RANGE)
-    );
-  });
-};
-
-export { getJson, createExtendsRelation, getJsons, getUniqueId };
+export { getJson, createExtendsRelation, getJsons };

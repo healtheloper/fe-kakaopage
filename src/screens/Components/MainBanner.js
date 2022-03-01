@@ -38,7 +38,6 @@ MainBanner.prototype.template = function () {
 MainBanner.prototype.render = function () {
   this.target.innerHTML = this.template();
   if (this.state.interval) {
-    console.log("??");
     clearInterval(this.state.interval);
   }
   this.state = { ...this.state, interval: this.state.getInterval() };
