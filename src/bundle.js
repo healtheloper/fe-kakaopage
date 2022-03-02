@@ -12,6 +12,154 @@ module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/
 
 /***/ }),
 
+/***/ "./src/carousel.js":
+/*!*************************!*\
+  !*** ./src/carousel.js ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_setPrototypeOf__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/setPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
+
+
+
+
+
+function _wrapRegExp() { _wrapRegExp = function _wrapRegExp(re, groups) { return new BabelRegExp(re, void 0, groups); }; var _super = RegExp.prototype, _groups = new WeakMap(); function BabelRegExp(re, flags, groups) { var _this = new RegExp(re, flags); return _groups.set(_this, groups || _groups.get(re)), (0,_babel_runtime_helpers_setPrototypeOf__WEBPACK_IMPORTED_MODULE_2__["default"])(_this, BabelRegExp.prototype); } function buildGroups(result, re) { var g = _groups.get(re); return Object.keys(g).reduce(function (groups, name) { return groups[name] = result[g[name]], groups; }, Object.create(null)); } return (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1__["default"])(BabelRegExp, RegExp), BabelRegExp.prototype.exec = function (str) { var result = _super.exec.call(this, str); return result && (result.groups = buildGroups(result, this)), result; }, BabelRegExp.prototype[Symbol.replace] = function (str, substitution) { if ("string" == typeof substitution) { var groups = _groups.get(this); return _super[Symbol.replace].call(this, str, substitution.replace(/\$<([^>]+)>/g, function (_, name) { return "$" + groups[name]; })); } if ("function" == typeof substitution) { var _this = this; return _super[Symbol.replace].call(this, str, function () { var args = arguments; return "object" != (0,_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(args[args.length - 1]) && (args = [].slice.call(args)).push(buildGroups(args, _this)), substitution.apply(this, args); }); } return _super[Symbol.replace].call(this, str, substitution); }, _wrapRegExp.apply(this, arguments); }
+
+var createElement = function createElement(_ref) {
+  var tag = _ref.tag,
+      classes = _ref.classes,
+      textContent = _ref.textContent,
+      children = _ref.children;
+  var element = document.createElement(tag);
+  classes.forEach(function (className) {
+    element.classList.add(className);
+  });
+  element.textContent = textContent;
+  children === null || children === void 0 ? void 0 : children.forEach(function (child) {
+    element.appendChild(child);
+  });
+  return element;
+};
+
+var createCarouselOrder = function createCarouselOrder(elems) {
+  var carouselCurNum = createElement({
+    tag: "span",
+    classes: ["orderNum", "curNum"],
+    textContent: 1
+  });
+  var orderBar = createElement({
+    tag: "span",
+    classes: ["orderBar"],
+    textContent: "/"
+  });
+  var carouselTotalNum = createElement({
+    tag: "span",
+    classes: ["orderNum"],
+    textContent: elems.length
+  });
+  var carouselOrder = createElement({
+    tag: "div",
+    classes: ["carousel-order"],
+    children: [carouselCurNum, orderBar, carouselTotalNum]
+  });
+  return carouselOrder;
+};
+
+var createCarouselElems = function createCarouselElems(elems) {
+  return elems.map(function (elem, index) {
+    var cloneElem = elem.cloneNode(true);
+    cloneElem.classList.add("carousel-elem");
+    cloneElem.setAttribute("data-index", index === 0 ? elems.length : index);
+    return cloneElem;
+  });
+};
+/**
+ *
+ * @param  {...Node} elems 캐러셀에 넣을 요소들
+ * @returns {Node} $carousel
+ */
+
+
+var carousel = function carousel() {
+  for (var _len = arguments.length, elems = new Array(_len), _key = 0; _key < _len; _key++) {
+    elems[_key] = arguments[_key];
+  }
+
+  if (elems.length === 1) {
+    return elems[0];
+  }
+
+  var newElems = [elems[elems.length - 1]].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__["default"])(elems.slice(0, elems.length - 1)));
+  var isRequireClone = elems.length === 2;
+  var WIDTH_PER_ELEM = 100 / (newElems.length * (isRequireClone ? 2 : 1));
+  var carouselChildren = isRequireClone ? [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__["default"])(createCarouselElems(newElems)), (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__["default"])(createCarouselElems(newElems))) : createCarouselElems(newElems);
+  var carouselBox = createElement({
+    tag: "div",
+    classes: ["carousel-box"],
+    children: carouselChildren
+  });
+  carouselBox.style.width = "".concat(newElems.length * 100 * (isRequireClone ? 2 : 1), "%");
+  carouselBox.style.transform = "translateX(-".concat(WIDTH_PER_ELEM, "%)");
+  var carouselOrder = createCarouselOrder(newElems);
+  var carousel = createElement({
+    tag: "div",
+    classes: ["carousel"],
+    children: [carouselBox, carouselOrder]
+  });
+
+  var handleTransitionEnd = function handleTransitionEnd(_ref2) {
+    var target = _ref2.target;
+    var curX = target.style.transform.match( /*#__PURE__*/_wrapRegExp(/(\x2D[\d]+(\.[\d])?)/, {
+      curX: 1
+    })).groups.curX;
+    target.style.transition = "none";
+    target.style.transform = "translateX(".concat(+curX + +WIDTH_PER_ELEM, "%)");
+    var firstElem = target.querySelector(".carousel-elem");
+    target.removeChild(firstElem);
+    var cBoxes = target.querySelectorAll(".carousel-elem");
+    cBoxes.forEach(function (box) {
+      return box.classList.remove("main-elem");
+    });
+    var mainElem = cBoxes[1];
+    mainElem.classList.add("main-elem");
+    var curNum = target.parentNode.querySelector(".curNum");
+    curNum.textContent = mainElem.dataset.index;
+    target.appendChild(firstElem);
+  };
+
+  var handleTransitionStart = function handleTransitionStart() {};
+
+  var getInterval = function getInterval() {
+    return setInterval(function () {
+      var cBox = document.querySelector(".carousel-box");
+      cBox.style.transition = "transform 0.2s";
+      cBox.style.transform = "translateX(-".concat(WIDTH_PER_ELEM * 2, "%)");
+      cBox.removeEventListener("transitionstart", handleTransitionStart);
+      cBox.removeEventListener("transitionend", handleTransitionEnd);
+      cBox.addEventListener("transitionstart", handleTransitionStart);
+      cBox.addEventListener("transitionend", handleTransitionEnd);
+    }, 3000);
+  };
+
+  return {
+    $carousel: carousel,
+    getInterval: getInterval
+  };
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (carousel);
+
+/***/ }),
+
 /***/ "./src/categories.js":
 /*!***************************!*\
   !*** ./src/categories.js ***!
@@ -62,6 +210,79 @@ __webpack_require__.r(__webpack_exports__);
 var SERVER_FETCH_URL = "http://127.0.0.1:3000/";
 var HEROKU_SERVER_URL = "https://fe-kakaopage-back.herokuapp.com/";
 
+
+/***/ }),
+
+/***/ "./src/screens/App.js":
+/*!****************************!*\
+  !*** ./src/screens/App.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _Components_Header_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Components/Header.js */ "./src/screens/Components/Header.js");
+/* harmony import */ var _Components_MainBox_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/MainBox.js */ "./src/screens/Components/MainBox.js");
+/* harmony import */ var _Components_Footer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/Footer.js */ "./src/screens/Components/Footer.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils.js */ "./src/utils.js");
+
+
+
+
+
+
+function App($target, state) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, $target, state);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.createExtendsRelation)(App, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+App.prototype.mount = function () {
+  var $header = this.$target.querySelector(".header");
+  var $main = this.$target.querySelector(".main");
+  var $footer = this.$target.querySelector("footer");
+  var _this$state = this.state,
+      categories = _this$state.categories,
+      genres = _this$state.genres,
+      category = _this$state.category;
+  new _Components_Header_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    $target: $header,
+    state: {
+      selected: category,
+      categories: categories
+    },
+    $props: {
+      updateCategory: this.updateCategory.bind(this)
+    }
+  });
+  new _Components_MainBox_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+    $target: $main,
+    state: {
+      category: category,
+      genres: genres[category],
+      selected: "home"
+    }
+  });
+  new _Components_Footer_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+    $target: $footer
+  });
+};
+
+App.prototype.updateCategory = function (category) {
+  this.setState({
+    category: category
+  });
+};
+
+App.prototype.template = function () {
+  return "\n    <header class=\"header\"></header>\n    <div class=\"main\"></div>\n    <footer></footer>\n    ";
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
 
 /***/ }),
 
@@ -137,33 +358,31 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
-function Component(target, state) {
-  this.target = target;
+function Component(_ref) {
+  var $target = _ref.$target,
+      state = _ref.state,
+      $props = _ref.$props;
+  this.$target = $target;
+  this.$props = $props;
   this.state = state || {};
   this.eventTypes = [];
+  this.setup();
+  this.render();
+  this.setEvent();
 }
 
 Component.prototype = {
+  setup: function setup() {},
+  mount: function mount() {},
   render: function render() {
-    this.target.innerHTML = this.template();
-    this.removeEvent();
-    this.setEvent();
+    this.$target.innerHTML = this.template();
+    this.mount();
   },
   template: function template() {
     return "";
   },
-  removeEvent: function removeEvent() {
-    var _this = this;
-
-    this.eventTypes.forEach(function (_ref) {
-      var type = _ref.type,
-          listener = _ref.listener;
-
-      _this.target.removeEventListener(type, listener);
-    });
-  },
   addEvent: function addEvent(eventType, selector, callback) {
-    var children = (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(this.target.querySelectorAll(selector));
+    var children = (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(this.$target.querySelectorAll(selector));
 
     var isTarget = function isTarget(target) {
       return children.includes(target) || target.closest(selector);
@@ -178,7 +397,7 @@ Component.prototype = {
       type: eventType,
       listener: handleEventListener
     });
-    this.target.addEventListener(eventType, handleEventListener);
+    this.$target.addEventListener(eventType, handleEventListener);
   },
   setEvent: function setEvent() {},
   setState: function setState(newState) {
@@ -201,17 +420,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
 
 
 
 
 function BannerImage(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
+  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, target, state);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(BannerImage, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(BannerImage, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
 BannerImage.prototype.template = function () {
   var _this$state = this.state,
@@ -220,7 +440,7 @@ BannerImage.prototype.template = function () {
       waitForFree = _this$state.waitForFree,
       mainDesc = _this$state.mainDesc,
       imageHorizontalUrl = _this$state.imageHorizontalUrl;
-  return "\n    <div class=\"banner__imgBox\">\n      <img src=\"".concat(imageHorizontalUrl, "\" alt=").concat(title, " />\n      <div class=\"imgBox__info\">\n        <div class=\"infoTitle\">\n          <span>").concat(title, "</span>\n        </div>\n        <div class=\"infoBody\">\n          <span class=\"info-event\">NEW</span>\n          <span class=\"info-category\">\n            ").concat(waitForFree ? '<i class="fas fa-clock"></i>' : "", " \uC6F9\uD230\n          </span>\n          <span class=\"span-bar\"> | </span>\n          <span class=\"info-users\">\n            <i class=\"fas fa-user\"></i> ").concat((0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(userCount), "\n          </span>\n        </div>\n      </div>\n    </div>\n    <div class=\"banner__message\">\n      <span>").concat(mainDesc, "</span>\n    </div>\n");
+  return "\n    <div class=\"banner__imgBox\">\n      <img src=\"".concat(imageHorizontalUrl, "\" alt=").concat(title, " />\n      <div class=\"imgBox__info\">\n        <div class=\"infoTitle\">\n          <span>").concat(title, "</span>\n        </div>\n        <div class=\"infoBody\">\n          <span class=\"info-event\">NEW</span>\n          <span class=\"info-category\">\n            ").concat(waitForFree ? '<i class="fas fa-clock"></i>' : "", " \uC6F9\uD230\n          </span>\n          <span class=\"span-bar\"> | </span>\n          <span class=\"info-users\">\n            <i class=\"fas fa-user\"></i> ").concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(userCount), "\n          </span>\n        </div>\n      </div>\n      <div class=\"banner__message\">\n        <span>").concat(mainDesc, "</span>\n      </div>\n    </div>\n");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BannerImage);
@@ -279,17 +499,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
 
 
 
 
 function Card(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
+  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, target, state);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(Card, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(Card, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
 Card.prototype.template = function () {
   var _this$state = this.state,
@@ -300,7 +521,7 @@ Card.prototype.template = function () {
       status = _this$state.status,
       userCount = _this$state.userCount,
       waitForFree = _this$state.waitForFree;
-  return "<li class=\"card\">\n    <div class=\"card__imgBox\">\n      <img\n        class=\"cardImg\"\n        src=\"".concat(imageVerticalUrl, "\"\n        alt=\"").concat(title, "\"\n      />\n      <div class=\"imgInfo\">\n        <span class=\"rank\">\u272D ").concat(rank, "</span>\n        ").concat(waitForFree ? '<span><i class="fas fa-clock"></i></span>' : "<span>웹툰</span>", "\n      </div>\n    </div>\n    <div class=\"card__title\">\n      <span>").concat(title, "</span>\n    </div>\n    <div class=\"card__info\">\n      ").concat(status ? "<span class=\"info-status ".concat(status === "N" ? "red" : "blue", "\">").concat(status, "</span>") : "", "\n      ").concat(adult ? "<span class=\"info-age\">15</span>" : "", "\n      <span class=\"info-user\">\n        <i class=\"fas fa-user\"></i>\n        <span>").concat((0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(userCount), "</span>\n      </span>\n    </div>\n  </li>");
+  return "<li class=\"card\">\n    <div class=\"card__imgBox\">\n      <img\n        class=\"cardImg\"\n        src=\"".concat(imageVerticalUrl, "\"\n        alt=\"").concat(title, "\"\n      />\n      <div class=\"imgInfo\">\n        <span class=\"rank\">\u272D ").concat(rank, "</span>\n        ").concat(waitForFree ? '<span><i class="fas fa-clock"></i></span>' : "<span>웹툰</span>", "\n      </div>\n    </div>\n    <div class=\"card__title\">\n      <span>").concat(title, "</span>\n    </div>\n    <div class=\"card__info\">\n      ").concat(status ? "<span class=\"info-status ".concat(status === "N" ? "red" : "blue", "\">").concat(status, "</span>") : "", "\n      ").concat(adult ? "<span class=\"info-age\">15</span>" : "", "\n      <span class=\"info-user\">\n        <i class=\"fas fa-user\"></i>\n        <span>").concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(userCount), "</span>\n      </span>\n    </div>\n  </li>");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Card);
@@ -319,58 +540,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+
 
 
 
 function CardInfoRow(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
+  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, target, state);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(CardInfoRow, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(CardInfoRow, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
 CardInfoRow.prototype.template = function () {
   var info = this.state;
-  return "\n  <li class=\"dateContent\">\n    <div class=\"contentRow\">\n      <div class=\"dateRank\">".concat(info.ranking, "</div>\n      <div class=\"contentImgBox\">\n        ").concat(info.waitForFree ? "<span class='content-waitFreeIcon'><i class='fas fa-clock'></i></span>" : "<span>웹툰</span>", "\n        <img\n          src=\"").concat(info.imagePosterUrl, "\"\n          alt=\"").concat(info.title, "\"\n        />\n      </div>\n      <div class=\"contentInfo\">\n        <div class=\"info__titleInfo\">\n          ").concat(info.status ? "<span class=\"info__title-status ".concat(info.status === "N" ? "red" : "blue", "\">").concat(info.status, "</span>") : "", "\n          ").concat(info.age ? '<span class="info__title-age info-age">15</span>' : "", "\n          <span class=\"info__title\">").concat(info.title, "</span>\n        </div>\n        <div class=\"infoBody\">\n          <i class=\"fas fa-user\"></i>\n          <span>").concat((0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(info.userCount), "</span>\n          <span class=\"span-bar\">|</span>\n          ").concat(info.waitForFree ? '<span>기다무웹툰</span><span class="span-bar"> | </span>' : "", "\n          <span>").concat(info.genre.join(","), "</span>\n          <span class=\"span-bar\">|</span>\n          <span>").concat(info.write ? info.write + "," : "", "\n          ").concat(info.paint ? info.paint + "," : "").concat(info.originalAuthor, "\n          </span>\n        </div>\n        <div class=\"info-footer\">\n          <span>").concat(info.days.join(","), " \uC5F0\uC7AC</span>\n        </div>\n      </div>\n    </div>\n  </li>");
+  return "\n  <li class=\"dateContent\">\n    <div class=\"contentRow\">\n      <div class=\"dateRank\">".concat(info.ranking, "</div>\n      <div class=\"contentImgBox\">\n        ").concat(info.waitForFree ? "<span class='content-waitFreeIcon'><i class='fas fa-clock'></i></span>" : "<span>웹툰</span>", "\n        <img\n          src=\"").concat(info.imagePosterUrl, "\"\n          alt=\"").concat(info.title, "\"\n        />\n      </div>\n      <div class=\"contentInfo\">\n        <div class=\"info__titleInfo\">\n          ").concat(info.status ? "<span class=\"info__title-status ".concat(info.status === "N" ? "red" : "blue", "\">").concat(info.status, "</span>") : "", "\n          ").concat(info.age ? '<span class="info__title-age info-age">15</span>' : "", "\n          <span class=\"info__title\">").concat(info.title, "</span>\n        </div>\n        <div class=\"infoBody\">\n          <i class=\"fas fa-user\"></i>\n          <span>").concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__.formatUserCount)(info.userCount), "</span>\n          <span class=\"span-bar\">|</span>\n          ").concat(info.waitForFree ? '<span>기다무웹툰</span><span class="span-bar"> | </span>' : "", "\n          <span>").concat(info.genre.join(","), "</span>\n          <span class=\"span-bar\">|</span>\n          <span>").concat(info.write ? info.write + "," : "", "\n          ").concat(info.paint ? info.paint + "," : "").concat(info.originalAuthor, "\n          </span>\n        </div>\n        <div class=\"info-footer\">\n          <span>").concat(info.days.join(","), " \uC5F0\uC7AC</span>\n        </div>\n      </div>\n    </div>\n  </li>");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CardInfoRow);
-
-/***/ }),
-
-/***/ "./src/screens/Components/Category.js":
-/*!********************************************!*\
-  !*** ./src/screens/Components/Category.js ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-
-
-
-function Category(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(Category, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-Category.prototype.template = function () {
-  var _this$state = this.state,
-      name = _this$state.name,
-      category = _this$state.category,
-      waitForFree = _this$state.waitForFree,
-      newAlert = _this$state.newAlert,
-      selected = _this$state.selected;
-  return "\n      <li class=\"header__nav-item \n      ".concat(selected ? "selected" : "", "\" data-category=\"").concat(category, "\">\n        <span>\n          ").concat(name, "\n          ").concat(waitForFree ? ' ・ <i class="fas fa-clock"></i>' : "", "\n        </span>\n        ").concat(newAlert ? '<span class="yellow-dot"></span>' : "", "\n      </li>");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Category);
 
 /***/ }),
 
@@ -390,33 +577,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function CategoryList(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-  this.render();
+function CategoryList(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
 }
 
 (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(CategoryList, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
-CategoryList.prototype.setEvent = function () {
-  var _this = this;
-
-  this.addEvent("click", ".header__nav-item", function (_ref) {
-    var target = _ref.target;
-    var eventTarget = target.closest(".header__nav-item");
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.updateNodeClasses)(eventTarget, "selected");
-    var category = eventTarget.dataset.category;
-    var genres = JSON.parse(localStorage.getItem("genres"));
-
-    _this.state.genreList.setState({
-      category: category,
-      genres: genres[category],
-      genre: "home"
-    });
-  });
-};
-
 CategoryList.prototype.template = function () {
-  return (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.getComponentsTemplate)(this.state.categories);
+  var _this$state = this.state,
+      categories = _this$state.categories,
+      selected = _this$state.selected;
+  return categories === null || categories === void 0 ? void 0 : categories.map(function (cInfo) {
+    var name = cInfo.name,
+        category = cInfo.category,
+        waitForFree = cInfo.waitForFree,
+        newAlert = cInfo.newAlert;
+    return "\n        <li class=\"header__nav-item \n        ".concat(selected === category ? "selected" : "", "\" data-category=\"").concat(category, "\">\n          <span>\n            ").concat(name, "\n            ").concat(waitForFree ? ' ・ <i class="fas fa-clock"></i>' : "", "\n          </span>\n          ").concat(newAlert ? '<span class="yellow-dot"></span>' : "", "\n        </li>");
+  }).join("");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CategoryList);
@@ -492,7 +669,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _CardInfoRow_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CardInfoRow.js */ "./src/screens/Components/CardInfoRow.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
 
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -503,11 +681,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 
 
+
 function DateTop(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, target, state);
+  _Component_js__WEBPACK_IMPORTED_MODULE_4__["default"].call(this, target, state);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.createExtendsRelation)(DateTop, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.createExtendsRelation)(DateTop, _Component_js__WEBPACK_IMPORTED_MODULE_4__["default"]);
 
 DateTop.prototype.template = function () {
   var koreaDay = this.state.koreaDay;
@@ -521,7 +700,7 @@ DateTop.prototype.template = function () {
       ranking: index + 1
     }));
   });
-  return "\n  <ul class=\"contents__date\">\n    ".concat((0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.getComponentsTemplate)(dateTopCards), "\n  </ul>");
+  return "\n  <ul class=\"contents__date\">\n    ".concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_3__.getComponentsTemplate)(dateTopCards), "\n  </ul>");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DateTop);
@@ -542,6 +721,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Card_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Card.js */ "./src/screens/Components/Card.js");
 /* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
+/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
+
 
 
 
@@ -563,7 +744,7 @@ DaysList.prototype.template = function () {
   var cards = sliceCardList.map(function (cardInfo) {
     return new _Card_js__WEBPACK_IMPORTED_MODULE_0__["default"]("_", cardInfo);
   });
-  return (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.getComponentsTemplate)(cards);
+  return (0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_3__.getComponentsTemplate)(cards);
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DaysList);
@@ -604,6 +785,36 @@ DaysTop.prototype.template = function () {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DaysTop);
+
+/***/ }),
+
+/***/ "./src/screens/Components/Footer.js":
+/*!******************************************!*\
+  !*** ./src/screens/Components/Footer.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
+
+
+
+function Footer(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(Footer, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+Footer.prototype.template = function () {
+  return "\n    <div class=\"footerLeft\">\n        <div class=\"footerBox\">\n            <span>\uD68C\uC0AC\uC18C\uAC1C</span>\n            <span class=\"span-dot\"> \u30FB </span>\n            <span>\uC774\uC6A9\uC57D\uAD00</span>\n            <span class=\"span-dot\"> \u30FB </span>\n            <span>\uAC1C\uC778\uC815\uBCF4\uCC98\uB9AC\uBC29\uCE68</span>\n            <span class=\"span-dot\"> \u30FB </span>\n            <span>\uCCAD\uC18C\uB144\uBCF4\uD638\uC815\uCC45</span>\n            <span class=\"span-dot\"> \u30FB </span>\n            <span>\uACF5\uC9C0\uC0AC\uD56D</span>\n        </div>\n        <div class=\"footerBox\">\n            <details>\n            <summary>(\uC8FC)\uCE74\uCE74\uC624\uC5D4\uD130\uD14C\uC778\uBA3C\uD2B8 \uC0AC\uC5C5\uC790 \uC815\uBCF4</summary>\n            <ul>\n                <li>\n                <span>\uB300\uD45C\uC790:\uC774\uC9C4\uC218, \uAE40\uC131\uC218 </span>\n                <span class=\"span-bar\">|</span>\n                <span>\uD638\uC2A4\uD305\uC11C\uBE44\uC2A4\uC0AC\uC5C5\uC790: (\uC8FC)\uCE74\uCE74\uC624\uC5D4\uD130\uD14C\uC778\uBA3C\uD2B8</span>\n                </li>\n                <li>\n                <span>\uC0AC\uC5C5\uC790 \uB4F1\uB85D\uBC88\uD638: 220-88-02594 </span>\n                <span class=\"span-bar\">|</span>\n                <span> \uD1B5\uC2E0\uD310\uB9E4\uC5C5\uC2E0\uACE0: 2018-\uC131\uB0A8\uBD84\uB2F9B-0004</span>\n                </li>\n                <li>\n                <span>\uB300\uD45C\uC804\uD654 : 1644-4755</span>\n                <span class=\"span-bar\"> | </span>\n                <span>\uC774\uBA54\uC77C:contact@kakaopage.com</span>\n                </li>\n                <li>\n                <span>\uC8FC\uC18C : \uACBD\uAE30\uB3C4 \uC131\uB0A8\uC2DC \uBD84\uB2F9\uAD6C \uD310\uAD50\uC5ED\uB85C 221</span>\n                </li>\n            </ul>\n            </details>\n            <span class=\"span-bar\">|</span>\n            <span>\uC0AC\uC5C5\uC790 \uC815\uBCF4 \uD655\uC778</span>\n        </div>\n        <div class=\"footerBox\">\n            <span>\xA9 Kakao Entertainment Corp.</span>\n        </div>\n        </div>\n        <div class=\"footerRight\">\n        <img\n            src=\"https://static-page.kakao.com/static/common/okMark.png?861290e3393cbb3c93e6d3056d6905af\"\n            alt=\"\uC800\uC791\uAD8Cok\"\n        />\n        <span>\uC800\uC791\uAD8C ok</span>\n    </div>\n  ";
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Footer);
 
 /***/ }),
 
@@ -650,50 +861,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
 /* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _categories_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../categories.js */ "./src/categories.js");
 
 
 
-
-function GenreList(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
+function GenreList(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
 }
 
 (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(GenreList, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
-GenreList.prototype.render = function () {
-  var _this$state = this.state,
-      category = _this$state.category,
-      genre = _this$state.genre;
-  this.target.innerHTML = this.template();
-  var contentsBox = document.querySelector(".main__contentsBox");
-  new _categories_js__WEBPACK_IMPORTED_MODULE_2__["default"][category][genre](contentsBox);
-  this.removeEvent();
-  this.setEvent();
-};
-
 GenreList.prototype.setEvent = function () {
-  var _this = this;
-
+  var updateGenre = this.$props.updateGenre;
   this.addEvent("click", ".navGenre-item", function (_ref) {
     var target = _ref.target;
-    var eventTarget = target.closest(".navGenre-item");
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.updateNodeClasses)(eventTarget, "selected");
-
-    _this.setState({
-      genre: eventTarget.dataset.genre
-    });
+    var $eventTarget = target.closest(".navGenre-item");
+    updateGenre($eventTarget.dataset.genre);
   });
 };
 
 GenreList.prototype.template = function () {
-  var _this$state2 = this.state,
-      genres = _this$state2.genres,
-      genre = _this$state2.genre;
-  return "\n    <ul class=\"".concat(genres.length ? "mainBox mainNav" : "", " main__navGenre\">\n      ").concat(genres.reduce(function (tags, gInfo) {
-    tags += "\n          <li class=\"navGenre-item ".concat(gInfo.genre === genre ? "selected" : "", "\" \n          data-genre=\"").concat(gInfo.genre, "\">\n              ").concat(gInfo.name, "\n          </li>");
+  var _this$state = this.state,
+      genres = _this$state.genres,
+      selected = _this$state.selected;
+  return genres.reduce(function (tags, gInfo) {
+    tags += "\n          <li class=\"navGenre-item ".concat(gInfo.genre === selected ? "selected" : "", "\"\n          data-genre=\"").concat(gInfo.genre, "\">\n              ").concat(gInfo.name, "\n          </li>");
     return tags;
-  }, ""), "\n    </ul>\n    <ul class=\"main__contentsBox\"></ul>\n  ");
+  }, "");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GenreList);
@@ -712,17 +905,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _Card_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Card.js */ "./src/screens/Components/Card.js");
+/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _Card_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Card.js */ "./src/screens/Components/Card.js");
+
 
 
 
 
 function GenreTop(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
+  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, target, state);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(GenreTop, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(GenreTop, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
 GenreTop.prototype.template = function () {
   var _this = this;
@@ -731,12 +926,71 @@ GenreTop.prototype.template = function () {
   var genreCards = webtoons.filter(function (wt) {
     return wt.genre.includes(_this.state.genre);
   }).map(function (cardInfo) {
-    return new _Card_js__WEBPACK_IMPORTED_MODULE_2__["default"]("_", cardInfo);
+    return new _Card_js__WEBPACK_IMPORTED_MODULE_3__["default"]("_", cardInfo);
   });
-  return "\n        <ul class=\"contentsCard\">\n          ".concat((0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.getComponentsTemplate)(genreCards), "\n        </ul>");
+  return "\n        <ul class=\"contentsCard\">\n          ".concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__.getComponentsTemplate)(genreCards), "\n        </ul>");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GenreTop);
+
+/***/ }),
+
+/***/ "./src/screens/Components/Header.js":
+/*!******************************************!*\
+  !*** ./src/screens/Components/Header.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
+/* harmony import */ var _CategoryList_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CategoryList.js */ "./src/screens/Components/CategoryList.js");
+
+
+
+
+function Header(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(Header, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+Header.prototype.setEvent = function () {
+  var _this = this;
+
+  this.addEvent("click", ".header__nav-item", function (_ref) {
+    var target = _ref.target;
+    var updateCategory = _this.$props.updateCategory;
+    var $eventTarget = target.closest(".header__nav-item");
+    var category = $eventTarget.dataset.category;
+    updateCategory(category);
+
+    _this.setState({
+      selected: category
+    });
+  });
+};
+
+Header.prototype.mount = function () {
+  var $headerNav = this.$target.querySelector(".header__nav");
+  new _CategoryList_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+    $target: $headerNav,
+    state: {
+      selected: this.state.selected,
+      categories: this.state.categories
+    }
+  });
+};
+
+Header.prototype.template = function () {
+  return "\n    <div class=\"header__title\">\n        <div class=\"header__titleLogo\">\n            <h2 class=\"logo\">parkaopage</h2>\n        </div>\n        <div class=\"header__titleSearch\">\n            <input type=\"text\" />\n            <i class=\"fas fa-search\"></i>\n        </div>\n        <div class=\"header__titleMenus\">\n            <div class=\"titleMenus stage\">\n            <span class=\"stage-span\">STAGE</span>\n            <span class=\"stage-arrow\"></span>\n            <span class=\"stage-popup\">\uC0C8\uB85C\uC6B4 \uC791\uAC00\uB97C \uB9CC\uB098\uB294\uACF3</span>\n            </div>\n            <span class=\"titleMenus menu\">\uCE90\uC2DC\uCDA9\uC804</span>\n            <span class=\"span-bar\">|</span>\n            <span class=\"titleMenus menu\">\uB85C\uADF8\uC778</span>\n        </div>\n    </div>\n    <ul class=\"header__nav\"></ul>\n  ";
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
 
 /***/ }),
 
@@ -751,28 +1005,143 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _BannerImage_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./BannerImage.js */ "./src/screens/Components/BannerImage.js");
+/* harmony import */ var _carousel_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../carousel.js */ "./src/carousel.js");
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+
 
 
 
 function MainBanner(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(MainBanner, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-MainBanner.prototype.template = function () {
   var _this = this;
 
-  var webtoon = JSON.parse(localStorage.getItem("webtoons")).filter(function (wt) {
-    return wt.isMain[_this.state.genre];
-  })[0]; // 일단 한개만, 나중에 슬라이더
+  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, target, state);
 
-  return "\n    <li class=\"mainBox main__mainBanner\">\n        <div class=\"banner__imgBox\">\n            <img src=\"".concat(webtoon.imageHorizontalUrl, "\" />\n            <div class=\"imgBox__info\">\n                <div class=\"infoTitle\">\n                    <span>").concat(webtoon.title, "</span>\n                </div>\n                <div class=\"infoBody\">\n                    <span class=\"info-event\">").concat(webtoon.event, "</span>\n                    <span class=\"info-category\">\n                        ").concat(webtoon.waitForFree ? "<i class='fas fa-clock'></i>" : "", " \uC6F9\uD230\n                    </span>\n                    <span class=\"span-bar\"> | </span>\n                    <span class=\"info-users\">\n                        <i class=\"fas fa-user\"></i> ").concat((0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(webtoon.userCount), "\n                    </span>\n                </div>\n            </div>\n        </div>\n        <div class=\"banner__message\">\n            <span>").concat(webtoon.mainDesc, "</span>\n        </div>\n        <div class=\"imgBox__order\">\n            <span class=\"orderNum\">1</span>\n            <span class=\"orderBar\">/</span>\n            <span class=\"orderNum\">3</span>\n        </div>\n    </li>\n    ");
+  if (this.state.interval) {
+    clearInterval(interval);
+  }
+
+  var webtoons = JSON.parse(localStorage.getItem("webtoons")).filter(function (wt) {
+    return wt.isMain[_this.state.genre];
+  });
+  var banners = webtoons.map(function (webtoon) {
+    return new _BannerImage_js__WEBPACK_IMPORTED_MODULE_4__["default"]("_", webtoon);
+  }).map(function (imageBox) {
+    var $imageBox = document.createElement("div");
+    $imageBox.innerHTML = imageBox.template();
+    return $imageBox;
+  });
+
+  var _carousel = _carousel_js__WEBPACK_IMPORTED_MODULE_5__["default"].apply(void 0, (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(banners)),
+      $carousel = _carousel.$carousel,
+      getInterval = _carousel.getInterval;
+
+  this.state.banners = $carousel;
+  this.state.getInterval = getInterval;
+  this.render();
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.createExtendsRelation)(MainBanner, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+MainBanner.prototype.template = function () {
+  var banners = this.state.banners;
+  return "\n    <li class=\"mainBox main__mainBanner\">\n        ".concat(banners === null || banners === void 0 ? void 0 : banners.outerHTML, "\n    </li>\n    ");
+};
+
+MainBanner.prototype.render = function () {
+  this.target.innerHTML = this.template();
+
+  if (this.state.interval) {
+    clearInterval(this.state.interval);
+  }
+
+  this.state = _objectSpread(_objectSpread({}, this.state), {}, {
+    interval: this.state.getInterval()
+  });
+  this.removeEvent();
+  this.setEvent();
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainBanner);
+
+/***/ }),
+
+/***/ "./src/screens/Components/MainBox.js":
+/*!*******************************************!*\
+  !*** ./src/screens/Components/MainBox.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
+/* harmony import */ var _GenreList_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./GenreList.js */ "./src/screens/Components/GenreList.js");
+/* harmony import */ var _categories_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../categories.js */ "./src/categories.js");
+
+
+
+
+
+function MainBox(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(MainBox, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+MainBox.prototype.mount = function () {
+  var $navGenre = this.$target.querySelector(".main__navGenre");
+  var $contentsBox = this.$target.querySelector(".main__contentsBox");
+  var _this$state = this.state,
+      genres = _this$state.genres,
+      selected = _this$state.selected,
+      category = _this$state.category;
+  this.selected = "webtoon";
+
+  if (category !== "home") {
+    new _GenreList_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+      $target: $navGenre,
+      state: {
+        genres: genres,
+        selected: "webtoon"
+      },
+      $props: {
+        updateGenre: this.updateGenre.bind(this)
+      }
+    });
+  }
+
+  new _categories_js__WEBPACK_IMPORTED_MODULE_3__["default"][category]["webtoon"]({
+    $target: $contentsBox
+  });
+};
+
+MainBox.prototype.template = function () {
+  var category = this.state.category;
+  return "\n    ".concat(category !== "home" ? '<ul class="mainBox mainNav main__navGenre"></ul>' : "", "\n    <ul class=\"main__contentsBox\"></ul>\n    ");
+};
+
+MainBox.prototype.updateGenre = function (genre) {
+  this.setState({
+    selected: genre
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainBox);
 
 /***/ }),
 
@@ -1080,6 +1449,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_MainBanner_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Components/MainBanner.js */ "./src/screens/Components/MainBanner.js");
 /* harmony import */ var _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Components/FullButton.js */ "./src/screens/Components/FullButton.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../serviceUtils.js */ "./src/serviceUtils.js");
+
 
 
 
@@ -1097,7 +1468,7 @@ function DaysGenre(target) {
 }
 
 DaysGenre.prototype.template = function () {
-  return (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getComponentsTemplate)(this.state.contents);
+  return (0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_4__.getComponentsTemplate)(this.state.contents);
 };
 
 (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.createExtendsRelation)(DaysGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
@@ -1157,9 +1528,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_SubBanner_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Components/SubBanner.js */ "./src/screens/Components/SubBanner.js");
 /* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../Components/DaysList.js */ "./src/screens/Components/DaysList.js");
-/* harmony import */ var _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../Components/ContentsBox.js */ "./src/screens/Components/ContentsBox.js");
-/* harmony import */ var _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../Components/FullButton.js */ "./src/screens/Components/FullButton.js");
+/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../serviceUtils.js */ "./src/serviceUtils.js");
+/* harmony import */ var _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../Components/DaysList.js */ "./src/screens/Components/DaysList.js");
+/* harmony import */ var _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../Components/ContentsBox.js */ "./src/screens/Components/ContentsBox.js");
+/* harmony import */ var _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../Components/FullButton.js */ "./src/screens/Components/FullButton.js");
+
 
 
 
@@ -1194,13 +1567,13 @@ function HomeGenre(target) {
   var koreaDay = days[day];
   /* 요일 연재 TOP Component */
 
-  var daysTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_11__["default"](target, {
+  var daysTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
     title: "요일 연재 TOP",
     contents: "daysTop",
     titleNum: WEBTOONS_TOTAL_COUNT
   });
   var daysTopBoxTarget = daysTopBox.state.contentsBodyDiv;
-  var daysList = new _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_10__["default"]("_", {
+  var daysList = new _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_11__["default"]("_", {
     koreaDay: koreaDay,
     count: DAYS_TOP_WEBTOON_PER_PAGE
   });
@@ -1214,14 +1587,14 @@ function HomeGenre(target) {
   });
   /* 기대 신작 TOP Component */
 
-  var bigCardListBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_11__["default"](target, {
+  var bigCardListBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
     title: "기대 신작 TOP",
     contents: "bigCardList",
     contentsBody: new _Components_BigCardList_js__WEBPACK_IMPORTED_MODULE_0__["default"]()
   });
   /* 로판 TOP Component */
 
-  var rofanTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_11__["default"](target, {
+  var rofanTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
     title: "로판 TOP",
     contents: "rofanTop",
     contentsBody: new _Components_GenreTop_js__WEBPACK_IMPORTED_MODULE_3__["default"]("_", {
@@ -1230,7 +1603,7 @@ function HomeGenre(target) {
   });
   /* 드라마 TOP Component */
 
-  var dramaTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_11__["default"](target, {
+  var dramaTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
     title: "드라마 TOP",
     contents: "dramaTop",
     contentsBody: new _Components_GenreTop_js__WEBPACK_IMPORTED_MODULE_3__["default"]("_", {
@@ -1239,7 +1612,7 @@ function HomeGenre(target) {
   });
   /* 일간 랭킹 TOP Component */
 
-  var dateTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_11__["default"](target, {
+  var dateTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
     title: "일간 랭킹 TOP",
     contents: "dateTop",
     contentsBody: new _Components_DateTop_js__WEBPACK_IMPORTED_MODULE_1__["default"]("_", {
@@ -1248,14 +1621,14 @@ function HomeGenre(target) {
   });
   /* 추천 이벤트 Component */
 
-  var recommendEventBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_11__["default"](target, {
+  var recommendEventBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
     title: "추천 이벤트",
     contents: "recommendEvent",
     classes: ["main__mainBanner"],
     contentsBody: new _Components_RecommendEvent_js__WEBPACK_IMPORTED_MODULE_6__["default"]()
   });
   this.setState({
-    contents: [mainBanner, navDetail, subBanner, daysTopBox, bigCardListBox, rofanTopBox, dramaTopBox, dateTopBox, recommendEventBox, new _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_12__["default"]()]
+    contents: [mainBanner, navDetail, subBanner, daysTopBox, bigCardListBox, rofanTopBox, dramaTopBox, dateTopBox, recommendEventBox, new _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_13__["default"]()]
   });
 }
 
@@ -1267,7 +1640,7 @@ HomeGenre.prototype.setEvent = function () {
   this.addEvent("click", ".daysNav-item", function (_ref) {
     var target = _ref.target;
     var eventTarget = target.closest(".daysNav-item");
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.updateNodeClasses)(eventTarget, "selected");
+    updateNodeClasses(eventTarget, "selected");
     var koreaDay = eventTarget.textContent;
 
     var isDaysTopBox = function isDaysTopBox(content) {
@@ -1281,7 +1654,7 @@ HomeGenre.prototype.setEvent = function () {
     var _daysTopBox$state = daysTopBox.state,
         contentsBodyDiv = _daysTopBox$state.contentsBodyDiv,
         contentsBody = _daysTopBox$state.contentsBody;
-    var daysList = new _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_10__["default"](contentsBodyDiv, {
+    var daysList = new _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_11__["default"](contentsBodyDiv, {
       koreaDay: koreaDay,
       count: DAYS_TOP_WEBTOON_PER_PAGE
     });
@@ -1295,7 +1668,7 @@ HomeGenre.prototype.setEvent = function () {
 };
 
 HomeGenre.prototype.template = function () {
-  return (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.getComponentsTemplate)(this.state.contents);
+  return (0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_10__.getComponentsTemplate)(this.state.contents);
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HomeGenre);
@@ -1380,15 +1753,67 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function WebtoonGenre(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-  this.render();
+function WebtoonGenre(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
 }
 
 (0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(WebtoonGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
+WebtoonGenre.prototype.mount = function () {
+  var _this = this;
+
+  var contents = this.state.contents;
+  contents.forEach(function (content) {
+    var $content = _this.$target.querySelector(".main__".concat(content.className)); // new 어쩌고를 위한 object 만들기
+
+
+    console.log($content);
+  });
+};
+
+WebtoonGenre.prototype.setup = function () {
+  this.state = {
+    contents: [{
+      className: "mainBanner",
+      state: {}
+    }, {
+      className: "navDetail",
+      state: {}
+    }, {
+      className: "subBanner",
+      state: {}
+    }, {
+      className: "daysTop",
+      state: {}
+    }, {
+      className: "bigCardList",
+      state: {}
+    }, {
+      className: "genreTop",
+      state: {}
+    }, {
+      className: "genreTop",
+      state: {}
+    }, {
+      className: "dateTop",
+      state: {}
+    }, {
+      className: "recommendEvent",
+      state: {}
+    }, {
+      className: "button",
+      state: {}
+    }]
+  };
+};
+
 WebtoonGenre.prototype.template = function () {
-  return "<div>WebtoonGenre</div>";
+  var contents = this.state.contents;
+  return contents.reduce(function (tags, _ref) {
+    var className = _ref.className;
+    tags += "<li class=\"mainBox main__".concat(className, "\"></li>");
+    return tags;
+  }, "");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WebtoonGenre);
@@ -1439,43 +1864,20 @@ var webtoonGenres = {
 
 /***/ }),
 
-/***/ "./src/utils.js":
-/*!**********************!*\
-  !*** ./src/utils.js ***!
-  \**********************/
+/***/ "./src/serviceUtils.js":
+/*!*****************************!*\
+  !*** ./src/serviceUtils.js ***!
+  \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "updateNodeClasses": () => (/* binding */ updateNodeClasses),
-/* harmony export */   "getJson": () => (/* binding */ getJson),
 /* harmony export */   "formatUserCount": () => (/* binding */ formatUserCount),
-/* harmony export */   "createExtendsRelation": () => (/* binding */ createExtendsRelation),
-/* harmony export */   "getJsons": () => (/* binding */ getJsons),
 /* harmony export */   "getComponentsTemplate": () => (/* binding */ getComponentsTemplate)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./constants.js */ "./src/constants.js");
-
-
-
-
-
-var createExtendsRelation = function createExtendsRelation(Child, Parent) {
-  Child.prototype = Object.create(Parent.prototype);
-  Child.prototype.constructor = Child;
-};
-
-var updateNodeClasses = function updateNodeClasses(target, className) {
-  (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(target.parentNode.children).forEach(function (node) {
-    node.classList.remove(className);
-  });
-
-  target.classList.add(className);
+var formatUserCount = function formatUserCount(userCount) {
+  return (userCount / 10000).toFixed(1) + "만명";
 };
 
 var getComponentsTemplate = function getComponentsTemplate(components) {
@@ -1485,20 +1887,46 @@ var getComponentsTemplate = function getComponentsTemplate(components) {
   }, "");
 };
 
-var formatUserCount = function formatUserCount(userCount) {
-  return (userCount / 10000).toFixed(1) + "만명";
+
+
+/***/ }),
+
+/***/ "./src/utils.js":
+/*!**********************!*\
+  !*** ./src/utils.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getJson": () => (/* binding */ getJson),
+/* harmony export */   "createExtendsRelation": () => (/* binding */ createExtendsRelation),
+/* harmony export */   "getJsons": () => (/* binding */ getJsons)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constants.js */ "./src/constants.js");
+
+
+
+
+var createExtendsRelation = function createExtendsRelation(Child, Parent) {
+  Child.prototype = Object.create(Parent.prototype);
+  Child.prototype.constructor = Child;
 };
 
 var getJson = /*#__PURE__*/function () {
-  var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee(dataName) {
+  var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee(dataName) {
     var response;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return fetch("".concat( true ? _constants_js__WEBPACK_IMPORTED_MODULE_3__.HEROKU_SERVER_URL : 0).concat(dataName));
+            return fetch("".concat( true ? _constants_js__WEBPACK_IMPORTED_MODULE_2__.HEROKU_SERVER_URL : 0).concat(dataName));
 
           case 3:
             response = _context.sent;
@@ -1528,6 +1956,33 @@ var getJsons = function getJsons(paths) {
   }));
 };
 
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./styles/carousel.css":
+/*!*******************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./styles/carousel.css ***!
+  \*******************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".carousel {\n  overflow: hidden;\n  position: relative;\n  width: 100%;\n  height: 100%;\n  background-color: #eee;\n}\n.carousel-box {\n  display: flex;\n  height: 100%;\n  transition: transform 0.2s;\n}\n.carousel-order {\n  color: #fff;\n  opacity: 0.7;\n  position: absolute;\n  bottom: 60px;\n  right: 30px;\n  font-size: 20px;\n}\n\n.carousel-order > span {\n  padding: 0px 3px;\n}\n\n.carousel-elem {\n  width: 100%;\n  height: 100%;\n}\n", "",{"version":3,"sources":["webpack://./styles/carousel.css"],"names":[],"mappings":"AAAA;EACE,gBAAgB;EAChB,kBAAkB;EAClB,WAAW;EACX,YAAY;EACZ,sBAAsB;AACxB;AACA;EACE,aAAa;EACb,YAAY;EACZ,0BAA0B;AAC5B;AACA;EACE,WAAW;EACX,YAAY;EACZ,kBAAkB;EAClB,YAAY;EACZ,WAAW;EACX,eAAe;AACjB;;AAEA;EACE,gBAAgB;AAClB;;AAEA;EACE,WAAW;EACX,YAAY;AACd","sourcesContent":[".carousel {\n  overflow: hidden;\n  position: relative;\n  width: 100%;\n  height: 100%;\n  background-color: #eee;\n}\n.carousel-box {\n  display: flex;\n  height: 100%;\n  transition: transform 0.2s;\n}\n.carousel-order {\n  color: #fff;\n  opacity: 0.7;\n  position: absolute;\n  bottom: 60px;\n  right: 30px;\n  font-size: 20px;\n}\n\n.carousel-order > span {\n  padding: 0px 3px;\n}\n\n.carousel-elem {\n  width: 100%;\n  height: 100%;\n}\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
 
 /***/ }),
@@ -1606,7 +2061,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n}\n.contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 22px;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n.main__mainBanner .imgBox__order {\n  position: absolute;\n  bottom: 60px;\n  right: 20px;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__button {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__button button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n}\n\n.contents {\n  margin: 20px 15px;\n}\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contentsCard {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contentsCard .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 15px;\n  padding: 5px;\n  margin: 0px 5px;\n  color: #808e9b;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.card__info .info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  height: 100%;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n.contents .imgBox__order {\n  left: 20px;\n  bottom: 30px;\n  opacity: 0.6;\n}\n", "",{"version":3,"sources":["webpack://./styles/main.css"],"names":[],"mappings":"AAAA;EACE,iBAAiB;EACjB,YAAY;AACd;;AAEA;EACE,yBAAyB;EACzB,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,cAAc;EACd,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;AACjB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;AACjB;AACA;EACE,YAAY;AACd;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,cAAc;AAChB;AACA;EACE,UAAU;EACV,YAAY;AACd;AACA;EACE,UAAU;EACV,WAAW;AACb;AACA;EACE,uBAAuB;EACvB,yBAAyB;EACzB,kBAAkB;EAClB,cAAc;EACd,gBAAgB;EAChB,gBAAgB;EAChB,iBAAiB;AACnB;AACA;EACE,eAAe;EACf,mBAAmB;AACrB;AACA;EACE,eAAe;EACf,kBAAkB;AACpB;AACA;EACE,kBAAkB;EAClB,YAAY;EACZ,WAAW;EACX,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,iBAAiB;EACjB,WAAW;AACb;AACA;EACE,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,kBAAkB;EAClB,WAAW;EACX,SAAS;EACT,WAAW;EACX,eAAe;EACf,YAAY;AACd;AACA;EACE,eAAe;EACf,WAAW;EACX,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,eAAe;EACf,WAAW;EACX,yBAAyB;EACzB,YAAY;AACd;;AAEA;EACE,aAAa;EACb,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;EACd,UAAU;EACV,YAAY;EACZ,WAAW;EACX,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,yBAAyB;EACzB,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,2BAA2B;AAC7B;AACA;EACE,4BAA4B;AAC9B;AACA;EACE,8BAA8B;AAChC;AACA;EACE,+BAA+B;AACjC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,aAAa;AACf;;AAEA;EACE,eAAe;EACf,UAAU;EACV,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,gBAAgB;EAChB,mBAAmB;EACnB,eAAe;EACf,cAAc;EACd,yBAAyB;AAC3B;;AAEA;EACE,aAAa;EACb,sBAAsB;AACxB;;AAEA;EACE,iBAAiB;AACnB;AACA;EACE,aAAa;EACb,8BAA8B;EAC9B,YAAY;AACd;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,eAAe;EACf,cAAc;AAChB;AACA;EACE,aAAa;EACb,sBAAsB;AACxB;AACA;EACE,aAAa;EACb,6BAA6B;EAC7B,YAAY;EACZ,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,UAAU;EACV,gCAAgC;AAClC;AACA;EACE,cAAc;EACd,gCAAgC;AAClC;AACA;EACE,aAAa;EACb,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;EACf,UAAU;EACV,aAAa;EACb,WAAW;EACX,YAAY;AACd;;AAEA;EACE,mBAAmB;EACnB,yBAAyB;EACzB,aAAa;AACf;AACA;EACE,gCAAgC;EAChC,WAAW;EACX,aAAa;EACb,gBAAgB;AAClB;AACA;EACE,aAAa;EACb,8BAA8B;EAC9B,eAAe;EACf,YAAY;EACZ,eAAe;EACf,cAAc;AAChB;AACA;EACE,cAAc;AAChB;AACA;EACE,eAAe;EACf,eAAe;EACf,mBAAmB;EACnB,uBAAuB;EACvB,gBAAgB;AAClB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,cAAc;AAChB;AACA;EACE,iBAAiB;AACnB;AACA;EACE,eAAe;AACjB;;AAEA;EACE,aAAa;EACb,8BAA8B;EAC9B,WAAW;AACb;;AAEA;EACE,UAAU;EACV,aAAa;EACb,YAAY;AACd;AACA;EACE,eAAe;AACjB;AACA;;;EAGE,eAAe;AACjB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,WAAW;AACb;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,kBAAkB;EAClB,WAAW;AACb;AACA;EACE,kBAAkB;EAClB,QAAQ;EACR,SAAS;EACT,YAAY;EACZ,eAAe;EACf,cAAc;EACd,oCAAoC;EACpC,2BAA2B;AAC7B;AACA;EACE,WAAW;EACX,kBAAkB;AACpB;AACA;EACE,aAAa;EACb,sBAAsB;EACtB,cAAc;AAChB;AACA;;EAEE,eAAe;AACjB;;AAEA;EACE,cAAc;EACd,eAAe;AACjB;AACA;EACE,eAAe;AACjB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,yBAAyB;EACzB,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;AACA;EACE,UAAU;EACV,YAAY;EACZ,YAAY;AACd","sourcesContent":[".main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n}\n.contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 22px;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n.main__mainBanner .imgBox__order {\n  position: absolute;\n  bottom: 60px;\n  right: 20px;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__button {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__button button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n}\n\n.contents {\n  margin: 20px 15px;\n}\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contentsCard {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contentsCard .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 15px;\n  padding: 5px;\n  margin: 0px 5px;\n  color: #808e9b;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.card__info .info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  height: 100%;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n.contents .imgBox__order {\n  left: 20px;\n  bottom: 30px;\n  opacity: 0.6;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n.contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n.main__mainBanner .imgBox__order {\n  position: absolute;\n  bottom: 60px;\n  right: 20px;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__button {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__button button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n}\n\n.contents {\n  margin: 20px 15px;\n}\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contentsCard {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contentsCard .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 15px;\n  padding: 5px;\n  margin: 0px 5px;\n  color: #808e9b;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.card__info .info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  height: 100%;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n.contents .imgBox__order {\n  left: 20px;\n  bottom: 30px;\n  opacity: 0.6;\n}\n", "",{"version":3,"sources":["webpack://./styles/main.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,sBAAsB;EACtB,mBAAmB;EACnB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,iBAAiB;EACjB,YAAY;AACd;;AAEA;EACE,yBAAyB;EACzB,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,cAAc;EACd,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;AACjB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,YAAY;EACZ,aAAa;AACf;AACA;EACE,YAAY;AACd;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,cAAc;AAChB;AACA;EACE,UAAU;EACV,YAAY;AACd;AACA;EACE,UAAU;EACV,WAAW;AACb;AACA;EACE,uBAAuB;EACvB,yBAAyB;EACzB,kBAAkB;EAClB,cAAc;EACd,gBAAgB;EAChB,gBAAgB;EAChB,iBAAiB;AACnB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;AACrB;AACA;EACE,eAAe;EACf,kBAAkB;AACpB;AACA;EACE,kBAAkB;EAClB,YAAY;EACZ,WAAW;EACX,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,iBAAiB;EACjB,WAAW;AACb;AACA;EACE,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,kBAAkB;EAClB,WAAW;EACX,SAAS;EACT,WAAW;EACX,eAAe;EACf,YAAY;AACd;AACA;EACE,eAAe;EACf,WAAW;EACX,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,eAAe;EACf,WAAW;EACX,yBAAyB;EACzB,YAAY;AACd;;AAEA;EACE,aAAa;EACb,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;EACd,UAAU;EACV,YAAY;EACZ,WAAW;EACX,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,yBAAyB;EACzB,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,2BAA2B;AAC7B;AACA;EACE,4BAA4B;AAC9B;AACA;EACE,8BAA8B;AAChC;AACA;EACE,+BAA+B;AACjC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,aAAa;AACf;;AAEA;EACE,eAAe;EACf,UAAU;EACV,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,gBAAgB;EAChB,mBAAmB;EACnB,eAAe;EACf,cAAc;EACd,yBAAyB;AAC3B;;AAEA;EACE,aAAa;EACb,sBAAsB;AACxB;;AAEA;EACE,iBAAiB;AACnB;AACA;EACE,aAAa;EACb,8BAA8B;EAC9B,YAAY;AACd;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,eAAe;EACf,cAAc;AAChB;AACA;EACE,aAAa;EACb,sBAAsB;AACxB;AACA;EACE,aAAa;EACb,6BAA6B;EAC7B,YAAY;EACZ,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,UAAU;EACV,gCAAgC;AAClC;AACA;EACE,cAAc;EACd,gCAAgC;AAClC;AACA;EACE,aAAa;EACb,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;EACf,UAAU;EACV,aAAa;EACb,WAAW;EACX,YAAY;AACd;;AAEA;EACE,mBAAmB;EACnB,yBAAyB;EACzB,aAAa;AACf;AACA;EACE,gCAAgC;EAChC,WAAW;EACX,aAAa;EACb,gBAAgB;AAClB;AACA;EACE,aAAa;EACb,8BAA8B;EAC9B,eAAe;EACf,YAAY;EACZ,eAAe;EACf,cAAc;AAChB;AACA;EACE,cAAc;AAChB;AACA;EACE,eAAe;EACf,eAAe;EACf,mBAAmB;EACnB,uBAAuB;EACvB,gBAAgB;AAClB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,cAAc;AAChB;AACA;EACE,iBAAiB;AACnB;AACA;EACE,eAAe;AACjB;;AAEA;EACE,aAAa;EACb,8BAA8B;EAC9B,WAAW;AACb;;AAEA;EACE,UAAU;EACV,aAAa;EACb,YAAY;AACd;AACA;EACE,eAAe;AACjB;AACA;;;EAGE,eAAe;AACjB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,WAAW;AACb;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,kBAAkB;EAClB,WAAW;AACb;AACA;EACE,kBAAkB;EAClB,QAAQ;EACR,SAAS;EACT,YAAY;EACZ,eAAe;EACf,cAAc;EACd,oCAAoC;EACpC,2BAA2B;AAC7B;AACA;EACE,WAAW;EACX,kBAAkB;AACpB;AACA;EACE,aAAa;EACb,sBAAsB;EACtB,cAAc;AAChB;AACA;;EAEE,eAAe;AACjB;;AAEA;EACE,cAAc;EACd,eAAe;AACjB;AACA;EACE,eAAe;AACjB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,yBAAyB;EACzB,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;AACA;EACE,UAAU;EACV,YAAY;EACZ,YAAY;AACd","sourcesContent":[".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n.contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n.main__mainBanner .imgBox__order {\n  position: absolute;\n  bottom: 60px;\n  right: 20px;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__button {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__button button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n}\n\n.contents {\n  margin: 20px 15px;\n}\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contentsCard {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contentsCard .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 15px;\n  padding: 5px;\n  margin: 0px 5px;\n  color: #808e9b;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.card__info .info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  height: 100%;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n.contents .imgBox__order {\n  left: 20px;\n  bottom: 30px;\n  opacity: 0.6;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1659,7 +2114,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_css_loader_dist_cjs_js_header_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! -!../node_modules/css-loader/dist/cjs.js!./header.css */ "./node_modules/css-loader/dist/cjs.js!./styles/header.css");
 /* harmony import */ var _node_modules_css_loader_dist_cjs_js_main_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! -!../node_modules/css-loader/dist/cjs.js!./main.css */ "./node_modules/css-loader/dist/cjs.js!./styles/main.css");
 /* harmony import */ var _node_modules_css_loader_dist_cjs_js_footer_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! -!../node_modules/css-loader/dist/cjs.js!./footer.css */ "./node_modules/css-loader/dist/cjs.js!./styles/footer.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_carousel_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! -!../node_modules/css-loader/dist/cjs.js!./carousel.css */ "./node_modules/css-loader/dist/cjs.js!./styles/carousel.css");
 // Imports
+
 
 
 
@@ -1671,8 +2128,9 @@ ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_reset_css__WEBPAC
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_header_css__WEBPACK_IMPORTED_MODULE_3__["default"]);
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_main_css__WEBPACK_IMPORTED_MODULE_4__["default"]);
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_footer_css__WEBPACK_IMPORTED_MODULE_5__["default"]);
+___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_carousel_css__WEBPACK_IMPORTED_MODULE_6__["default"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  background-color: #eeeeee;\n  width: 100%;\n}\n\n.span-bar {\n  color: #e2e2e2;\n  font-weight: 400;\n}\n\n.blue {\n  background-color: #2e86de;\n}\n.red {\n  background-color: #eb3b5a;\n}\n\nfooter {\n  width: 720px;\n}\n\nb {\n  font-weight: bold;\n}\n", "",{"version":3,"sources":["webpack://./styles/styles.css"],"names":[],"mappings":"AAKA;EACE,aAAa;EACb,sBAAsB;EACtB,mBAAmB;EACnB,yBAAyB;EACzB,WAAW;AACb;;AAEA;EACE,cAAc;EACd,gBAAgB;AAClB;;AAEA;EACE,yBAAyB;AAC3B;AACA;EACE,yBAAyB;AAC3B;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,iBAAiB;AACnB","sourcesContent":["@import \"reset.css\";\n@import \"header.css\";\n@import \"main.css\";\n@import \"footer.css\";\n\nbody {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  background-color: #eeeeee;\n  width: 100%;\n}\n\n.span-bar {\n  color: #e2e2e2;\n  font-weight: 400;\n}\n\n.blue {\n  background-color: #2e86de;\n}\n.red {\n  background-color: #eb3b5a;\n}\n\nfooter {\n  width: 720px;\n}\n\nb {\n  font-weight: bold;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\n  background-color: #eeeeee;\n  width: 100%;\n  height: 100%;\n}\n\n.span-bar {\n  color: #e2e2e2;\n  font-weight: 400;\n}\n\n.blue {\n  background-color: #2e86de;\n}\n.red {\n  background-color: #eb3b5a;\n}\n\nfooter {\n  width: 720px;\n}\n\nb {\n  font-weight: bold;\n}\n", "",{"version":3,"sources":["webpack://./styles/styles.css"],"names":[],"mappings":"AAMA;EACE,yBAAyB;EACzB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,cAAc;EACd,gBAAgB;AAClB;;AAEA;EACE,yBAAyB;AAC3B;AACA;EACE,yBAAyB;AAC3B;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,iBAAiB;AACnB","sourcesContent":["@import \"reset.css\";\n@import \"header.css\";\n@import \"main.css\";\n@import \"footer.css\";\n@import \"carousel.css\";\n\nbody {\n  background-color: #eeeeee;\n  width: 100%;\n  height: 100%;\n}\n\n.span-bar {\n  color: #e2e2e2;\n  font-weight: 400;\n}\n\n.blue {\n  background-color: #2e86de;\n}\n.red {\n  background-color: #eb3b5a;\n}\n\nfooter {\n  width: 720px;\n}\n\nb {\n  font-weight: bold;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3035,6 +3493,39 @@ function _defineProperty(obj, key, value) {
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/helpers/esm/inherits.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/inherits.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _inherits)
+/* harmony export */ });
+/* harmony import */ var _setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  Object.defineProperty(subClass, "prototype", {
+    writable: false
+  });
+  if (superClass) (0,_setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(subClass, superClass);
+}
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js":
 /*!********************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArray.js ***!
@@ -3129,6 +3620,28 @@ function _nonIterableSpread() {
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _setPrototypeOf)
+/* harmony export */ });
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js":
 /*!******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js ***!
@@ -3175,6 +3688,29 @@ __webpack_require__.r(__webpack_exports__);
 
 function _toConsumableArray(arr) {
   return (0,_arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr) || (0,_iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__["default"])(arr) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(arr) || (0,_nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/typeof.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _typeof)
+/* harmony export */ });
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, _typeof(obj);
 }
 
 /***/ }),
@@ -3280,25 +3816,12 @@ var __webpack_exports__ = {};
   !*** ./src/index.js ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _screens_Components_CategoryList_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./screens/Components/CategoryList.js */ "./src/screens/Components/CategoryList.js");
-/* harmony import */ var _screens_Components_Category_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./screens/Components/Category.js */ "./src/screens/Components/Category.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
-/* harmony import */ var _screens_Components_GenreList_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./screens/Components/GenreList.js */ "./src/screens/Components/GenreList.js");
-/* harmony import */ var _screens_Webtoon_genre_HomeGenre_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./screens/Webtoon/genre/HomeGenre.js */ "./src/screens/Webtoon/genre/HomeGenre.js");
-
-
-
-
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+/* harmony import */ var _screens_App_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./screens/App.js */ "./src/screens/App.js");
 
 
 
@@ -3306,53 +3829,33 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 
 var init = /*#__PURE__*/function () {
-  var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().mark(function _callee() {
-    var paths, _yield$getJsons, _yield$getJsons2, categories, genres, webtoons, main, headerNav, categoryList, genreList, category, contentsBox;
+  var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+    var paths, _yield$getJsons, _yield$getJsons2, categories, genres, $app;
 
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().wrap(function _callee$(_context) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            paths = ["categories", "genres", "webtoons"];
+            paths = ["categories", "genres"];
             _context.next = 3;
-            return (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.getJsons)(paths);
+            return (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getJsons)(paths);
 
           case 3:
             _yield$getJsons = _context.sent;
-            _yield$getJsons2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_yield$getJsons, 3);
+            _yield$getJsons2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_yield$getJsons, 2);
             categories = _yield$getJsons2[0].results;
             genres = _yield$getJsons2[1].results;
-            webtoons = _yield$getJsons2[2].results;
-            localStorage.setItem("genres", JSON.stringify(genres));
-            localStorage.setItem("webtoons", JSON.stringify(webtoons));
-            main = document.querySelector(".main");
-            headerNav = document.querySelector(".header__nav");
-            categoryList = new _screens_Components_CategoryList_js__WEBPACK_IMPORTED_MODULE_4__["default"](headerNav);
-            genreList = new _screens_Components_GenreList_js__WEBPACK_IMPORTED_MODULE_7__["default"](main, {
-              genre: "home"
+            $app = document.querySelector(".app");
+            new _screens_App_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+              $target: $app,
+              state: {
+                categories: categories,
+                genres: genres,
+                category: "webtoon"
+              }
             });
-            categoryList.setState({
-              categories: categories.map(function (cInfo) {
-                var category = new _screens_Components_Category_js__WEBPACK_IMPORTED_MODULE_5__["default"](headerNav);
-                category.setState(_objectSpread({}, cInfo));
-                return category;
-              })
-            });
-            category = categoryList.state.categories.find(function (_ref2) {
-              var selected = _ref2.state.selected;
-              return selected;
-            }).state.category;
-            genreList.setState({
-              genres: genres[category],
-              category: category
-            });
-            categoryList.setState({
-              genreList: genreList
-            });
-            contentsBox = main.querySelector(".main__contentsBox");
-            new _screens_Webtoon_genre_HomeGenre_js__WEBPACK_IMPORTED_MODULE_8__["default"](contentsBox);
 
-          case 20:
+          case 9:
           case "end":
             return _context.stop();
         }
