@@ -375,8 +375,10 @@ Component.prototype = {
   setup: function setup() {},
   mount: function mount() {},
   render: function render() {
-    this.$target.innerHTML = this.template();
-    this.mount();
+    if (this.$target) {
+      this.$target.innerHTML = this.template();
+      this.mount();
+    }
   },
   template: function template() {
     return "";
