@@ -1552,10 +1552,8 @@ function HomeGenre(target) {
   var WEBTOONS_TOTAL_COUNT = 1318;
   var DAYS_TOP_WEBTOON_PER_PAGE = 10;
   /* 메인 배너 Component */
+  // const mainBanner = new MainBanner(target, { genre: "home" });
 
-  var mainBanner = new _Components_MainBanner_js__WEBPACK_IMPORTED_MODULE_4__["default"](target, {
-    genre: "home"
-  });
   /* Nav Detail (Webtoon Status Nav) Component */
 
   var navDetail = new _Components_NavDetail_js__WEBPACK_IMPORTED_MODULE_5__["default"](target);
