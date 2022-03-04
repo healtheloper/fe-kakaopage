@@ -18,7 +18,9 @@ NewWorkTop.prototype.mount = function () {
   const $contentsBigCard = this.$target.querySelector("#wtNewWorkTop");
   const { webtoons } = this.state;
   const MAXIMUM_CARD_COUNT = 2;
-  const sortedWebtoons = this.$props.sortRanking(webtoons);
+  // const sortedWebtoons = this.$props.sortRanking(webtoons);
+  const sortedWebtoons = webtoons;
+
   new BigCardList({
     $target: $contentsBigCard,
     state: {

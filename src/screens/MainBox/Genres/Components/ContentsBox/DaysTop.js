@@ -28,11 +28,12 @@ DaysTop.prototype.mount = function () {
   const days = getKoreaDays();
   const { webtoons, selected } = this.state;
   const MAXIMUM_CARD_COUNT = 10;
-  const filteredWebtoons = this.$props.filterContent(
-    webtoons,
-    "days",
-    selected
-  );
+  const filteredWebtoons = webtoons;
+  // const filteredWebtoons = this.$props.filterContent(
+  //   webtoons,
+  //   "days",
+  //   selected
+  // );
 
   new DaysList({
     $target: $contentNav,

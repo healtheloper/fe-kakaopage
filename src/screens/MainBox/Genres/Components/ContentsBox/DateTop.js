@@ -15,7 +15,7 @@ DateTop.prototype.setup = function () {
 DateTop.prototype.mount = function () {
   const $dateTop = this.$target.querySelector("#wtDateTop");
   const { webtoons } = this.state;
-  const { sortRanking } = this.$props;
+  // const { sortRanking } = this.$props;
   const MAXIMUM_CARD_COUNT = 3;
 
   const sliceWebtoons =
@@ -23,10 +23,11 @@ DateTop.prototype.mount = function () {
       ? webtoons.slice(0, MAXIMUM_CARD_COUNT)
       : webtoons;
 
-  const newWebtoons = sortRanking(sliceWebtoons).map((webtoon, idx) => ({
-    ...webtoon,
-    ranking: idx + 1,
-  }));
+  const newWebtoons = webtoons;
+  // const newWebtoons = sortRanking(sliceWebtoons).map((webtoon, idx) => ({
+  //   ...webtoon,
+  //   ranking: idx + 1,
+  // }));
 
   new RowCardList({
     $target: $dateTop,

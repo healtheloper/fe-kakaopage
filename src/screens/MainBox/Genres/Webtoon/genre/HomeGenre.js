@@ -11,31 +11,31 @@ function HomeGenre(infoObject) {
 
 createExtendsRelation(HomeGenre, Component);
 
-HomeGenre.prototype.sortRanking = function (items) {
-  return items.sort((i1, i2) => i2.rank - i1.rank);
-};
+// HomeGenre.prototype.sortRanking = function (items) {
+//   return items.sort((i1, i2) => i2.rank - i1.rank);
+// };
 
-HomeGenre.prototype.filterContent = function (webtoons, where, what) {
-  return webtoons.filter((webtoon) =>
-    typeof webtoon[where] === "object"
-      ? webtoon[where].includes(what)
-      : webtoon[where] === what
-  );
-};
+// HomeGenre.prototype.filterContent = function (webtoons, where, what) {
+//   return webtoons.filter((webtoon) =>
+//     typeof webtoon[where] === "object"
+//       ? webtoon[where].includes(what)
+//       : webtoon[where] === what
+//   );
+// };
 
 HomeGenre.prototype.mount = function () {
   const { contents } = this.state;
 
   contents.forEach((content) => {
     const { elementId, className, state } = content;
-    const { list } = state;
+    const { list, webtoons } = state;
     const $content = this.$target.querySelector(`#${elementId}`);
 
     new components[className]({
       $target: $content,
       state: {
         ...state,
-        webtoons: className === "mainBanner" ? list : [],
+        webtoons: className === "mainBanner" ? list : webtoons,
       },
       $props: {
         sortRanking: this.sortRanking,
@@ -59,8 +59,25 @@ HomeGenre.prototype.setup = async function () {
     API_POINT({ categoryId: CategoryId[category], genreId: GenreId[genre] })
   );
 
+  const [
+    _1,
+    _2,
+    _3,
+    daysTopWt,
+    newWorkTopWt,
+    _4,
+    romanceTopWt,
+    rofanTopWt,
+    dramaTopWt,
+    blTopWt,
+    boyTopWt,
+    actionTopWt,
+    dateTopWt,
+    rcEventWt,
+  ] = section_containers;
+
+  console.log(daysTopWt);
   this.state = {
-    section_containers,
     contents: [
       {
         elementId: "wtMainBanner",
@@ -76,6 +93,7 @@ HomeGenre.prototype.setup = async function () {
         className: "daysTop",
         state: {
           title: "요일연재 TOP",
+          webtoons: daysTopWt,
         },
       },
       {
@@ -83,6 +101,15 @@ HomeGenre.prototype.setup = async function () {
         className: "newWorkTop",
         state: {
           title: "기대신작 TOP",
+          webtoons: newWorkTopWt,
+        },
+      },
+      {
+        elementId: "wtRomanceGenreTop",
+        className: "genreTop",
+        state: {
+          title: "로맨스 TOP",
+          webtoons: romanceTopWt,
         },
       },
       {
@@ -90,6 +117,7 @@ HomeGenre.prototype.setup = async function () {
         className: "genreTop",
         state: {
           title: "로판 TOP",
+          webtoons: rofanTopWt,
         },
       },
       {
@@ -97,6 +125,31 @@ HomeGenre.prototype.setup = async function () {
         className: "genreTop",
         state: {
           title: "드라마 TOP",
+          webtoons: dramaTopWt,
+        },
+      },
+      {
+        elementId: "wtBLGenreTop",
+        className: "genreTop",
+        state: {
+          title: "BL TOP",
+          webtoons: blTopWt,
+        },
+      },
+      {
+        elementId: "wtBoyGenreTop",
+        className: "genreTop",
+        state: {
+          title: "소년 TOP",
+          webtoons: boyTopWt,
+        },
+      },
+      {
+        elementId: "wtActionGenreTop",
+        className: "genreTop",
+        state: {
+          title: "액션무협 TOP",
+          webtoons: actionTopWt,
         },
       },
       {
@@ -104,6 +157,7 @@ HomeGenre.prototype.setup = async function () {
         className: "dateTop",
         state: {
           title: "일간 랭킹 TOP",
+          webtoons: dateTopWt,
         },
       },
       {
@@ -111,6 +165,7 @@ HomeGenre.prototype.setup = async function () {
         className: "recommendEvent",
         state: {
           title: "추천이벤트",
+          webtoons: rcEventWt,
         },
       },
       { elementId: "wtFullButton", className: "fullButton", state: {} },
