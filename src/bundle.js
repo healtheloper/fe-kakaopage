@@ -100,33 +100,147 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var _babel_runtime_helpers_setPrototypeOf__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/setPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_setPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/setPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
+/* harmony import */ var throttle_debounce__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! throttle-debounce */ "./node_modules/throttle-debounce/esm/index.js");
 
 
 
 
 
-function _wrapRegExp() { _wrapRegExp = function _wrapRegExp(re, groups) { return new BabelRegExp(re, void 0, groups); }; var _super = RegExp.prototype, _groups = new WeakMap(); function BabelRegExp(re, flags, groups) { var _this = new RegExp(re, flags); return _groups.set(_this, groups || _groups.get(re)), (0,_babel_runtime_helpers_setPrototypeOf__WEBPACK_IMPORTED_MODULE_2__["default"])(_this, BabelRegExp.prototype); } function buildGroups(result, re) { var g = _groups.get(re); return Object.keys(g).reduce(function (groups, name) { return groups[name] = result[g[name]], groups; }, Object.create(null)); } return (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1__["default"])(BabelRegExp, RegExp), BabelRegExp.prototype.exec = function (str) { var result = _super.exec.call(this, str); return result && (result.groups = buildGroups(result, this)), result; }, BabelRegExp.prototype[Symbol.replace] = function (str, substitution) { if ("string" == typeof substitution) { var groups = _groups.get(this); return _super[Symbol.replace].call(this, str, substitution.replace(/\$<([^>]+)>/g, function (_, name) { return "$" + groups[name]; })); } if ("function" == typeof substitution) { var _this = this; return _super[Symbol.replace].call(this, str, function () { var args = arguments; return "object" != (0,_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(args[args.length - 1]) && (args = [].slice.call(args)).push(buildGroups(args, _this)), substitution.apply(this, args); }); } return _super[Symbol.replace].call(this, str, substitution); }, _wrapRegExp.apply(this, arguments); }
+function _wrapRegExp() { _wrapRegExp = function _wrapRegExp(re, groups) { return new BabelRegExp(re, void 0, groups); }; var _super = RegExp.prototype, _groups = new WeakMap(); function BabelRegExp(re, flags, groups) { var _this = new RegExp(re, flags); return _groups.set(_this, groups || _groups.get(re)), (0,_babel_runtime_helpers_setPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(_this, BabelRegExp.prototype); } function buildGroups(result, re) { var g = _groups.get(re); return Object.keys(g).reduce(function (groups, name) { return groups[name] = result[g[name]], groups; }, Object.create(null)); } return (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__["default"])(BabelRegExp, RegExp), BabelRegExp.prototype.exec = function (str) { var result = _super.exec.call(this, str); return result && (result.groups = buildGroups(result, this)), result; }, BabelRegExp.prototype[Symbol.replace] = function (str, substitution) { if ("string" == typeof substitution) { var groups = _groups.get(this); return _super[Symbol.replace].call(this, str, substitution.replace(/\$<([^>]+)>/g, function (_, name) { return "$" + groups[name]; })); } if ("function" == typeof substitution) { var _this = this; return _super[Symbol.replace].call(this, str, function () { var args = arguments; return "object" != (0,_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(args[args.length - 1]) && (args = [].slice.call(args)).push(buildGroups(args, _this)), substitution.apply(this, args); }); } return _super[Symbol.replace].call(this, str, substitution); }, _wrapRegExp.apply(this, arguments); }
+
+
 
 var createElement = function createElement(_ref) {
   var tag = _ref.tag,
       classes = _ref.classes,
       textContent = _ref.textContent,
-      children = _ref.children;
+      children = _ref.children,
+      event = _ref.event,
+      css = _ref.css;
   var element = document.createElement(tag);
   classes.forEach(function (className) {
     element.classList.add(className);
   });
   element.textContent = textContent;
   children === null || children === void 0 ? void 0 : children.forEach(function (child) {
-    element.appendChild(child);
+    if (child) element.appendChild(child);
   });
+
+  if (event) {
+    var eventType = event.eventType,
+        callback = event.callback;
+    element.addEventListener(eventType, callback);
+  }
+
+  if (css) {
+    Object.keys(css).forEach(function (attr) {
+      element.style[attr] = css[attr];
+    });
+  }
+
   return element;
 };
 
-var createCarouselOrder = function createCarouselOrder(elems) {
+var handleArrowButton = function handleArrowButton(_ref2) {
+  var _ref2$isPrev = _ref2.isPrev,
+      isPrev = _ref2$isPrev === void 0 ? false : _ref2$isPrev,
+      carouselBox = _ref2.carouselBox,
+      elemWidth = _ref2.elemWidth,
+      elemUnit = _ref2.elemUnit,
+      css = _ref2.css;
+  var curX = carouselBox.style.transform.match( /*#__PURE__*/_wrapRegExp(/(\x2D?[\d]+(\.[\d])?)/, {
+    curX: 1
+  })).groups.curX;
+  var moveX = isPrev ? +curX + +elemWidth : +curX - +elemWidth;
+  carouselBox.style.transition = "transform 0.2s";
+  carouselBox.style.transform = "translateX(".concat(moveX).concat(elemUnit, ")");
+
+  if (css) {
+    Object.keys(css).forEach(function (attr) {
+      carouselBox.style[attr] = css[attr];
+    });
+  }
+
+  setTimeout(function () {
+    var removeElem = isPrev ? carouselBox.lastChild : carouselBox.firstChild;
+    carouselBox.removeChild(removeElem);
+    var cElems = carouselBox.querySelectorAll(".carousel-elem");
+    cElems.forEach(function (box) {
+      return box.classList.remove("main-elem");
+    });
+    var mainElem = isPrev ? cElems[0] : cElems[1];
+    mainElem.classList.add("main-elem");
+    var curNum = carouselBox.parentNode.querySelector(".curNum");
+    if (curNum) curNum.textContent = mainElem.dataset.index;
+
+    if (isPrev) {
+      var firstElem = carouselBox.firstChild;
+      carouselBox.insertBefore(removeElem, firstElem);
+    } else {
+      carouselBox.appendChild(removeElem);
+    }
+
+    carouselBox.style.transition = "none";
+    carouselBox.style.transform = "translateX(".concat(+curX).concat(elemUnit, ")");
+  }, 210);
+};
+
+var createArrowBox = function createArrowBox(_ref3) {
+  var carouselBox = _ref3.carouselBox,
+      elemWidth = _ref3.elemWidth,
+      elemUnit = _ref3.elemUnit,
+      css = _ref3.css;
+  var prevArrow = createElement({
+    tag: "div",
+    classes: ["arrow", "arrow__prev"],
+    textContent: "<",
+    event: {
+      eventType: "click",
+      callback: (0,throttle_debounce__WEBPACK_IMPORTED_MODULE_4__.throttle)(500, function () {
+        handleArrowButton({
+          isPrev: true,
+          carouselBox: carouselBox,
+          elemWidth: elemWidth,
+          elemUnit: elemUnit,
+          css: css.elemCss
+        });
+      })
+    },
+    css: css.arrowCss
+  });
+  var nextArrow = createElement({
+    tag: "div",
+    classes: ["arrow", "arrow__next"],
+    textContent: ">",
+    event: {
+      eventType: "click",
+      callback: (0,throttle_debounce__WEBPACK_IMPORTED_MODULE_4__.throttle)(500, function () {
+        handleArrowButton({
+          isPrev: false,
+          carouselBox: carouselBox,
+          elemWidth: elemWidth,
+          elemUnit: elemUnit,
+          css: css.elemCss
+        });
+      })
+    },
+    css: css.arrowCss
+  });
+  var arrowBox = createElement({
+    tag: "div",
+    classes: ["arrow-box"],
+    children: [prevArrow, nextArrow],
+    css: css.arrowBoxCss
+  });
+  return arrowBox;
+};
+
+var createCarouselOrder = function createCarouselOrder(_ref4) {
+  var elems = _ref4.elems,
+      css = _ref4.css;
   var carouselCurNum = createElement({
     tag: "span",
     classes: ["orderNum", "curNum"],
@@ -145,86 +259,116 @@ var createCarouselOrder = function createCarouselOrder(elems) {
   var carouselOrder = createElement({
     tag: "div",
     classes: ["carousel-order"],
-    children: [carouselCurNum, orderBar, carouselTotalNum]
+    children: [carouselCurNum, orderBar, carouselTotalNum],
+    css: css
   });
   return carouselOrder;
 };
 
-var createCarouselElems = function createCarouselElems(elems) {
+var createCarouselElems = function createCarouselElems(_ref5) {
+  var elems = _ref5.elems,
+      css = _ref5.css;
   return elems.map(function (elem, index) {
     var cloneElem = elem.cloneNode(true);
     cloneElem.classList.add("carousel-elem");
     cloneElem.setAttribute("data-index", index === 0 ? elems.length : index);
+
+    if (css) {
+      Object.keys(css).forEach(function (attr) {
+        cloneElem.style[attr] = css[attr];
+      });
+    }
+
     return cloneElem;
   });
 };
 /**
  *
- * @param  {...Node} elems 캐러셀에 넣을 요소들
- * @returns {Node} $carousel
+ * @param  {{elems:[Node], unit:string, elemWidth:number, css:object}} carouselInfo 캐러셀 정보
+ * @returns {object} {$carousel, getInterval}
  */
 
 
-var carousel = function carousel(_ref2) {
-  var elems = _ref2.elems,
-      unit = _ref2.unit,
-      elemWidth = _ref2.elemWidth;
+var carousel = function carousel(_ref6) {
+  var elems = _ref6.elems,
+      unit = _ref6.unit,
+      elemWidth = _ref6.elemWidth,
+      css = _ref6.css;
+  var elemCss = css.elemCss,
+      orderCss = css.orderCss,
+      arrowBoxCss = css.arrowBoxCss,
+      arrowCss = css.arrowCss;
 
   if (elems.length === 1) {
     var ONLY_ONE_SCREEN = elems[0];
     return ONLY_ONE_SCREEN;
   }
 
-  var newElems = [elems[elems.length - 1]].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__["default"])(elems.slice(0, elems.length - 1)));
+  var newElems = [elems[elems.length - 1]].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(elems.slice(0, elems.length - 1)));
   var isRequireClone = elems.length === 2;
   var WIDTH_PER_ELEM = elemWidth;
   var ELEM_UNIT = unit;
-  var carouselChildren = isRequireClone ? [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__["default"])(createCarouselElems(newElems)), (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__["default"])(createCarouselElems(newElems))) : createCarouselElems(newElems);
+  var carouselChildren = isRequireClone ? [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(createCarouselElems({
+    elems: newElems,
+    css: elemCss
+  })), (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(createCarouselElems({
+    elems: newElems,
+    css: elemCss
+  }))) : createCarouselElems({
+    elems: newElems,
+    css: elemCss
+  });
   var carouselBox = createElement({
     tag: "div",
     classes: ["carousel-box"],
     children: carouselChildren
   });
-  carouselBox.style.width = "".concat(newElems.length * 100 * (isRequireClone ? 2 : 1), "%");
+  carouselBox.style.width = "".concat(newElems.length * WIDTH_PER_ELEM * (isRequireClone ? 2 : 1)).concat(ELEM_UNIT);
   carouselBox.style.transform = "translateX(-".concat(WIDTH_PER_ELEM).concat(ELEM_UNIT, ")");
-  var carouselOrder = createCarouselOrder(newElems);
+  var arrowBox = arrowBoxCss ? createArrowBox({
+    carouselBox: carouselBox,
+    elemWidth: elemWidth,
+    elemUnit: unit,
+    css: {
+      arrowBoxCss: arrowBoxCss,
+      arrowCss: arrowCss,
+      elemCss: elemCss
+    }
+  }) : null;
+  var carouselOrder = orderCss ? createCarouselOrder({
+    elems: newElems,
+    css: orderCss
+  }) : null;
   var carousel = createElement({
     tag: "div",
     classes: ["carousel"],
-    children: [carouselBox, carouselOrder]
+    children: [carouselBox, arrowBox, carouselOrder]
   });
 
-  var handleTransitionEnd = function handleTransitionEnd(_ref3) {
-    var target = _ref3.target;
-    var curX = target.style.transform.match( /*#__PURE__*/_wrapRegExp(/(\x2D[\d]+(\.[\d])?)/, {
-      curX: 1
-    })).groups.curX;
-    target.style.transition = "none";
-    target.style.transform = "translateX(".concat(+curX + +WIDTH_PER_ELEM).concat(ELEM_UNIT, ")");
-    var firstElem = target.querySelector(".carousel-elem");
-    target.removeChild(firstElem);
-    var cBoxes = target.querySelectorAll(".carousel-elem");
-    cBoxes.forEach(function (box) {
-      return box.classList.remove("main-elem");
-    });
-    var mainElem = cBoxes[1];
-    mainElem.classList.add("main-elem");
-    var curNum = target.parentNode.querySelector(".curNum");
-    curNum.textContent = mainElem.dataset.index;
-    target.appendChild(firstElem);
+  var handleTransitionStart = function handleTransitionStart(_ref7) {// next, prev 버튼의 비활성화? 어떻게?
+
+    var target = _ref7.target;
   };
 
-  var handleTransitionStart = function handleTransitionStart() {};
+  var handleTransitionEnd = function handleTransitionEnd(_ref8) {// next, prev 버튼의 활성화? 어떻게?
+
+    var target = _ref8.target;
+  };
 
   var getInterval = function getInterval() {
     return setInterval(function () {
-      var cBox = document.querySelector(".carousel-box");
-      cBox.style.transition = "transform 0.2s";
-      cBox.style.transform = "translateX(-".concat(WIDTH_PER_ELEM * 2).concat(ELEM_UNIT, ")");
-      cBox.removeEventListener("transitionstart", handleTransitionStart);
-      cBox.removeEventListener("transitionend", handleTransitionEnd);
-      cBox.addEventListener("transitionstart", handleTransitionStart);
-      cBox.addEventListener("transitionend", handleTransitionEnd);
+      var carouselBox = document.querySelector(".carousel-box");
+      handleArrowButton({
+        carouselBox: carouselBox,
+        elemWidth: elemWidth,
+        elemUnit: unit
+      });
+      carouselBox.addEventListener("transitionstart", handleTransitionStart, {
+        once: true
+      });
+      carouselBox.addEventListener("transitionend", handleTransitionEnd, {
+        once: true
+      });
     }, 3000);
   };
 
@@ -1154,19 +1298,70 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
-/* harmony import */ var _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ContentsBox.js */ "./src/screens/MainBox/Genres/Components/ContentsBox.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _ContentsBox_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ContentsBox.js */ "./src/screens/MainBox/Genres/Components/ContentsBox.js");
+/* harmony import */ var _modules_carousel_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../modules/carousel.js */ "./src/modules/carousel.js");
+
+
 
 
 
 function RecommendEvent(infoObject) {
-  _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
+  _ContentsBox_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(RecommendEvent, _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(RecommendEvent, _ContentsBox_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+RecommendEvent.prototype.mount = function () {
+  var section_banner = this.state.webtoons.section_banner;
+  var FIRST_ELEMENT = 0;
+  var list = section_banner[FIRST_ELEMENT].list;
+  var $bannerImgBox = this.$target.querySelector(".banner__imgBox");
+  var $bannerElems = list.map(function (_ref) {
+    var image = _ref.image,
+        title = _ref.title;
+    var wtTpl = "<img src=\"".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.KAKAO_DATA_URL + image, "\" alt=\"").concat(title, "\" />");
+    var div = document.createElement("div");
+    div.innerHTML = wtTpl;
+    return div;
+  });
+
+  var _carousel = (0,_modules_carousel_js__WEBPACK_IMPORTED_MODULE_3__["default"])({
+    elems: $bannerElems,
+    elemWidth: 690,
+    unit: "px",
+    css: {
+      elemCss: {
+        objectFit: "cover",
+        zIndex: "-1"
+      },
+      arrowBoxCss: {
+        justifyContent: "unset",
+        color: "#fff",
+        bottom: "12px",
+        left: "0px",
+        opacity: 0.6,
+        zIndex: 2
+      },
+      arrowCss: {
+        border: "none",
+        margin: "0px 15px"
+      },
+      orderCss: {
+        bottom: "20px",
+        left: "40px",
+        opacity: 0.6
+      }
+    }
+  }),
+      $carousel = _carousel.$carousel;
+
+  $bannerImgBox.appendChild($carousel);
+};
 
 RecommendEvent.prototype.setup = function () {
-  this.state.contentBody = "\n    <div class=\"banner__imgBox\">\n        <img src=\"https://dn-img-page.kakao.com/download/resource?kid=E8yMN/hzp2nOI0PT/XjH8y8XBKB7K53kSq88HKk\" alt=\"\uC774\uADF8\uB808\uD2B8\" />\n        <div class=\"imgBox__order\">\n          <span class=\"orderArrow\"><</span>\n          <span class=\"orderNum\">1</span>\n          <span class=\"orderBar\">/</span>\n          <span class=\"orderNum\">8</span>\n          <span class=\"orderArrow\">></span>\n        </div>\n    </div>\n";
+  this.state.contentBody = "<div class=\"banner__imgBox\"></div>";
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RecommendEvent);
@@ -1262,7 +1457,7 @@ function MainBanner(infoObject) {
 
 MainBanner.prototype.mount = function () {
   var webtoons = this.state.webtoons;
-  var $mainBanner = this.$target.querySelector("#wtMainBanner");
+  var $mainBanner = this.$target;
   var $bannerElems = webtoons.map(function (webtoon) {
     var wtTpl = (0,_Templates_bannerImgBoxTpl_js__WEBPACK_IMPORTED_MODULE_3__["default"])(webtoon);
     var div = document.createElement("div");
@@ -1273,17 +1468,27 @@ MainBanner.prototype.mount = function () {
   var _carousel = (0,_modules_carousel_js__WEBPACK_IMPORTED_MODULE_2__["default"])({
     elems: $bannerElems,
     elemWidth: 720,
-    unit: "px"
+    unit: "px",
+    css: {
+      orderCss: {
+        bottom: "60px",
+        right: "30px",
+        fontSize: "20px"
+      },
+      arrowBoxCss: {
+        top: "200px"
+      },
+      arrowCss: {
+        backgroundColor: "rgba(0,0,0,0.2)",
+        color: "#fff"
+      }
+    }
   }),
       $carousel = _carousel.$carousel,
       getInterval = _carousel.getInterval;
 
   $mainBanner.appendChild($carousel);
   this.$props.setCarousel(getInterval);
-};
-
-MainBanner.prototype.template = function () {
-  return "\n    <li id=\"wtMainBanner\" class=\"mainBox main__mainBanner\"></li>\n    ";
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainBanner);
@@ -1331,19 +1536,56 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _modules_carousel_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../modules/carousel.js */ "./src/modules/carousel.js");
 
 
 
-function SubBanner(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target);
+
+
+function SubBanner(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(SubBanner, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(SubBanner, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
-SubBanner.prototype.template = function () {
-  return "\n  <div class=\"arrow\">\n    <span><</span>\n  </div>\n  <img\n    class=\"subImg\"\n    src=\"https://dn-img-page.kakao.com/download/resource?kid=cOMNfP/hzp2fXqtDJ/Tswxss4NFzkbDtL6gdvBSK\"\n    alt=\"\uBBF8\uC290\uB7AD\uC2A4\uD0C0\"\n  />\n  <div class=\"arrow\">\n    <span>></span>\n  </div>\n";
+SubBanner.prototype.mount = function () {
+  var section_text_banner = this.state.webtoons.section_text_banner;
+  var FIRST_ELEMENT = 0;
+  var list = section_text_banner[FIRST_ELEMENT].list;
+  var $subBanner = this.$target;
+  var $bannerElems = list.map(function (_ref) {
+    var bg_img = _ref.bg_img,
+        webtoon = _ref.webtoon;
+    var wtTpl = "\n    <img class=\"subImg\" src=\n    \"".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.KAKAO_DATA_URL + bg_img, "\" alt=\"").concat(webtoon, "\" />");
+    var div = document.createElement("div");
+    div.innerHTML = wtTpl;
+    return div;
+  });
+
+  var _carousel = (0,_modules_carousel_js__WEBPACK_IMPORTED_MODULE_3__["default"])({
+    elems: $bannerElems,
+    elemWidth: 720,
+    unit: "px",
+    css: {
+      elemCss: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      },
+      arrowBoxCss: {
+        position: "absolute",
+        display: "flex",
+        justifyContent: "space-between",
+        top: "40px"
+      }
+    }
+  }),
+      $carousel = _carousel.$carousel;
+
+  $subBanner.appendChild($carousel);
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SubBanner);
@@ -2224,8 +2466,6 @@ HomeGenre.prototype.mount = function () {
         webtoons: className === "mainBanner" ? list : webtoons
       }),
       $props: {
-        sortRanking: _this.sortRanking,
-        filterContent: _this.filterContent,
         setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
@@ -2233,7 +2473,7 @@ HomeGenre.prototype.mount = function () {
 };
 
 HomeGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().mark(function _callee() {
-  var _this$state, category, genre, _yield$getJson, section_containers, list, _section_containers, _1, _2, _3, daysTopWt, newWorkTopWt, _4, romanceTopWt, rofanTopWt, dramaTopWt, blTopWt, boyTopWt, actionTopWt, dateTopWt, rcEventWt;
+  var _this$state, category, genre, _yield$getJson, section_containers, list, _section_containers, _1, _2, subBannerWt, daysTopWt, newWorkTopWt, _3, romanceTopWt, rofanTopWt, dramaTopWt, blTopWt, boyTopWt, actionTopWt, dateTopWt, rcEventWt;
 
   return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().wrap(function _callee$(_context) {
     while (1) {
@@ -2250,7 +2490,7 @@ HomeGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenera
           _yield$getJson = _context.sent;
           section_containers = _yield$getJson.section_containers;
           list = _yield$getJson.top_banner.list;
-          _section_containers = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(section_containers, 14), _1 = _section_containers[0], _2 = _section_containers[1], _3 = _section_containers[2], daysTopWt = _section_containers[3], newWorkTopWt = _section_containers[4], _4 = _section_containers[5], romanceTopWt = _section_containers[6], rofanTopWt = _section_containers[7], dramaTopWt = _section_containers[8], blTopWt = _section_containers[9], boyTopWt = _section_containers[10], actionTopWt = _section_containers[11], dateTopWt = _section_containers[12], rcEventWt = _section_containers[13];
+          _section_containers = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(section_containers, 14), _1 = _section_containers[0], _2 = _section_containers[1], subBannerWt = _section_containers[2], daysTopWt = _section_containers[3], newWorkTopWt = _section_containers[4], _3 = _section_containers[5], romanceTopWt = _section_containers[6], rofanTopWt = _section_containers[7], dramaTopWt = _section_containers[8], blTopWt = _section_containers[9], boyTopWt = _section_containers[10], actionTopWt = _section_containers[11], dateTopWt = _section_containers[12], rcEventWt = _section_containers[13];
           this.state = {
             contents: [{
               elementId: "wtMainBanner",
@@ -2265,7 +2505,9 @@ HomeGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenera
             }, {
               elementId: "wtSubBanner",
               className: "subBanner",
-              state: {}
+              state: {
+                webtoons: subBannerWt
+              }
             }, {
               elementId: "wtDaysTop",
               className: "daysTop",
@@ -3042,7 +3284,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".carousel {\n  overflow: hidden;\n  position: relative;\n  width: 100%;\n  height: 100%;\n  background-color: #eee;\n}\n.carousel-box {\n  display: flex;\n  height: 100%;\n  transition: transform 0.2s;\n}\n.carousel-order {\n  color: #fff;\n  opacity: 0.7;\n  position: absolute;\n  bottom: 60px;\n  right: 30px;\n  font-size: 20px;\n}\n\n.carousel-order > span {\n  padding: 0px 3px;\n}\n\n.carousel-elem {\n  width: 100%;\n  height: 100%;\n}\n", "",{"version":3,"sources":["webpack://./styles/carousel.css"],"names":[],"mappings":"AAAA;EACE,gBAAgB;EAChB,kBAAkB;EAClB,WAAW;EACX,YAAY;EACZ,sBAAsB;AACxB;AACA;EACE,aAAa;EACb,YAAY;EACZ,0BAA0B;AAC5B;AACA;EACE,WAAW;EACX,YAAY;EACZ,kBAAkB;EAClB,YAAY;EACZ,WAAW;EACX,eAAe;AACjB;;AAEA;EACE,gBAAgB;AAClB;;AAEA;EACE,WAAW;EACX,YAAY;AACd","sourcesContent":[".carousel {\n  overflow: hidden;\n  position: relative;\n  width: 100%;\n  height: 100%;\n  background-color: #eee;\n}\n.carousel-box {\n  display: flex;\n  height: 100%;\n  transition: transform 0.2s;\n}\n.carousel-order {\n  color: #fff;\n  opacity: 0.7;\n  position: absolute;\n  bottom: 60px;\n  right: 30px;\n  font-size: 20px;\n}\n\n.carousel-order > span {\n  padding: 0px 3px;\n}\n\n.carousel-elem {\n  width: 100%;\n  height: 100%;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".carousel {\n  overflow: hidden;\n  position: relative;\n  width: 100%;\n  height: 100%;\n}\n.carousel-box {\n  display: flex;\n  height: 100%;\n  transition: transform 0.2s;\n}\n.carousel-order {\n  color: #fff;\n  opacity: 0.7;\n  position: absolute;\n  bottom: 60px;\n  right: 30px;\n  font-size: 20px;\n}\n\n.carousel-order > span {\n  padding: 0px 3px;\n}\n\n.carousel-elem {\n  width: 100%;\n  height: 100%;\n}\n", "",{"version":3,"sources":["webpack://./styles/carousel.css"],"names":[],"mappings":"AAAA;EACE,gBAAgB;EAChB,kBAAkB;EAClB,WAAW;EACX,YAAY;AACd;AACA;EACE,aAAa;EACb,YAAY;EACZ,0BAA0B;AAC5B;AACA;EACE,WAAW;EACX,YAAY;EACZ,kBAAkB;EAClB,YAAY;EACZ,WAAW;EACX,eAAe;AACjB;;AAEA;EACE,gBAAgB;AAClB;;AAEA;EACE,WAAW;EACX,YAAY;AACd","sourcesContent":[".carousel {\n  overflow: hidden;\n  position: relative;\n  width: 100%;\n  height: 100%;\n}\n.carousel-box {\n  display: flex;\n  height: 100%;\n  transition: transform 0.2s;\n}\n.carousel-order {\n  color: #fff;\n  opacity: 0.7;\n  position: absolute;\n  bottom: 60px;\n  right: 30px;\n  font-size: 20px;\n}\n\n.carousel-order > span {\n  padding: 0px 3px;\n}\n\n.carousel-elem {\n  width: 100%;\n  height: 100%;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3123,7 +3365,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n\n.main__contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__fullButton {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__fullButton button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n  padding: 20px 15px;\n}\n\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contents__card {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contents__card .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 16px;\n  padding: 5px;\n  margin: 0px 6px;\n  color: #808e9b;\n  line-height: normal;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contents__bigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n\n.imgBox__order {\n  position: absolute;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n.main__mainBanner .imgBox__order {\n  bottom: 60px;\n  right: 20px;\n}\n.main__contents .imgBox__order {\n  bottom: 20px;\n  left: 20px;\n  opacity: 0.6;\n}\n", "",{"version":3,"sources":["webpack://./styles/main.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,sBAAsB;EACtB,mBAAmB;EACnB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,iBAAiB;EACjB,YAAY;AACd;;AAEA;EACE,yBAAyB;EACzB,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,cAAc;EACd,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;AACjB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,cAAc;AAChB;AACA;EACE,UAAU;EACV,YAAY;AACd;AACA;EACE,UAAU;EACV,WAAW;AACb;AACA;EACE,uBAAuB;EACvB,yBAAyB;EACzB,kBAAkB;EAClB,cAAc;EACd,gBAAgB;EAChB,gBAAgB;EAChB,iBAAiB;AACnB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;AACrB;AACA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,iBAAiB;EACjB,WAAW;AACb;AACA;EACE,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,kBAAkB;EAClB,WAAW;EACX,SAAS;EACT,WAAW;EACX,eAAe;EACf,YAAY;AACd;AACA;EACE,eAAe;EACf,WAAW;EACX,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,eAAe;EACf,WAAW;EACX,yBAAyB;EACzB,YAAY;AACd;;AAEA;EACE,aAAa;EACb,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;EACd,UAAU;EACV,YAAY;EACZ,WAAW;EACX,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,yBAAyB;EACzB,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,2BAA2B;AAC7B;AACA;EACE,4BAA4B;AAC9B;AACA;EACE,8BAA8B;AAChC;AACA;EACE,+BAA+B;AACjC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,aAAa;AACf;;AAEA;EACE,eAAe;EACf,UAAU;EACV,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,gBAAgB;EAChB,mBAAmB;EACnB,eAAe;EACf,cAAc;EACd,yBAAyB;AAC3B;;AAEA;EACE,aAAa;EACb,sBAAsB;EACtB,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,8BAA8B;EAC9B,YAAY;AACd;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,eAAe;EACf,cAAc;AAChB;AACA;EACE,aAAa;EACb,sBAAsB;AACxB;AACA;EACE,aAAa;EACb,6BAA6B;EAC7B,YAAY;EACZ,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,UAAU;EACV,gCAAgC;AAClC;AACA;EACE,cAAc;EACd,gCAAgC;AAClC;AACA;EACE,aAAa;EACb,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;EACf,UAAU;EACV,aAAa;EACb,WAAW;EACX,YAAY;AACd;;AAEA;EACE,mBAAmB;EACnB,yBAAyB;EACzB,aAAa;AACf;AACA;EACE,gCAAgC;EAChC,WAAW;EACX,aAAa;EACb,gBAAgB;AAClB;AACA;EACE,aAAa;EACb,8BAA8B;EAC9B,eAAe;EACf,YAAY;EACZ,eAAe;EACf,cAAc;EACd,mBAAmB;AACrB;AACA;EACE,cAAc;AAChB;AACA;EACE,eAAe;EACf,eAAe;EACf,mBAAmB;EACnB,uBAAuB;EACvB,gBAAgB;AAClB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,cAAc;AAChB;AACA;EACE,iBAAiB;AACnB;AACA;EACE,eAAe;AACjB;;AAEA;EACE,aAAa;EACb,8BAA8B;EAC9B,WAAW;EACX,YAAY;AACd;;AAEA;EACE,UAAU;EACV,aAAa;EACb,YAAY;AACd;AACA;EACE,eAAe;AACjB;AACA;;;EAGE,eAAe;AACjB;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,WAAW;AACb;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,kBAAkB;EAClB,WAAW;AACb;AACA;EACE,kBAAkB;EAClB,QAAQ;EACR,SAAS;EACT,YAAY;EACZ,eAAe;EACf,cAAc;EACd,oCAAoC;EACpC,2BAA2B;AAC7B;AACA;EACE,WAAW;EACX,kBAAkB;AACpB;AACA;EACE,aAAa;EACb,sBAAsB;EACtB,cAAc;AAChB;AACA;;EAEE,eAAe;AACjB;;AAEA;EACE,cAAc;EACd,eAAe;AACjB;AACA;EACE,eAAe;AACjB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,yBAAyB;EACzB,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;AACA;EACE,YAAY;EACZ,WAAW;AACb;AACA;EACE,YAAY;EACZ,UAAU;EACV,YAAY;AACd","sourcesContent":[".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n\n.main__contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__fullButton {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__fullButton button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n  padding: 20px 15px;\n}\n\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contents__card {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contents__card .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 16px;\n  padding: 5px;\n  margin: 0px 6px;\n  color: #808e9b;\n  line-height: normal;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contents__bigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n\n.imgBox__order {\n  position: absolute;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n.main__mainBanner .imgBox__order {\n  bottom: 60px;\n  right: 20px;\n}\n.main__contents .imgBox__order {\n  bottom: 20px;\n  left: 20px;\n  opacity: 0.6;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n\n.main__contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__fullButton {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__fullButton button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n\n.arrow-box {\n  display: flex;\n  width: 100%;\n  position: absolute;\n  justify-content: space-between;\n}\n\n.arrow-box .arrow {\n  color: #bbb;\n}\n\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 3px 11px;\n  border-radius: 20px;\n  font-size: 25px;\n  border: 2px solid #bbbbbb;\n  margin: 0px 20px;\n  line-height: normal;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n  padding: 20px 15px;\n}\n\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contents__card {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contents__card .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 16px;\n  padding: 5px;\n  margin: 0px 6px;\n  color: #808e9b;\n  line-height: normal;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contents__bigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n\n.imgBox__order {\n  position: absolute;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n.main__mainBanner .imgBox__order {\n  bottom: 60px;\n  right: 20px;\n}\n.main__contents .imgBox__order {\n  bottom: 20px;\n  left: 20px;\n  opacity: 0.6;\n}\n", "",{"version":3,"sources":["webpack://./styles/main.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,sBAAsB;EACtB,mBAAmB;EACnB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,iBAAiB;EACjB,YAAY;AACd;;AAEA;EACE,yBAAyB;EACzB,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,cAAc;EACd,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;AACjB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,cAAc;AAChB;AACA;EACE,UAAU;EACV,YAAY;AACd;AACA;EACE,UAAU;EACV,WAAW;AACb;AACA;EACE,uBAAuB;EACvB,yBAAyB;EACzB,kBAAkB;EAClB,cAAc;EACd,gBAAgB;EAChB,gBAAgB;EAChB,iBAAiB;AACnB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;AACrB;AACA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,iBAAiB;EACjB,WAAW;AACb;AACA;EACE,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,kBAAkB;EAClB,WAAW;EACX,SAAS;EACT,WAAW;EACX,eAAe;EACf,YAAY;AACd;AACA;EACE,eAAe;EACf,WAAW;EACX,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,eAAe;EACf,WAAW;EACX,yBAAyB;EACzB,YAAY;AACd;;AAEA;EACE,aAAa;EACb,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;EACd,UAAU;EACV,YAAY;EACZ,WAAW;EACX,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,yBAAyB;EACzB,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,2BAA2B;AAC7B;AACA;EACE,4BAA4B;AAC9B;AACA;EACE,8BAA8B;AAChC;AACA;EACE,+BAA+B;AACjC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,aAAa;AACf;;AAEA;EACE,eAAe;EACf,UAAU;EACV,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,WAAW;EACX,kBAAkB;EAClB,8BAA8B;AAChC;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,eAAe;EACf,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,iBAAiB;EACjB,mBAAmB;EACnB,eAAe;EACf,yBAAyB;EACzB,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,sBAAsB;EACtB,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,8BAA8B;EAC9B,YAAY;AACd;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,eAAe;EACf,cAAc;AAChB;AACA;EACE,aAAa;EACb,sBAAsB;AACxB;AACA;EACE,aAAa;EACb,6BAA6B;EAC7B,YAAY;EACZ,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,UAAU;EACV,gCAAgC;AAClC;AACA;EACE,cAAc;EACd,gCAAgC;AAClC;AACA;EACE,aAAa;EACb,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;EACf,UAAU;EACV,aAAa;EACb,WAAW;EACX,YAAY;AACd;;AAEA;EACE,mBAAmB;EACnB,yBAAyB;EACzB,aAAa;AACf;AACA;EACE,gCAAgC;EAChC,WAAW;EACX,aAAa;EACb,gBAAgB;AAClB;AACA;EACE,aAAa;EACb,8BAA8B;EAC9B,eAAe;EACf,YAAY;EACZ,eAAe;EACf,cAAc;EACd,mBAAmB;AACrB;AACA;EACE,cAAc;AAChB;AACA;EACE,eAAe;EACf,eAAe;EACf,mBAAmB;EACnB,uBAAuB;EACvB,gBAAgB;AAClB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,cAAc;AAChB;AACA;EACE,iBAAiB;AACnB;AACA;EACE,eAAe;AACjB;;AAEA;EACE,aAAa;EACb,8BAA8B;EAC9B,WAAW;EACX,YAAY;AACd;;AAEA;EACE,UAAU;EACV,aAAa;EACb,YAAY;AACd;AACA;EACE,eAAe;AACjB;AACA;;;EAGE,eAAe;AACjB;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,WAAW;AACb;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,kBAAkB;EAClB,WAAW;AACb;AACA;EACE,kBAAkB;EAClB,QAAQ;EACR,SAAS;EACT,YAAY;EACZ,eAAe;EACf,cAAc;EACd,oCAAoC;EACpC,2BAA2B;AAC7B;AACA;EACE,WAAW;EACX,kBAAkB;AACpB;AACA;EACE,aAAa;EACb,sBAAsB;EACtB,cAAc;AAChB;AACA;;EAEE,eAAe;AACjB;;AAEA;EACE,cAAc;EACd,eAAe;AACjB;AACA;EACE,eAAe;AACjB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,yBAAyB;EACzB,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;AACA;EACE,YAAY;EACZ,WAAW;AACb;AACA;EACE,YAAY;EACZ,UAAU;EACV,YAAY;AACd","sourcesContent":[".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n\n.main__contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__fullButton {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__fullButton button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n\n.arrow-box {\n  display: flex;\n  width: 100%;\n  position: absolute;\n  justify-content: space-between;\n}\n\n.arrow-box .arrow {\n  color: #bbb;\n}\n\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 3px 11px;\n  border-radius: 20px;\n  font-size: 25px;\n  border: 2px solid #bbbbbb;\n  margin: 0px 20px;\n  line-height: normal;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n  padding: 20px 15px;\n}\n\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contents__card {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contents__card .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 16px;\n  padding: 5px;\n  margin: 0px 6px;\n  color: #808e9b;\n  line-height: normal;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contents__bigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n\n.imgBox__order {\n  position: absolute;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n.main__mainBanner .imgBox__order {\n  bottom: 60px;\n  right: 20px;\n}\n.main__contents .imgBox__order {\n  bottom: 20px;\n  left: 20px;\n  opacity: 0.6;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -4798,6 +5040,162 @@ function _unsupportedIterableToArray(o, minLen) {
   if (n === "Map" || n === "Set") return Array.from(o);
   if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(o, minLen);
 }
+
+/***/ }),
+
+/***/ "./node_modules/throttle-debounce/esm/index.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/throttle-debounce/esm/index.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "debounce": () => (/* binding */ debounce),
+/* harmony export */   "throttle": () => (/* binding */ throttle)
+/* harmony export */ });
+/* eslint-disable no-undefined,no-param-reassign,no-shadow */
+
+/**
+ * Throttle execution of a function. Especially useful for rate limiting
+ * execution of handlers on events like resize and scroll.
+ *
+ * @param  {number}    delay -          A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+ * @param  {boolean}   [noTrailing] -   Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds while the
+ *                                    throttled-function is being called. If noTrailing is false or unspecified, callback will be executed one final time
+ *                                    after the last throttled-function call. (After the throttled-function has not been called for `delay` milliseconds,
+ *                                    the internal counter is reset).
+ * @param  {Function}  callback -       A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+ *                                    to `callback` when the throttled-function is executed.
+ * @param  {boolean}   [debounceMode] - If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is false (at end),
+ *                                    schedule `callback` to execute after `delay` ms.
+ *
+ * @returns {Function}  A new, throttled, function.
+ */
+function throttle (delay, noTrailing, callback, debounceMode) {
+  /*
+   * After wrapper has stopped being called, this timeout ensures that
+   * `callback` is executed at the proper times in `throttle` and `end`
+   * debounce modes.
+   */
+  var timeoutID;
+  var cancelled = false; // Keep track of the last time `callback` was executed.
+
+  var lastExec = 0; // Function to clear existing timeout
+
+  function clearExistingTimeout() {
+    if (timeoutID) {
+      clearTimeout(timeoutID);
+    }
+  } // Function to cancel next exec
+
+
+  function cancel() {
+    clearExistingTimeout();
+    cancelled = true;
+  } // `noTrailing` defaults to falsy.
+
+
+  if (typeof noTrailing !== 'boolean') {
+    debounceMode = callback;
+    callback = noTrailing;
+    noTrailing = undefined;
+  }
+  /*
+   * The `wrapper` function encapsulates all of the throttling / debouncing
+   * functionality and when executed will limit the rate at which `callback`
+   * is executed.
+   */
+
+
+  function wrapper() {
+    for (var _len = arguments.length, arguments_ = new Array(_len), _key = 0; _key < _len; _key++) {
+      arguments_[_key] = arguments[_key];
+    }
+
+    var self = this;
+    var elapsed = Date.now() - lastExec;
+
+    if (cancelled) {
+      return;
+    } // Execute `callback` and update the `lastExec` timestamp.
+
+
+    function exec() {
+      lastExec = Date.now();
+      callback.apply(self, arguments_);
+    }
+    /*
+     * If `debounceMode` is true (at begin) this is used to clear the flag
+     * to allow future `callback` executions.
+     */
+
+
+    function clear() {
+      timeoutID = undefined;
+    }
+
+    if (debounceMode && !timeoutID) {
+      /*
+       * Since `wrapper` is being called for the first time and
+       * `debounceMode` is true (at begin), execute `callback`.
+       */
+      exec();
+    }
+
+    clearExistingTimeout();
+
+    if (debounceMode === undefined && elapsed > delay) {
+      /*
+       * In throttle mode, if `delay` time has been exceeded, execute
+       * `callback`.
+       */
+      exec();
+    } else if (noTrailing !== true) {
+      /*
+       * In trailing throttle mode, since `delay` time has not been
+       * exceeded, schedule `callback` to execute `delay` ms after most
+       * recent execution.
+       *
+       * If `debounceMode` is true (at begin), schedule `clear` to execute
+       * after `delay` ms.
+       *
+       * If `debounceMode` is false (at end), schedule `callback` to
+       * execute after `delay` ms.
+       */
+      timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
+    }
+  }
+
+  wrapper.cancel = cancel; // Return the wrapper function.
+
+  return wrapper;
+}
+
+/* eslint-disable no-undefined */
+/**
+ * Debounce execution of a function. Debouncing, unlike throttling,
+ * guarantees that a function is only executed a single time, either at the
+ * very beginning of a series of calls, or at the very end.
+ *
+ * @param  {number}   delay -         A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+ * @param  {boolean}  [atBegin] -     Optional, defaults to false. If atBegin is false or unspecified, callback will only be executed `delay` milliseconds
+ *                                  after the last debounced-function call. If atBegin is true, callback will be executed only at the first debounced-function call.
+ *                                  (After the throttled-function has not been called for `delay` milliseconds, the internal counter is reset).
+ * @param  {Function} callback -      A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+ *                                  to `callback` when the debounced-function is executed.
+ *
+ * @returns {Function} A new, debounced function.
+ */
+
+function debounce (delay, atBegin, callback) {
+  return callback === undefined ? throttle(delay, atBegin, false) : throttle(delay, callback, atBegin !== false);
+}
+
+
+//# sourceMappingURL=index.js.map
+
 
 /***/ })
 
