@@ -12,10 +12,86 @@ module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/
 
 /***/ }),
 
-/***/ "./src/carousel.js":
-/*!*************************!*\
-  !*** ./src/carousel.js ***!
-  \*************************/
+/***/ "./src/constants.js":
+/*!**************************!*\
+  !*** ./src/constants.js ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "HEROKU_SERVER_URL": () => (/* binding */ HEROKU_SERVER_URL),
+/* harmony export */   "SERVER_FETCH_URL": () => (/* binding */ SERVER_FETCH_URL),
+/* harmony export */   "KAKAO_DATA_URL": () => (/* binding */ KAKAO_DATA_URL),
+/* harmony export */   "API_POINT": () => (/* binding */ API_POINT)
+/* harmony export */ });
+var SERVER_FETCH_URL = "http://127.0.0.1:3000/";
+var HEROKU_SERVER_URL = "https://fe-kakaopage-back.herokuapp.com/";
+var KAKAO_DATA_URL = "https://dn-img-page.kakao.com/download/resource?kid=";
+
+var API_POINT = function API_POINT(_ref) {
+  var categoryId = _ref.categoryId,
+      genreId = _ref.genreId;
+  return "v2/?categoryId=".concat(categoryId, "&genreId=").concat(genreId);
+};
+
+
+
+/***/ }),
+
+/***/ "./src/enums/CategoryId.js":
+/*!*********************************!*\
+  !*** ./src/enums/CategoryId.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var CategoryId = {
+  webtoon: 10,
+  webnovel: 11,
+  movie: 21,
+  broadcast: 22,
+  book: 16
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CategoryId);
+
+/***/ }),
+
+/***/ "./src/enums/GenreId.js":
+/*!******************************!*\
+  !*** ./src/enums/GenreId.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var GenreId = {
+  home: 10000,
+  days: 1002,
+  webtoon: 1000,
+  boy: 115,
+  drama: 116,
+  romance: 121,
+  rofan: 69,
+  action: 112,
+  bl: 119
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GenreId);
+
+/***/ }),
+
+/***/ "./src/modules/carousel.js":
+/*!*********************************!*\
+  !*** ./src/modules/carousel.js ***!
+  \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -89,18 +165,20 @@ var createCarouselElems = function createCarouselElems(elems) {
  */
 
 
-var carousel = function carousel() {
-  for (var _len = arguments.length, elems = new Array(_len), _key = 0; _key < _len; _key++) {
-    elems[_key] = arguments[_key];
-  }
+var carousel = function carousel(_ref2) {
+  var elems = _ref2.elems,
+      unit = _ref2.unit,
+      elemWidth = _ref2.elemWidth;
 
   if (elems.length === 1) {
-    return elems[0];
+    var ONLY_ONE_SCREEN = elems[0];
+    return ONLY_ONE_SCREEN;
   }
 
   var newElems = [elems[elems.length - 1]].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__["default"])(elems.slice(0, elems.length - 1)));
   var isRequireClone = elems.length === 2;
-  var WIDTH_PER_ELEM = 100 / (newElems.length * (isRequireClone ? 2 : 1));
+  var WIDTH_PER_ELEM = elemWidth;
+  var ELEM_UNIT = unit;
   var carouselChildren = isRequireClone ? [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__["default"])(createCarouselElems(newElems)), (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__["default"])(createCarouselElems(newElems))) : createCarouselElems(newElems);
   var carouselBox = createElement({
     tag: "div",
@@ -108,7 +186,7 @@ var carousel = function carousel() {
     children: carouselChildren
   });
   carouselBox.style.width = "".concat(newElems.length * 100 * (isRequireClone ? 2 : 1), "%");
-  carouselBox.style.transform = "translateX(-".concat(WIDTH_PER_ELEM, "%)");
+  carouselBox.style.transform = "translateX(-".concat(WIDTH_PER_ELEM).concat(ELEM_UNIT, ")");
   var carouselOrder = createCarouselOrder(newElems);
   var carousel = createElement({
     tag: "div",
@@ -116,13 +194,13 @@ var carousel = function carousel() {
     children: [carouselBox, carouselOrder]
   });
 
-  var handleTransitionEnd = function handleTransitionEnd(_ref2) {
-    var target = _ref2.target;
+  var handleTransitionEnd = function handleTransitionEnd(_ref3) {
+    var target = _ref3.target;
     var curX = target.style.transform.match( /*#__PURE__*/_wrapRegExp(/(\x2D[\d]+(\.[\d])?)/, {
       curX: 1
     })).groups.curX;
     target.style.transition = "none";
-    target.style.transform = "translateX(".concat(+curX + +WIDTH_PER_ELEM, "%)");
+    target.style.transform = "translateX(".concat(+curX + +WIDTH_PER_ELEM).concat(ELEM_UNIT, ")");
     var firstElem = target.querySelector(".carousel-elem");
     target.removeChild(firstElem);
     var cBoxes = target.querySelectorAll(".carousel-elem");
@@ -142,7 +220,7 @@ var carousel = function carousel() {
     return setInterval(function () {
       var cBox = document.querySelector(".carousel-box");
       cBox.style.transition = "transform 0.2s";
-      cBox.style.transform = "translateX(-".concat(WIDTH_PER_ELEM * 2, "%)");
+      cBox.style.transform = "translateX(-".concat(WIDTH_PER_ELEM * 2).concat(ELEM_UNIT, ")");
       cBox.removeEventListener("transitionstart", handleTransitionStart);
       cBox.removeEventListener("transitionend", handleTransitionEnd);
       cBox.addEventListener("transitionstart", handleTransitionStart);
@@ -160,55 +238,49 @@ var carousel = function carousel() {
 
 /***/ }),
 
-/***/ "./src/categories.js":
-/*!***************************!*\
-  !*** ./src/categories.js ***!
-  \***************************/
+/***/ "./src/modules/serviceUtils.js":
+/*!*************************************!*\
+  !*** ./src/modules/serviceUtils.js ***!
+  \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "formatUserCount": () => (/* binding */ formatUserCount),
+/* harmony export */   "getComponentsTemplate": () => (/* binding */ getComponentsTemplate),
+/* harmony export */   "getDay": () => (/* binding */ getDay),
+/* harmony export */   "getKoreaDay": () => (/* binding */ getKoreaDay),
+/* harmony export */   "getKoreaDays": () => (/* binding */ getKoreaDays)
 /* harmony export */ });
-/* harmony import */ var _screens_Webtoon_webtoonGenres_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./screens/Webtoon/webtoonGenres.js */ "./src/screens/Webtoon/webtoonGenres.js");
-/* harmony import */ var _screens_Webnovel_webnovelGenres_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./screens/Webnovel/webnovelGenres.js */ "./src/screens/Webnovel/webnovelGenres.js");
-/* harmony import */ var _screens_Home_homeGenres_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./screens/Home/homeGenres.js */ "./src/screens/Home/homeGenres.js");
-/* harmony import */ var _screens_Movie_movieGenres_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./screens/Movie/movieGenres.js */ "./src/screens/Movie/movieGenres.js");
-/* harmony import */ var _screens_Broadcast_broadcastGenres_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./screens/Broadcast/broadcastGenres.js */ "./src/screens/Broadcast/broadcastGenres.js");
-/* harmony import */ var _screens_Book_bookGenres_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./screens/Book/bookGenres.js */ "./src/screens/Book/bookGenres.js");
-
-
-
-
-
-
-var categories = {
-  home: _screens_Home_homeGenres_js__WEBPACK_IMPORTED_MODULE_2__["default"],
-  webtoon: _screens_Webtoon_webtoonGenres_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  webnovel: _screens_Webnovel_webnovelGenres_js__WEBPACK_IMPORTED_MODULE_1__["default"],
-  movie: _screens_Movie_movieGenres_js__WEBPACK_IMPORTED_MODULE_3__["default"],
-  broadcast: _screens_Broadcast_broadcastGenres_js__WEBPACK_IMPORTED_MODULE_4__["default"],
-  book: _screens_Book_bookGenres_js__WEBPACK_IMPORTED_MODULE_5__["default"]
+var formatUserCount = function formatUserCount(userCount) {
+  return (userCount / 10000).toFixed(1) + "만명";
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (categories);
 
-/***/ }),
+var getComponentsTemplate = function getComponentsTemplate(components) {
+  return components === null || components === void 0 ? void 0 : components.reduce(function (tags, component) {
+    tags += component.template();
+    return tags;
+  }, "");
+};
 
-/***/ "./src/constants.js":
-/*!**************************!*\
-  !*** ./src/constants.js ***!
-  \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+var getDay = function getDay() {
+  var day = new Date().getDay();
+  var SUNDAY = 0;
+  var SUNDAY_FOR_SERVICE = 7;
+  return day === SUNDAY ? SUNDAY_FOR_SERVICE : day;
+};
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "HEROKU_SERVER_URL": () => (/* binding */ HEROKU_SERVER_URL),
-/* harmony export */   "SERVER_FETCH_URL": () => (/* binding */ SERVER_FETCH_URL)
-/* harmony export */ });
-var SERVER_FETCH_URL = "http://127.0.0.1:3000/";
-var HEROKU_SERVER_URL = "https://fe-kakaopage-back.herokuapp.com/";
+var getKoreaDays = function getKoreaDays() {
+  return ["일", "월", "화", "수", "목", "금", "토", "완결"];
+};
+
+var getKoreaDay = function getKoreaDay() {
+  var day = new Date().getDay();
+  var days = getKoreaDays();
+  return days[day];
+};
+
 
 
 /***/ }),
@@ -225,9 +297,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _Components_Header_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Components/Header.js */ "./src/screens/Components/Header.js");
-/* harmony import */ var _Components_MainBox_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/MainBox.js */ "./src/screens/Components/MainBox.js");
-/* harmony import */ var _Components_Footer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/Footer.js */ "./src/screens/Components/Footer.js");
+/* harmony import */ var _Header_Header_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Header/Header.js */ "./src/screens/Header/Header.js");
+/* harmony import */ var _MainBox_MainBox_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MainBox/MainBox.js */ "./src/screens/MainBox/MainBox.js");
+/* harmony import */ var _Footer_Footer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Footer/Footer.js */ "./src/screens/Footer/Footer.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils.js */ "./src/utils.js");
 
 
@@ -249,7 +321,7 @@ App.prototype.mount = function () {
       categories = _this$state.categories,
       genres = _this$state.genres,
       category = _this$state.category;
-  new _Components_Header_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
+  new _Header_Header_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
     $target: $header,
     state: {
       selected: category,
@@ -259,7 +331,7 @@ App.prototype.mount = function () {
       updateCategory: this.updateCategory.bind(this)
     }
   });
-  new _Components_MainBox_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+  new _MainBox_MainBox_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
     $target: $main,
     state: {
       category: category,
@@ -267,7 +339,7 @@ App.prototype.mount = function () {
       selected: "home"
     }
   });
-  new _Components_Footer_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+  new _Footer_Footer_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
     $target: $footer
   });
 };
@@ -286,58 +358,6 @@ App.prototype.template = function () {
 
 /***/ }),
 
-/***/ "./src/screens/Book/bookGenres.js":
-/*!****************************************!*\
-  !*** ./src/screens/Book/bookGenres.js ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/dummy.js */ "./src/screens/Components/dummy.js");
-
-var bookGenres = {
-  home: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  serial: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  bestseller: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  ranking: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  thriller: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  selfDev: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  learning: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (bookGenres);
-
-/***/ }),
-
-/***/ "./src/screens/Broadcast/broadcastGenres.js":
-/*!**************************************************!*\
-  !*** ./src/screens/Broadcast/broadcastGenres.js ***!
-  \**************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/dummy.js */ "./src/screens/Components/dummy.js");
-
-var broadcastGenres = {
-  home: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  entertain: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  drama: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  animation: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  overseas: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  ranking: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  genreAll: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (broadcastGenres);
-
-/***/ }),
-
 /***/ "./src/screens/Component.js":
 /*!**********************************!*\
   !*** ./src/screens/Component.js ***!
@@ -351,6 +371,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -358,27 +382,59 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
-function Component(_ref) {
-  var $target = _ref.$target,
-      state = _ref.state,
-      $props = _ref.$props;
-  this.$target = $target;
-  this.$props = $props;
-  this.state = state || {};
-  this.eventTypes = [];
-  this.setup();
-  this.render();
-  this.setEvent();
+
+
+function Component(_x) {
+  return _Component.apply(this, arguments);
+}
+
+function _Component() {
+  _Component = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().mark(function _callee2(_ref) {
+    var $target, state, $props;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            $target = _ref.$target, state = _ref.state, $props = _ref.$props;
+            this.$target = $target;
+            this.$props = $props;
+            this.state = state || {};
+            this.eventTypes = [];
+            _context2.next = 7;
+            return this.setup();
+
+          case 7:
+            this.render();
+            this.setEvent();
+
+          case 9:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, this);
+  }));
+  return _Component.apply(this, arguments);
 }
 
 Component.prototype = {
-  setup: function setup() {},
+  setup: function setup() {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
   mount: function mount() {},
   render: function render() {
-    if (this.$target) {
-      this.$target.innerHTML = this.template();
-      this.mount();
-    }
+    this.$target.innerHTML = this.template();
+    this.mount();
   },
   template: function template() {
     return "";
@@ -411,389 +467,10 @@ Component.prototype = {
 
 /***/ }),
 
-/***/ "./src/screens/Components/BannerImage.js":
-/*!***********************************************!*\
-  !*** ./src/screens/Components/BannerImage.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-
-
-
-
-function BannerImage(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, target, state);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(BannerImage, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
-
-BannerImage.prototype.template = function () {
-  var _this$state = this.state,
-      title = _this$state.title,
-      userCount = _this$state.userCount,
-      waitForFree = _this$state.waitForFree,
-      mainDesc = _this$state.mainDesc,
-      imageHorizontalUrl = _this$state.imageHorizontalUrl;
-  return "\n    <div class=\"banner__imgBox\">\n      <img src=\"".concat(imageHorizontalUrl, "\" alt=").concat(title, " />\n      <div class=\"imgBox__info\">\n        <div class=\"infoTitle\">\n          <span>").concat(title, "</span>\n        </div>\n        <div class=\"infoBody\">\n          <span class=\"info-event\">NEW</span>\n          <span class=\"info-category\">\n            ").concat(waitForFree ? '<i class="fas fa-clock"></i>' : "", " \uC6F9\uD230\n          </span>\n          <span class=\"span-bar\"> | </span>\n          <span class=\"info-users\">\n            <i class=\"fas fa-user\"></i> ").concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(userCount), "\n          </span>\n        </div>\n      </div>\n      <div class=\"banner__message\">\n        <span>").concat(mainDesc, "</span>\n      </div>\n    </div>\n");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BannerImage);
-
-/***/ }),
-
-/***/ "./src/screens/Components/BigCardList.js":
-/*!***********************************************!*\
-  !*** ./src/screens/Components/BigCardList.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _BannerImage_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BannerImage.js */ "./src/screens/Components/BannerImage.js");
-
-
-
-
-function BigCardList() {}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(BigCardList, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-BigCardList.prototype.template = function () {
-  var webtoons = JSON.parse(localStorage.getItem("webtoons"));
-  var wtForBigCard = webtoons.filter(function (wt) {
-    return wt.status === "N" && wt.imageHorizontalUrl;
-  });
-  var bigCardsTemplates = wtForBigCard.sort(function (c1, c2) {
-    return c2.rank - c1.rank;
-  }).slice(0, 2).map(function (bigCardInfo) {
-    return new _BannerImage_js__WEBPACK_IMPORTED_MODULE_2__["default"]("_", bigCardInfo);
-  }).map(function (bannerImage) {
-    return "<li class=\"bigCard\">".concat(bannerImage.template(), "</li>");
-  });
-  return "\n  <ul class=\"contentsBigCard\">\n    ".concat(bigCardsTemplates.join(""), "\n  </ul>");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BigCardList);
-
-/***/ }),
-
-/***/ "./src/screens/Components/Card.js":
-/*!****************************************!*\
-  !*** ./src/screens/Components/Card.js ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-
-
-
-
-function Card(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, target, state);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(Card, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
-
-Card.prototype.template = function () {
-  var _this$state = this.state,
-      title = _this$state.title,
-      imageVerticalUrl = _this$state.imageVerticalUrl,
-      rank = _this$state.rank,
-      adult = _this$state.adult,
-      status = _this$state.status,
-      userCount = _this$state.userCount,
-      waitForFree = _this$state.waitForFree;
-  return "<li class=\"card\">\n    <div class=\"card__imgBox\">\n      <img\n        class=\"cardImg\"\n        src=\"".concat(imageVerticalUrl, "\"\n        alt=\"").concat(title, "\"\n      />\n      <div class=\"imgInfo\">\n        <span class=\"rank\">\u272D ").concat(rank, "</span>\n        ").concat(waitForFree ? '<span><i class="fas fa-clock"></i></span>' : "<span>웹툰</span>", "\n      </div>\n    </div>\n    <div class=\"card__title\">\n      <span>").concat(title, "</span>\n    </div>\n    <div class=\"card__info\">\n      ").concat(status ? "<span class=\"info-status ".concat(status === "N" ? "red" : "blue", "\">").concat(status, "</span>") : "", "\n      ").concat(adult ? "<span class=\"info-age\">15</span>" : "", "\n      <span class=\"info-user\">\n        <i class=\"fas fa-user\"></i>\n        <span>").concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(userCount), "</span>\n      </span>\n    </div>\n  </li>");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Card);
-
-/***/ }),
-
-/***/ "./src/screens/Components/CardInfoRow.js":
-/*!***********************************************!*\
-  !*** ./src/screens/Components/CardInfoRow.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-
-
-
-
-function CardInfoRow(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, target, state);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(CardInfoRow, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
-
-CardInfoRow.prototype.template = function () {
-  var info = this.state;
-  return "\n  <li class=\"dateContent\">\n    <div class=\"contentRow\">\n      <div class=\"dateRank\">".concat(info.ranking, "</div>\n      <div class=\"contentImgBox\">\n        ").concat(info.waitForFree ? "<span class='content-waitFreeIcon'><i class='fas fa-clock'></i></span>" : "<span>웹툰</span>", "\n        <img\n          src=\"").concat(info.imagePosterUrl, "\"\n          alt=\"").concat(info.title, "\"\n        />\n      </div>\n      <div class=\"contentInfo\">\n        <div class=\"info__titleInfo\">\n          ").concat(info.status ? "<span class=\"info__title-status ".concat(info.status === "N" ? "red" : "blue", "\">").concat(info.status, "</span>") : "", "\n          ").concat(info.age ? '<span class="info__title-age info-age">15</span>' : "", "\n          <span class=\"info__title\">").concat(info.title, "</span>\n        </div>\n        <div class=\"infoBody\">\n          <i class=\"fas fa-user\"></i>\n          <span>").concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__.formatUserCount)(info.userCount), "</span>\n          <span class=\"span-bar\">|</span>\n          ").concat(info.waitForFree ? '<span>기다무웹툰</span><span class="span-bar"> | </span>' : "", "\n          <span>").concat(info.genre.join(","), "</span>\n          <span class=\"span-bar\">|</span>\n          <span>").concat(info.write ? info.write + "," : "", "\n          ").concat(info.paint ? info.paint + "," : "").concat(info.originalAuthor, "\n          </span>\n        </div>\n        <div class=\"info-footer\">\n          <span>").concat(info.days.join(","), " \uC5F0\uC7AC</span>\n        </div>\n      </div>\n    </div>\n  </li>");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CardInfoRow);
-
-/***/ }),
-
-/***/ "./src/screens/Components/CategoryList.js":
-/*!************************************************!*\
-  !*** ./src/screens/Components/CategoryList.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-
-
-
-function CategoryList(infoObject) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(CategoryList, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-CategoryList.prototype.template = function () {
-  var _this$state = this.state,
-      categories = _this$state.categories,
-      selected = _this$state.selected;
-  return categories === null || categories === void 0 ? void 0 : categories.map(function (cInfo) {
-    var name = cInfo.name,
-        category = cInfo.category,
-        waitForFree = cInfo.waitForFree,
-        newAlert = cInfo.newAlert;
-    return "\n        <li class=\"header__nav-item \n        ".concat(selected === category ? "selected" : "", "\" data-category=\"").concat(category, "\">\n          <span>\n            ").concat(name, "\n            ").concat(waitForFree ? ' ・ <i class="fas fa-clock"></i>' : "", "\n          </span>\n          ").concat(newAlert ? '<span class="yellow-dot"></span>' : "", "\n        </li>");
-  }).join("");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CategoryList);
-
-/***/ }),
-
-/***/ "./src/screens/Components/ContentsBox.js":
-/*!***********************************************!*\
-  !*** ./src/screens/Components/ContentsBox.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-
-
-
-function ContentsBox(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
-  this.state.contentsBodyDiv = this.createContentBodyDiv();
-  this.render();
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(ContentsBox, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-ContentsBox.prototype.createContentBodyDiv = function () {
-  var _this$state = this.state,
-      classes = _this$state.classes,
-      contents = _this$state.contents,
-      contentsBody = _this$state.contentsBody;
-  var contentsBodyDiv = document.createElement("div");
-  contentsBodyDiv.classList.add("contents__body");
-  contentsBodyDiv.setAttribute("data-contents", contents);
-
-  if (classes) {
-    classes.forEach(function (className) {
-      contentsBodyDiv.classList.add(className);
-    });
-  }
-
-  contentsBodyDiv.innerHTML = (contentsBody === null || contentsBody === void 0 ? void 0 : contentsBody.template()) || "";
-  return contentsBodyDiv;
-};
-
-ContentsBox.prototype.template = function () {
-  var _this$state2 = this.state,
-      title = _this$state2.title,
-      titleNum = _this$state2.titleNum,
-      contentsBodyDiv = _this$state2.contentsBodyDiv;
-  return "<li class=\"mainBox main__contents\">\n   <div class=\"contents\">\n     <div class=\"contents__header\">\n       <div class=\"contents__title\">\n         <span>".concat(title, "</span>\n         ").concat(titleNum ? "<span class=\"titleNum\">(".concat(titleNum, ")</span>") : "", " \n       </div>\n       <div class=\"contents__more\">\n         <span>\uB354\uBCF4\uAE30></span>\n       </div>\n     </div>\n     ").concat(contentsBodyDiv.outerHTML, "\n   </div>\n </li>");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ContentsBox);
-
-/***/ }),
-
-/***/ "./src/screens/Components/DateTop.js":
-/*!*******************************************!*\
-  !*** ./src/screens/Components/DateTop.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
-/* harmony import */ var _CardInfoRow_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CardInfoRow.js */ "./src/screens/Components/CardInfoRow.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-
-
-
-
-
-function DateTop(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_4__["default"].call(this, target, state);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.createExtendsRelation)(DateTop, _Component_js__WEBPACK_IMPORTED_MODULE_4__["default"]);
-
-DateTop.prototype.template = function () {
-  var koreaDay = this.state.koreaDay;
-  var webtoons = JSON.parse(localStorage.getItem("webtoons"));
-  var dateTopCards = webtoons.filter(function (wt) {
-    return wt.days.includes(koreaDay);
-  }).sort(function (wt1, wt2) {
-    return wt2.rank - wt1.rank;
-  }).slice(0, 3).map(function (card, index) {
-    return new _CardInfoRow_js__WEBPACK_IMPORTED_MODULE_1__["default"]("_", _objectSpread(_objectSpread({}, card), {}, {
-      ranking: index + 1
-    }));
-  });
-  return "\n  <ul class=\"contents__date\">\n    ".concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_3__.getComponentsTemplate)(dateTopCards), "\n  </ul>");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DateTop);
-
-/***/ }),
-
-/***/ "./src/screens/Components/DaysList.js":
-/*!********************************************!*\
-  !*** ./src/screens/Components/DaysList.js ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _Card_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Card.js */ "./src/screens/Components/Card.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
-
-
-
-
-
-function DaysList(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.createExtendsRelation)(DaysList, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-DaysList.prototype.template = function () {
-  var _this = this;
-
-  var webtoons = JSON.parse(localStorage.getItem("webtoons"));
-  var cardList = webtoons.filter(function (webtoon) {
-    return webtoon.days.includes(_this.state.koreaDay);
-  });
-  var sliceCardList = cardList.slice(0, this.state.count ? this.state.count : cardList.length);
-  var cards = sliceCardList.map(function (cardInfo) {
-    return new _Card_js__WEBPACK_IMPORTED_MODULE_0__["default"]("_", cardInfo);
-  });
-  return (0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_3__.getComponentsTemplate)(cards);
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DaysList);
-
-/***/ }),
-
-/***/ "./src/screens/Components/DaysTop.js":
-/*!*******************************************!*\
-  !*** ./src/screens/Components/DaysTop.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-
-
-
-function DaysTop(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
-  this.render();
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(DaysTop, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-DaysTop.prototype.template = function () {
-  var _this$state = this.state,
-      days = _this$state.days,
-      koreaDay = _this$state.koreaDay,
-      daysList = _this$state.daysList;
-  return "\n      <ul class=\"contents__daysNav\">\n      ".concat(days.map(function (day) {
-    return "<li class='daysNav-item ".concat(koreaDay === day ? " selected" : "", "'>\n              ").concat(day, "\n            </li>");
-  }).join(""), "\n          </ul>\n          <ul class=\"contentsCard\">\n            ").concat(daysList === null || daysList === void 0 ? void 0 : daysList.template(), "\n          </ul>");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DaysTop);
-
-/***/ }),
-
-/***/ "./src/screens/Components/Footer.js":
-/*!******************************************!*\
-  !*** ./src/screens/Components/Footer.js ***!
-  \******************************************/
+/***/ "./src/screens/Footer/Footer.js":
+/*!**************************************!*\
+  !*** ./src/screens/Footer/Footer.js ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -820,10 +497,10 @@ Footer.prototype.template = function () {
 
 /***/ }),
 
-/***/ "./src/screens/Components/FullButton.js":
-/*!**********************************************!*\
-  !*** ./src/screens/Components/FullButton.js ***!
-  \**********************************************/
+/***/ "./src/screens/Header/Components/CategoryList.js":
+/*!*******************************************************!*\
+  !*** ./src/screens/Header/Components/CategoryList.js ***!
+  \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -831,116 +508,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
 
 
 
-function FullButton(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target);
+function CategoryList(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(FullButton, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(CategoryList, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
-FullButton.prototype.template = function () {
-  return "\n  <div class=\"main__button\">\n    <button>\n      <span><b>\uCE74\uCE74\uC624\uD398\uC774\uC9C0</b> \uC571\uC73C\uB85C \uBCF4\uAE30 ></span>\n    </button>\n  </div>";
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FullButton);
-
-/***/ }),
-
-/***/ "./src/screens/Components/GenreList.js":
-/*!*********************************************!*\
-  !*** ./src/screens/Components/GenreList.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-
-
-
-function GenreList(infoObject) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(GenreList, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-GenreList.prototype.setEvent = function () {
-  var updateGenre = this.$props.updateGenre;
-  this.addEvent("click", ".navGenre-item", function (_ref) {
-    var target = _ref.target;
-    var $eventTarget = target.closest(".navGenre-item");
-    updateGenre($eventTarget.dataset.genre);
-  });
-};
-
-GenreList.prototype.template = function () {
+CategoryList.prototype.template = function () {
   var _this$state = this.state,
-      genres = _this$state.genres,
+      categories = _this$state.categories,
       selected = _this$state.selected;
-  return genres.reduce(function (tags, gInfo) {
-    tags += "\n          <li class=\"navGenre-item ".concat(gInfo.genre === selected ? "selected" : "", "\"\n          data-genre=\"").concat(gInfo.genre, "\">\n              ").concat(gInfo.name, "\n          </li>");
-    return tags;
-  }, "");
+  return categories === null || categories === void 0 ? void 0 : categories.map(function (cInfo) {
+    var name = cInfo.name,
+        category = cInfo.category,
+        waitForFree = cInfo.waitForFree,
+        newAlert = cInfo.newAlert;
+    return "\n        <li class=\"header__nav-item \n        ".concat(selected === category ? "selected" : "", "\" data-category=\"").concat(category, "\">\n          <span>\n            ").concat(name, "\n            ").concat(waitForFree ? ' ・ <i class="fas fa-clock"></i>' : "", "\n          </span>\n          ").concat(newAlert ? '<span class="yellow-dot"></span>' : "", "\n        </li>");
+  }).join("");
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GenreList);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CategoryList);
 
 /***/ }),
 
-/***/ "./src/screens/Components/GenreTop.js":
-/*!********************************************!*\
-  !*** ./src/screens/Components/GenreTop.js ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../serviceUtils.js */ "./src/serviceUtils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _Card_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Card.js */ "./src/screens/Components/Card.js");
-
-
-
-
-
-function GenreTop(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, target, state);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(GenreTop, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
-
-GenreTop.prototype.template = function () {
-  var _this = this;
-
-  var webtoons = JSON.parse(localStorage.getItem("webtoons"));
-  var genreCards = webtoons.filter(function (wt) {
-    return wt.genre.includes(_this.state.genre);
-  }).map(function (cardInfo) {
-    return new _Card_js__WEBPACK_IMPORTED_MODULE_3__["default"]("_", cardInfo);
-  });
-  return "\n        <ul class=\"contentsCard\">\n          ".concat((0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__.getComponentsTemplate)(genreCards), "\n        </ul>");
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GenreTop);
-
-/***/ }),
-
-/***/ "./src/screens/Components/Header.js":
-/*!******************************************!*\
-  !*** ./src/screens/Components/Header.js ***!
-  \******************************************/
+/***/ "./src/screens/Header/Header.js":
+/*!**************************************!*\
+  !*** ./src/screens/Header/Header.js ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -950,7 +549,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _CategoryList_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CategoryList.js */ "./src/screens/Components/CategoryList.js");
+/* harmony import */ var _Components_CategoryList_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/CategoryList.js */ "./src/screens/Header/Components/CategoryList.js");
 
 
 
@@ -964,7 +563,7 @@ function Header(infoObject) {
 Header.prototype.setEvent = function () {
   var _this = this;
 
-  this.addEvent("click", ".header__nav-item", function (_ref) {
+  var handleAddEvent = function handleAddEvent(_ref) {
     var target = _ref.target;
     var updateCategory = _this.$props.updateCategory;
     var $eventTarget = target.closest(".header__nav-item");
@@ -974,12 +573,14 @@ Header.prototype.setEvent = function () {
     _this.setState({
       selected: category
     });
-  });
+  };
+
+  this.addEvent("click", ".header__nav-item", handleAddEvent);
 };
 
 Header.prototype.mount = function () {
   var $headerNav = this.$target.querySelector(".header__nav");
-  new _CategoryList_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+  new _Components_CategoryList_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
     $target: $headerNav,
     state: {
       selected: this.state.selected,
@@ -996,10 +597,10 @@ Header.prototype.template = function () {
 
 /***/ }),
 
-/***/ "./src/screens/Components/MainBanner.js":
-/*!**********************************************!*\
-  !*** ./src/screens/Components/MainBanner.js ***!
-  \**********************************************/
+/***/ "./src/screens/MainBox/Genres/Book/bookGenres.js":
+/*!*******************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Book/bookGenres.js ***!
+  \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1007,82 +608,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _BannerImage_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./BannerImage.js */ "./src/screens/Components/BannerImage.js");
-/* harmony import */ var _carousel_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../carousel.js */ "./src/carousel.js");
+/* harmony import */ var _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/Dummy.js */ "./src/screens/MainBox/Genres/Components/Dummy.js");
 
-
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-
-
-
-
-
-function MainBanner(target, state) {
-  var _this = this;
-
-  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, target, state);
-
-  if (this.state.interval) {
-    clearInterval(interval);
-  }
-
-  var webtoons = JSON.parse(localStorage.getItem("webtoons")).filter(function (wt) {
-    return wt.isMain[_this.state.genre];
-  });
-  var banners = webtoons.map(function (webtoon) {
-    return new _BannerImage_js__WEBPACK_IMPORTED_MODULE_4__["default"]("_", webtoon);
-  }).map(function (imageBox) {
-    var $imageBox = document.createElement("div");
-    $imageBox.innerHTML = imageBox.template();
-    return $imageBox;
-  });
-
-  var _carousel = _carousel_js__WEBPACK_IMPORTED_MODULE_5__["default"].apply(void 0, (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(banners)),
-      $carousel = _carousel.$carousel,
-      getInterval = _carousel.getInterval;
-
-  this.state.banners = $carousel;
-  this.state.getInterval = getInterval;
-  this.render();
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.createExtendsRelation)(MainBanner, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
-
-MainBanner.prototype.template = function () {
-  var banners = this.state.banners;
-  return "\n    <li class=\"mainBox main__mainBanner\">\n        ".concat(banners === null || banners === void 0 ? void 0 : banners.outerHTML, "\n    </li>\n    ");
+var bookGenres = {
+  home: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  serial: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  bestseller: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  ranking: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  thriller: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  selfDev: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  learning: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
 };
-
-MainBanner.prototype.render = function () {
-  this.target.innerHTML = this.template();
-
-  if (this.state.interval) {
-    clearInterval(this.state.interval);
-  }
-
-  this.state = _objectSpread(_objectSpread({}, this.state), {}, {
-    interval: this.state.getInterval()
-  });
-  this.removeEvent();
-  this.setEvent();
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainBanner);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (bookGenres);
 
 /***/ }),
 
-/***/ "./src/screens/Components/MainBox.js":
-/*!*******************************************!*\
-  !*** ./src/screens/Components/MainBox.js ***!
-  \*******************************************/
+/***/ "./src/screens/MainBox/Genres/Broadcast/broadcastGenres.js":
+/*!*****************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Broadcast/broadcastGenres.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1090,67 +634,404 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _GenreList_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./GenreList.js */ "./src/screens/Components/GenreList.js");
-/* harmony import */ var _categories_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../categories.js */ "./src/categories.js");
+/* harmony import */ var _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/Dummy.js */ "./src/screens/MainBox/Genres/Components/Dummy.js");
+
+var broadcastGenres = {
+  home: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  entertain: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  drama: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  animation: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  overseas: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  ranking: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  genreAll: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (broadcastGenres);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox.js":
+/*!**************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../Component.js */ "./src/screens/Component.js");
+
+
+
+function ContentsBox(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(ContentsBox, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+ContentsBox.prototype.template = function () {
+  var _this$state = this.state,
+      title = _this$state.title,
+      titleNum = _this$state.titleNum,
+      contentBody = _this$state.contentBody;
+  return "\n     <div class=\"main__contents\">\n       <div class=\"contents__header\">\n         <div class=\"contents__title\">\n           <span>".concat(title, "</span>\n           ").concat(titleNum ? "<span class=\"titleNum\">(".concat(titleNum, ")</span>") : "", "\n         </div>\n         <div class=\"contents__more\">\n           <span>\uB354\uBCF4\uAE30></span>\n         </div>\n       </div>\n       ").concat(contentBody, "\n     </div>");
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ContentsBox);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/BigCardList.js":
+/*!*************************************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/Components/BigCardList.js ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Templates_bannerImgBoxTpl_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Templates/bannerImgBoxTpl.js */ "./src/screens/MainBox/Genres/Components/Templates/bannerImgBoxTpl.js");
 
 
 
 
-
-function MainBox(infoObject) {
+function BigCardList(infoObject) {
   _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(MainBox, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(BigCardList, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
-MainBox.prototype.mount = function () {
-  var $navGenre = this.$target.querySelector(".main__navGenre");
-  var $contentsBox = this.$target.querySelector(".main__contentsBox");
+BigCardList.prototype.template = function () {
+  var webtoons = this.state.webtoons;
+
+  var templateWtBigCard = function templateWtBigCard(webtoon) {
+    return "\n      <li class=\"bigCard\">\n        ".concat((0,_Templates_bannerImgBoxTpl_js__WEBPACK_IMPORTED_MODULE_2__["default"])(webtoon), "\n      </li>\n      ");
+  };
+
+  return webtoons.reduce(function (tags, wt) {
+    tags += templateWtBigCard(wt);
+    return tags;
+  }, "");
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BigCardList);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/CardList.js":
+/*!**********************************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/Components/CardList.js ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _modules_serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../../modules/serviceUtils.js */ "./src/modules/serviceUtils.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../constants */ "./src/constants.js");
+/* harmony import */ var _constants_badgeInfo_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./constants/badgeInfo.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/constants/badgeInfo.js");
+
+
+
+
+
+
+function CardList(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(CardList, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+CardList.prototype.template = function () {
+  var webtoons = this.state.webtoons;
+
+  var templateWtCard = function templateWtCard(webtoon) {
+    var title = webtoon.title,
+        image = webtoon.image,
+        rank = webtoon.rank,
+        rating = webtoon.rating,
+        age_grade = webtoon.age_grade,
+        badge = webtoon.badge,
+        read_count = webtoon.read_count,
+        waitfree = webtoon.waitfree;
+    var badgeSpan = _constants_badgeInfo_js__WEBPACK_IMPORTED_MODULE_4__["default"].badgeSpan,
+        badgeBgColor = _constants_badgeInfo_js__WEBPACK_IMPORTED_MODULE_4__["default"].badgeBgColor;
+    return "<li class=\"card\">\n      <div class=\"card__imgBox\">\n        <img\n          class=\"cardImg\"\n          src=\"".concat(_constants__WEBPACK_IMPORTED_MODULE_3__.KAKAO_DATA_URL + image, "\"\n          alt=\"").concat(title, "\"\n        />\n        <div class=\"imgInfo\">\n          <span class=\"rank\">").concat(rank > 0 ? "".concat(rank, "\uC704") : "\u272D ".concat(rating.toFixed(1)), "</span>\n          ").concat(waitfree === "Y" ? '<span><i class="fas fa-clock"></i></span>' : "<span>웹툰</span>", "\n        </div>\n      </div>\n      <div class=\"card__title\">\n        <span>").concat(title, "</span>\n      </div>\n      <div class=\"card__info\">\n        ").concat(badge ? "<span class=\"info-status ".concat(badgeBgColor[badge], "\">").concat(badgeSpan[badge], "</span>") : "", "\n        ").concat(age_grade !== 0 ? "<span class=\"info-age\">".concat(age_grade, "</span>") : "", "\n        <span class=\"info-user\">\n          <i class=\"fas fa-user\"></i>\n          <span>").concat((0,_modules_serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(read_count), "</span>\n        </span>\n      </div>\n    </li>");
+  };
+
+  return webtoons.reduce(function (tags, wt) {
+    tags += templateWtCard(wt);
+    return tags;
+  }, "");
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CardList);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/DaysList.js":
+/*!**********************************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/Components/DaysList.js ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../Component.js */ "./src/screens/Component.js");
+
+
+
+function DaysList(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(DaysList, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+DaysList.prototype.setEvent = function () {
+  var updateDay = this.$props.updateDay;
+
+  var handleAddEvent = function handleAddEvent(_ref) {
+    var target = _ref.target;
+    var $eventTarget = target.closest(".daysNav-item");
+    updateDay($eventTarget.dataset.day);
+  };
+
+  this.addEvent("click", ".daysNav-item", handleAddEvent);
+};
+
+DaysList.prototype.template = function () {
   var _this$state = this.state,
-      genres = _this$state.genres,
-      selected = _this$state.selected,
-      category = _this$state.category;
-  this.selected = "webtoon";
+      days = _this$state.days,
+      selected = _this$state.selected;
+  var PROGRAM_SUNDAY = 0;
+  var SERVICE_SUNDAY = 7;
+  var SERVICE_FINISH = 12;
+  return days.reduce(function (tags, day, index) {
+    var serviceDay = index === SERVICE_SUNDAY ? SERVICE_FINISH : index === PROGRAM_SUNDAY ? SERVICE_SUNDAY : index;
+    tags += "\n      <li class='daysNav-item ".concat(+selected === serviceDay ? " selected" : "", "'\n        data-day=\"").concat(serviceDay, "\">\n          ").concat(day, "\n      </li>");
+    return tags;
+  }, "");
+};
 
-  if (category !== "home") {
-    new _GenreList_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
-      $target: $navGenre,
-      state: {
-        genres: genres,
-        selected: "webtoon"
-      },
-      $props: {
-        updateGenre: this.updateGenre.bind(this)
-      }
-    });
-  }
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DaysList);
 
-  new _categories_js__WEBPACK_IMPORTED_MODULE_3__["default"][category]["webtoon"]({
-    $target: $contentsBox
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/RowCardList.js":
+/*!*************************************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/Components/RowCardList.js ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _modules_serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../../modules/serviceUtils.js */ "./src/modules/serviceUtils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _constants_badgeInfo_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./constants/badgeInfo.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/constants/badgeInfo.js");
+
+
+
+
+
+
+function RowCardList(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(RowCardList, _Component_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+RowCardList.prototype.template = function () {
+  var webtoons = this.state.webtoons;
+  var badgeSpan = _constants_badgeInfo_js__WEBPACK_IMPORTED_MODULE_4__["default"].badgeSpan,
+      badgeBgColor = _constants_badgeInfo_js__WEBPACK_IMPORTED_MODULE_4__["default"].badgeBgColor;
+
+  var templateWtCard = function templateWtCard(webtoon) {
+    return "\n    <li class=\"dateContent\">\n      <div class=\"contentRow\">\n        <div class=\"dateRank\">".concat(webtoon.rank, "</div>\n        <div class=\"contentImgBox\">\n          <span class='content-waitFreeIcon'>\n          ").concat(webtoon.waitfree === "Y" ? "<i class='fas fa-clock'></i>" : "웹툰", "\n          </span>\n          <img\n            src=\"").concat(_constants_js__WEBPACK_IMPORTED_MODULE_3__.KAKAO_DATA_URL + webtoon.thumb_img, "\"\n            alt=\"").concat(webtoon.title, "\"\n          />\n        </div>\n        <div class=\"contentInfo\">\n          <div class=\"info__titleInfo\">\n          ").concat(webtoon.badge ? "<span class=\"info-status ".concat(badgeBgColor[webtoon.badge], "\">").concat(badgeSpan[webtoon.badge], "</span>") : "", "\n            ").concat(webtoon.age_grade ? "<span class=\"info__title-age info-age\">".concat(webtoon.age_grade, "</span>") : "", "\n            <span class=\"info__title\">").concat(webtoon.title, "</span>\n          </div>\n          <div class=\"infoBody\">\n            <i class=\"fas fa-user\"></i>\n            <span>").concat((0,_modules_serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__.formatUserCount)(webtoon.read_count), "</span>\n            <span class=\"span-bar\">|</span>\n            ").concat(webtoon.waitfree ? '<span>기다무웹툰</span><span class="span-bar"> | </span>' : "", "\n            <span>").concat(webtoon.sub_category_title, "</span>\n            <span class=\"span-bar\">|</span>\n            <span>").concat(webtoon.publisher ? webtoon.publisher : "", "\n            </span>\n          </div>\n          <div class=\"info-footer\">\n            <span>").concat(webtoon.pubperiod, " \uC5F0\uC7AC</span>\n          </div>\n        </div>\n      </div>\n    </li>");
+  };
+
+  return webtoons.reduce(function (tags, wt) {
+    tags += templateWtCard(wt);
+    return tags;
+  }, "");
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RowCardList);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/constants/badgeInfo.js":
+/*!*********************************************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/Components/constants/badgeInfo.js ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var badgeSpan = {
+  BT02: "UP",
+  BT03: "N",
+  BT99: ""
+};
+var badgeBgColor = {
+  BT02: "blue",
+  BT03: "red",
+  BT99: ""
+};
+var badgeInfo = {
+  badgeSpan: badgeSpan,
+  badgeBgColor: badgeBgColor
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (badgeInfo);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/DateTop.js":
+/*!**********************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/DateTop.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ContentsBox.js */ "./src/screens/MainBox/Genres/Components/ContentsBox.js");
+/* harmony import */ var _Components_RowCardList_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/RowCardList.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/RowCardList.js");
+
+
+
+
+function DateTop(infoObject) {
+  _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(DateTop, _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+DateTop.prototype.setup = function () {
+  this.state.contentBody = "<ul id=\"wtDateTop\" class=\"contents__date\"></ul>";
+};
+
+DateTop.prototype.mount = function () {
+  var $dateTop = this.$target.querySelector("#wtDateTop");
+  var section_series = this.state.webtoons.section_series;
+  var FIRST_ELEMENT = 0;
+  var list = section_series[FIRST_ELEMENT].list;
+  var MAXIMUM_CARD_COUNT = 3;
+  new _Components_RowCardList_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+    $target: $dateTop,
+    state: {
+      webtoons: list.length > MAXIMUM_CARD_COUNT ? list.slice(0, MAXIMUM_CARD_COUNT) : list
+    }
   });
 };
 
-MainBox.prototype.template = function () {
-  var category = this.state.category;
-  return "\n    ".concat(category !== "home" ? '<ul class="mainBox mainNav main__navGenre"></ul>' : "", "\n    <ul class=\"main__contentsBox\"></ul>\n    ");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DateTop);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/DaysTop.js":
+/*!**********************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/DaysTop.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _modules_serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../modules/serviceUtils.js */ "./src/modules/serviceUtils.js");
+/* harmony import */ var _ContentsBox_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ContentsBox.js */ "./src/screens/MainBox/Genres/Components/ContentsBox.js");
+/* harmony import */ var _Components_CardList_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/CardList.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/CardList.js");
+/* harmony import */ var _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Components/DaysList.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/DaysList.js");
+
+
+
+
+
+
+function DaysTop(infoObject) {
+  _ContentsBox_js__WEBPACK_IMPORTED_MODULE_2__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(DaysTop, _ContentsBox_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+DaysTop.prototype.setup = function () {
+  this.state.selected = (0,_modules_serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__.getDay)();
+  this.state.contentBody = "\n    <ul id=\"wtDaysTopNav\" class=\"contents__daysNav\"></ul>\n    <ul id=\"wtDaysTopCards\" class=\"contents__card\"></ul>\n  ";
 };
 
-MainBox.prototype.updateGenre = function (genre) {
+DaysTop.prototype.mount = function () {
+  var $contentNav = this.$target.querySelector("#wtDaysTopNav");
+  var $contentsCard = this.$target.querySelector("#wtDaysTopCards");
+  var days = (0,_modules_serviceUtils_js__WEBPACK_IMPORTED_MODULE_1__.getKoreaDays)();
+  var MAXIMUM_CARD_COUNT = 10;
+  var _this$state = this.state,
+      section_week_top = _this$state.webtoons.section_week_top,
+      selectedDay = _this$state.selected;
+  var FIRST_ELEMENT = 0;
+  var list = section_week_top[FIRST_ELEMENT].list;
+  var filteredWebtoons = list.find(function (_ref) {
+    var day = _ref.day;
+    return day === +selectedDay;
+  }).list;
+  new _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    $target: $contentNav,
+    state: {
+      days: days,
+      selected: selectedDay
+    },
+    $props: {
+      updateDay: this.updateDay.bind(this)
+    }
+  });
+  new _Components_CardList_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+    $target: $contentsCard,
+    state: {
+      webtoons: filteredWebtoons.length > MAXIMUM_CARD_COUNT ? filteredWebtoons.slice(0, MAXIMUM_CARD_COUNT) : filteredWebtoons
+    }
+  });
+};
+
+DaysTop.prototype.updateDay = function (day) {
   this.setState({
-    selected: genre
+    selected: day
   });
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainBox);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DaysTop);
 
 /***/ }),
 
-/***/ "./src/screens/Components/NavDetail.js":
-/*!*********************************************!*\
-  !*** ./src/screens/Components/NavDetail.js ***!
-  \*********************************************/
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/GenreTop.js":
+/*!***********************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/GenreTop.js ***!
+  \***********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1158,29 +1039,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ContentsBox.js */ "./src/screens/MainBox/Genres/Components/ContentsBox.js");
+/* harmony import */ var _Components_CardList_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/CardList.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/CardList.js");
 
 
 
-function NavDetail(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target);
+
+function GenreTop(infoObject) {
+  _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(NavDetail, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(GenreTop, _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
-NavDetail.prototype.template = function () {
-  return "<li class=\"mainBox main__navDetail\">\n  <div class=\"nav_detailBox\">\n    <div class=\"detailBox border-top-left\">\n      <span class=\"detailName\">\uC624\uB298 UP</span>\n      <span class=\"detailNum\">208</span>\n    </div>\n    <div class=\"detailBox\">\n      <span class=\"detailName\">\uC624\uB298 \uC2E0\uC791</span>\n      <span class=\"detailNum\">4</span>\n    </div>\n    <div class=\"detailBox border-top-right\">\n      <span class=\"detailName\">\uC624\uB9AC\uC9C0\uB110</span>\n      <span class=\"detailNum\">2,328</span>\n    </div>\n  </div>\n  <div class=\"nav_detailBox\">\n    <div class=\"detailBox border-bottom-left\">\n      <span class=\"detailName\">\uC644\uACB0\uAE4C\uC9C0 \uC815\uC8FC\uD589</span>\n    </div>\n    <div class=\"detailBox\">\n      <span class=\"detailName\">\uB3C5\uB9BD\uC6B4\uB3D9\uAC00 \uC6F9\uD230</span>\n    </div>\n    <div class=\"detailBox border-bottom-right\">\n      <span class=\"detailName\">\uC624\uB298 \uB7AD\uD0B9</span>\n      <span class=\"detailNum\">1\uC704</span>\n    </div>\n  </div>\n</li>";
+GenreTop.prototype.setup = function () {
+  this.state.contentBody = "<ul id=\"wtGenreTop\" class=\"contents__card\"></ul>";
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NavDetail);
+GenreTop.prototype.mount = function () {
+  var $contentsCard = this.$target.querySelector("#wtGenreTop");
+  var section_series = this.state.webtoons.section_series;
+  var FIRST_ELEMENT = 0;
+  var list = section_series[FIRST_ELEMENT].list;
+  var MAXIMUM_CARD_COUNT = 5;
+  new _Components_CardList_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+    $target: $contentsCard,
+    state: {
+      webtoons: list.length > MAXIMUM_CARD_COUNT ? list.slice(0, MAXIMUM_CARD_COUNT) : list
+    }
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GenreTop);
 
 /***/ }),
 
-/***/ "./src/screens/Components/RecommendEvent.js":
-/*!**************************************************!*\
-  !*** ./src/screens/Components/RecommendEvent.js ***!
-  \**************************************************/
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/NewWorkTop.js":
+/*!*************************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/NewWorkTop.js ***!
+  \*************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1188,29 +1085,78 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ContentsBox.js */ "./src/screens/MainBox/Genres/Components/ContentsBox.js");
+/* harmony import */ var _Components_BigCardList_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/BigCardList.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/Components/BigCardList.js");
 
 
 
-function RecommendEvent(target, state) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target, state);
+
+function NewWorkTop(infoObject) {
+  _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(RecommendEvent, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(NewWorkTop, _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
-RecommendEvent.prototype.template = function () {
-  return "\n      <div class=\"banner__imgBox\">\n        <img src=\"https://dn-img-page.kakao.com/download/resource?kid=E8yMN/hzp2nOI0PT/XjH8y8XBKB7K53kSq88HKk\" alt=\"\uC774\uADF8\uB808\uD2B8\" />\n        <div class=\"imgBox__order\">\n          <span class=\"orderArrow\"><</span>\n          <span class=\"orderNum\">1</span>\n          <span class=\"orderBar\">/</span>\n          <span class=\"orderNum\">8</span>\n          <span class=\"orderArrow\">></span>\n        </div>\n      </div>";
+NewWorkTop.prototype.setup = function () {
+  this.state.contentBody = "\n    <ul id=\"wtNewWorkTop\" class=\"contents__bigCard\"></ul>\n  ";
+};
+
+NewWorkTop.prototype.mount = function () {
+  var $contentsBigCard = this.$target.querySelector("#wtNewWorkTop");
+  var section_text_banner = this.state.webtoons.section_text_banner;
+  var MAXIMUM_CARD_COUNT = 2;
+  var FIRST_ELEMENT = 0;
+  var list = section_text_banner[FIRST_ELEMENT].list;
+  var sortedWebtoons = list.sort(function (b1, b2) {
+    return b1.item_order - b2.item_order;
+  });
+  new _Components_BigCardList_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+    $target: $contentsBigCard,
+    state: {
+      webtoons: sortedWebtoons.length > MAXIMUM_CARD_COUNT ? sortedWebtoons.slice(0, MAXIMUM_CARD_COUNT) : sortedWebtoons
+    }
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NewWorkTop);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/ContentsBox/RecommendEvent.js":
+/*!*****************************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/ContentsBox/RecommendEvent.js ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ContentsBox.js */ "./src/screens/MainBox/Genres/Components/ContentsBox.js");
+
+
+
+function RecommendEvent(infoObject) {
+  _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(RecommendEvent, _ContentsBox_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+RecommendEvent.prototype.setup = function () {
+  this.state.contentBody = "\n    <div class=\"banner__imgBox\">\n        <img src=\"https://dn-img-page.kakao.com/download/resource?kid=E8yMN/hzp2nOI0PT/XjH8y8XBKB7K53kSq88HKk\" alt=\"\uC774\uADF8\uB808\uD2B8\" />\n        <div class=\"imgBox__order\">\n          <span class=\"orderArrow\"><</span>\n          <span class=\"orderNum\">1</span>\n          <span class=\"orderBar\">/</span>\n          <span class=\"orderNum\">8</span>\n          <span class=\"orderArrow\">></span>\n        </div>\n    </div>\n";
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RecommendEvent);
 
 /***/ }),
 
-/***/ "./src/screens/Components/SubBanner.js":
-/*!*********************************************!*\
-  !*** ./src/screens/Components/SubBanner.js ***!
-  \*********************************************/
+/***/ "./src/screens/MainBox/Genres/Components/Dummy.js":
+/*!********************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/Dummy.js ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1218,38 +1164,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-
-
-
-function SubBanner(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target);
-}
-
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(SubBanner, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-SubBanner.prototype.template = function () {
-  return "<li class=\"mainBox main__subBanner\">\n  <div class=\"arrow\">\n    <span><</span>\n  </div>\n  <img\n    class=\"subImg\"\n    src=\"https://dn-img-page.kakao.com/download/resource?kid=cOMNfP/hzp2fXqtDJ/Tswxss4NFzkbDtL6gdvBSK\"\n    alt=\"\uBBF8\uC290\uB7AD\uC2A4\uD0C0\"\n  />\n  <div class=\"arrow\">\n    <span>></span>\n  </div>\n</li>";
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SubBanner);
-
-/***/ }),
-
-/***/ "./src/screens/Components/dummy.js":
-/*!*****************************************!*\
-  !*** ./src/screens/Components/dummy.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../utils.js */ "./src/utils.js");
 
 
 
@@ -1268,10 +1184,10 @@ Dummy.prototype.template = function () {
 
 /***/ }),
 
-/***/ "./src/screens/Home/homeGenres.js":
-/*!****************************************!*\
-  !*** ./src/screens/Home/homeGenres.js ***!
-  \****************************************/
+/***/ "./src/screens/MainBox/Genres/Components/FullButton.js":
+/*!*************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/FullButton.js ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1279,19 +1195,247 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/dummy.js */ "./src/screens/Components/dummy.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../Component.js */ "./src/screens/Component.js");
+
+
+
+function FullButton(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(FullButton, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+FullButton.prototype.template = function () {
+  return "\n    <button>\n      <span><b>\uCE74\uCE74\uC624\uD398\uC774\uC9C0</b> \uC571\uC73C\uB85C \uBCF4\uAE30 ></span>\n    </button>\n  ";
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FullButton);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/MainBanner.js":
+/*!*************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/MainBanner.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _modules_carousel_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../modules/carousel.js */ "./src/modules/carousel.js");
+/* harmony import */ var _Templates_bannerImgBoxTpl_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Templates/bannerImgBoxTpl.js */ "./src/screens/MainBox/Genres/Components/Templates/bannerImgBoxTpl.js");
+
+
+
+
+
+function MainBanner(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
+  this.$props.clearCarousel();
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(MainBanner, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+MainBanner.prototype.mount = function () {
+  var webtoons = this.state.webtoons;
+  var $mainBanner = this.$target.querySelector("#wtMainBanner");
+  var $bannerElems = webtoons.map(function (webtoon) {
+    var wtTpl = (0,_Templates_bannerImgBoxTpl_js__WEBPACK_IMPORTED_MODULE_3__["default"])(webtoon);
+    var div = document.createElement("div");
+    div.innerHTML = wtTpl;
+    return div;
+  });
+
+  var _carousel = (0,_modules_carousel_js__WEBPACK_IMPORTED_MODULE_2__["default"])({
+    elems: $bannerElems,
+    elemWidth: 720,
+    unit: "px"
+  }),
+      $carousel = _carousel.$carousel,
+      getInterval = _carousel.getInterval;
+
+  $mainBanner.appendChild($carousel);
+  this.$props.setCarousel(getInterval);
+};
+
+MainBanner.prototype.template = function () {
+  return "\n    <li id=\"wtMainBanner\" class=\"mainBox main__mainBanner\"></li>\n    ";
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainBanner);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/NavDetail.js":
+/*!************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/NavDetail.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../Component.js */ "./src/screens/Component.js");
+
+
+
+function NavDetail(target) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(NavDetail, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+NavDetail.prototype.template = function () {
+  return "\n  <div class=\"nav_detailBox\">\n    <div class=\"detailBox border-top-left\">\n      <span class=\"detailName\">\uC624\uB298 UP</span>\n      <span class=\"detailNum\">208</span>\n    </div>\n    <div class=\"detailBox\">\n      <span class=\"detailName\">\uC624\uB298 \uC2E0\uC791</span>\n      <span class=\"detailNum\">4</span>\n    </div>\n    <div class=\"detailBox border-top-right\">\n      <span class=\"detailName\">\uC624\uB9AC\uC9C0\uB110</span>\n      <span class=\"detailNum\">2,328</span>\n    </div>\n  </div>\n  <div class=\"nav_detailBox\">\n    <div class=\"detailBox border-bottom-left\">\n      <span class=\"detailName\">\uC644\uACB0\uAE4C\uC9C0 \uC815\uC8FC\uD589</span>\n    </div>\n    <div class=\"detailBox\">\n      <span class=\"detailName\">\uB3C5\uB9BD\uC6B4\uB3D9\uAC00 \uC6F9\uD230</span>\n    </div>\n    <div class=\"detailBox border-bottom-right\">\n      <span class=\"detailName\">\uC624\uB298 \uB7AD\uD0B9</span>\n      <span class=\"detailNum\">1\uC704</span>\n    </div>\n  </div>\n";
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NavDetail);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/SubBanner.js":
+/*!************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/SubBanner.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../Component.js */ "./src/screens/Component.js");
+
+
+
+function SubBanner(target) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, target);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(SubBanner, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+SubBanner.prototype.template = function () {
+  return "\n  <div class=\"arrow\">\n    <span><</span>\n  </div>\n  <img\n    class=\"subImg\"\n    src=\"https://dn-img-page.kakao.com/download/resource?kid=cOMNfP/hzp2fXqtDJ/Tswxss4NFzkbDtL6gdvBSK\"\n    alt=\"\uBBF8\uC290\uB7AD\uC2A4\uD0C0\"\n  />\n  <div class=\"arrow\">\n    <span>></span>\n  </div>\n";
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SubBanner);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Components/Templates/bannerImgBoxTpl.js":
+/*!****************************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Components/Templates/bannerImgBoxTpl.js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _modules_serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../modules/serviceUtils.js */ "./src/modules/serviceUtils.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+
+
+
+var bannerImgBoxTpl = function bannerImgBoxTpl(webtoon) {
+  var title = webtoon.title,
+      read_count = webtoon.read_count,
+      bm_category = webtoon.bm_category,
+      main_copy1 = webtoon.main_copy1,
+      main_copy2 = webtoon.main_copy2,
+      sub_copy1 = webtoon.sub_copy1,
+      sub_copy2 = webtoon.sub_copy2,
+      bg_img = webtoon.bg_img,
+      badge_type = webtoon.badge_type;
+  return "\n    <div class=\"banner__imgBox\">\n        <img src=\"".concat(_constants_js__WEBPACK_IMPORTED_MODULE_1__.KAKAO_DATA_URL + bg_img, "\" alt=").concat(title, " />\n        <div class=\"imgBox__info\">\n        <div class=\"infoTitle\">\n            <span>").concat(main_copy1 ? "<div>".concat(main_copy1, "</div><div>").concat(main_copy2, "</div>") : main_copy2, "</span>\n        </div>\n        <div class=\"infoBody\">\n            <span class=\"info-event\">").concat(badge_type, "</span>\n            <span class=\"info-category\">\n            ").concat(bm_category === "기다무웹툰" ? '<i class="fas fa-clock"></i>' : "", " \uC6F9\uD230\n            </span>\n            <span class=\"span-bar\"> | </span>\n            <span class=\"info-users\">\n            <i class=\"fas fa-user\"></i> ").concat((0,_modules_serviceUtils_js__WEBPACK_IMPORTED_MODULE_0__.formatUserCount)(read_count), "\n            </span>\n        </div>\n        </div>\n        <div class=\"banner__message\">\n        <span>").concat(sub_copy1 ? "<div>".concat(sub_copy1, "</div><div>").concat(sub_copy2, "</div>") : sub_copy2, "</span>\n        </div>\n    </div>\n    ");
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (bannerImgBoxTpl);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/GenreList.js":
+/*!*************************************************!*\
+  !*** ./src/screens/MainBox/Genres/GenreList.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
+
+
+
+function GenreList(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(GenreList, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+GenreList.prototype.setEvent = function () {
+  var updateGenre = this.$props.updateGenre;
+
+  var handleAddEvent = function handleAddEvent(_ref) {
+    var target = _ref.target;
+    var $eventTarget = target.closest(".navGenre-item");
+    updateGenre($eventTarget.dataset.genre);
+  };
+
+  this.addEvent("click", ".navGenre-item", handleAddEvent);
+};
+
+GenreList.prototype.template = function () {
+  var _this$state = this.state,
+      genres = _this$state.genres,
+      selected = _this$state.selected;
+  return genres.reduce(function (tags, gInfo) {
+    tags += "\n          <li class=\"navGenre-item ".concat(gInfo.genre === selected ? "selected" : "", "\"\n          data-genre=\"").concat(gInfo.genre, "\">\n              ").concat(gInfo.name, "\n          </li>");
+    return tags;
+  }, "");
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GenreList);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/Genres/Home/homeGenres.js":
+/*!*******************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Home/homeGenres.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/Dummy.js */ "./src/screens/MainBox/Genres/Components/Dummy.js");
 
 var homeGenres = {
-  home: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
+  home: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (homeGenres);
 
 /***/ }),
 
-/***/ "./src/screens/Movie/movieGenres.js":
-/*!******************************************!*\
-  !*** ./src/screens/Movie/movieGenres.js ***!
-  \******************************************/
+/***/ "./src/screens/MainBox/Genres/Movie/movieGenres.js":
+/*!*********************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Movie/movieGenres.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1299,24 +1443,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/dummy.js */ "./src/screens/Components/dummy.js");
+/* harmony import */ var _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/Dummy.js */ "./src/screens/MainBox/Genres/Components/Dummy.js");
 
 var movieGenres = {
-  home: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  ranking: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  romance: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  action: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  animation: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  genreAll: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
+  home: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  ranking: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  romance: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  action: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  animation: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  genreAll: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (movieGenres);
 
 /***/ }),
 
-/***/ "./src/screens/Webnovel/webnovelGenres.js":
-/*!************************************************!*\
-  !*** ./src/screens/Webnovel/webnovelGenres.js ***!
-  \************************************************/
+/***/ "./src/screens/MainBox/Genres/Webnovel/webnovelGenres.js":
+/*!***************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webnovel/webnovelGenres.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1324,29 +1468,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/dummy.js */ "./src/screens/Components/dummy.js");
+/* harmony import */ var _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Components/Dummy.js */ "./src/screens/MainBox/Genres/Components/Dummy.js");
 
 var webnovelGenres = {
-  home: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  days: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  webnovel: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  fantasy: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  hyunfan: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  romance: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  rofan: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  action: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  fande: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  bl: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  sepvol: _Components_dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
+  home: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  days: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  webnovel: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  fantasy: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  hyunfan: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  romance: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  rofan: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  action: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  fande: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  bl: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  sepvol: _Components_Dummy_js__WEBPACK_IMPORTED_MODULE_0__["default"]
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (webnovelGenres);
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/genre/ActionGenre.js":
-/*!**************************************************!*\
-  !*** ./src/screens/Webtoon/genre/ActionGenre.js ***!
-  \**************************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/genre/ActionGenre.js":
+/*!*****************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/genre/ActionGenre.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1354,30 +1498,131 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _components_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components.js */ "./src/screens/MainBox/Genres/components.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../enums/CategoryId.js */ "./src/enums/CategoryId.js");
+/* harmony import */ var _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../enums/GenreId.js */ "./src/enums/GenreId.js");
 
 
 
-function ActionGenre(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-  this.render();
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+
+
+
+
+
+
+function ActionGenre(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(ActionGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.createExtendsRelation)(ActionGenre, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+ActionGenre.prototype.mount = function () {
+  var _this = this;
+
+  var contents = this.state.contents;
+  contents.forEach(function (content) {
+    var elementId = content.elementId,
+        className = content.className,
+        state = content.state;
+    var list = state.list;
+
+    var $content = _this.$target.querySelector("#".concat(elementId));
+
+    new _components_js__WEBPACK_IMPORTED_MODULE_5__["default"][className]({
+      $target: $content,
+      state: _objectSpread(_objectSpread({}, state), {}, {
+        webtoons: className === "mainBanner" ? list : []
+      }),
+      $props: {
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
+        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+      }
+    });
+  });
+};
+
+ActionGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+  var _this$state, category, genre, _yield$getJson, section_containers, list;
+
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _this$state = this.state, category = _this$state.category, genre = _this$state.genre;
+          _context.next = 3;
+          return (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.getJson)((0,_constants_js__WEBPACK_IMPORTED_MODULE_6__.API_POINT)({
+            categoryId: _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__["default"][category],
+            genreId: _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__["default"][genre]
+          }));
+
+        case 3:
+          _yield$getJson = _context.sent;
+          section_containers = _yield$getJson.section_containers;
+          list = _yield$getJson.top_banner.list;
+          this.state = {
+            section_containers: section_containers,
+            contents: [{
+              elementId: "wtMainBanner",
+              className: "mainBanner",
+              state: {
+                list: list
+              }
+            }, {
+              elementId: "wtNavDetail",
+              className: "navDetail",
+              state: {}
+            }, {
+              elementId: "wtDateTop",
+              className: "dateTop",
+              state: {
+                title: "일간 액션/무협 TOP"
+              }
+            }, {
+              elementId: "wtFullButton",
+              className: "fullButton",
+              state: {}
+            }]
+          };
+
+        case 7:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
 
 ActionGenre.prototype.template = function () {
-  return "<div>ActionGenre</div>";
+  var contents = this.state.contents;
+  return contents.reduce(function (tags, _ref2) {
+    var elementId = _ref2.elementId,
+        className = _ref2.className;
+    tags += "<li id=\"".concat(elementId, "\" class=\"mainBox main__").concat(className, "\"></li>");
+    return tags;
+  }, "");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ActionGenre);
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/genre/BLGenre.js":
-/*!**********************************************!*\
-  !*** ./src/screens/Webtoon/genre/BLGenre.js ***!
-  \**********************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/genre/BLGenre.js":
+/*!*************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/genre/BLGenre.js ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1385,30 +1630,131 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _components_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components.js */ "./src/screens/MainBox/Genres/components.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../enums/CategoryId.js */ "./src/enums/CategoryId.js");
+/* harmony import */ var _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../enums/GenreId.js */ "./src/enums/GenreId.js");
 
 
 
-function BLGenre(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-  this.render();
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+
+
+
+
+
+
+function BLGenre(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(BLGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.createExtendsRelation)(BLGenre, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+BLGenre.prototype.mount = function () {
+  var _this = this;
+
+  var contents = this.state.contents;
+  contents.forEach(function (content) {
+    var elementId = content.elementId,
+        className = content.className,
+        state = content.state;
+    var list = state.list;
+
+    var $content = _this.$target.querySelector("#".concat(elementId));
+
+    new _components_js__WEBPACK_IMPORTED_MODULE_5__["default"][className]({
+      $target: $content,
+      state: _objectSpread(_objectSpread({}, state), {}, {
+        webtoons: className === "mainBanner" ? list : []
+      }),
+      $props: {
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
+        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+      }
+    });
+  });
+};
+
+BLGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+  var _this$state, category, genre, _yield$getJson, section_containers, list;
+
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _this$state = this.state, category = _this$state.category, genre = _this$state.genre;
+          _context.next = 3;
+          return (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.getJson)((0,_constants_js__WEBPACK_IMPORTED_MODULE_6__.API_POINT)({
+            categoryId: _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__["default"][category],
+            genreId: _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__["default"][genre]
+          }));
+
+        case 3:
+          _yield$getJson = _context.sent;
+          section_containers = _yield$getJson.section_containers;
+          list = _yield$getJson.top_banner.list;
+          this.state = {
+            section_containers: section_containers,
+            contents: [{
+              elementId: "wtMainBanner",
+              className: "mainBanner",
+              state: {
+                list: list
+              }
+            }, {
+              elementId: "wtNavDetail",
+              className: "navDetail",
+              state: {}
+            }, {
+              elementId: "wtDateTop",
+              className: "dateTop",
+              state: {
+                title: "일간 BL TOP"
+              }
+            }, {
+              elementId: "wtFullButton",
+              className: "fullButton",
+              state: {}
+            }]
+          };
+
+        case 7:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
 
 BLGenre.prototype.template = function () {
-  return "<div>BLGenre</div>";
+  var contents = this.state.contents;
+  return contents.reduce(function (tags, _ref2) {
+    var elementId = _ref2.elementId,
+        className = _ref2.className;
+    tags += "<li id=\"".concat(elementId, "\" class=\"mainBox main__").concat(className, "\"></li>");
+    return tags;
+  }, "");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BLGenre);
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/genre/BoyGenre.js":
-/*!***********************************************!*\
-  !*** ./src/screens/Webtoon/genre/BoyGenre.js ***!
-  \***********************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/genre/BoyGenre.js":
+/*!**************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/genre/BoyGenre.js ***!
+  \**************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1416,30 +1762,131 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _components_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components.js */ "./src/screens/MainBox/Genres/components.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../enums/CategoryId.js */ "./src/enums/CategoryId.js");
+/* harmony import */ var _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../enums/GenreId.js */ "./src/enums/GenreId.js");
 
 
 
-function BoyGenre(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-  this.render();
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+
+
+
+
+
+
+function BoyGenre(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(BoyGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.createExtendsRelation)(BoyGenre, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+BoyGenre.prototype.mount = function () {
+  var _this = this;
+
+  var contents = this.state.contents;
+  contents.forEach(function (content) {
+    var elementId = content.elementId,
+        className = content.className,
+        state = content.state;
+    var list = state.list;
+
+    var $content = _this.$target.querySelector("#".concat(elementId));
+
+    new _components_js__WEBPACK_IMPORTED_MODULE_5__["default"][className]({
+      $target: $content,
+      state: _objectSpread(_objectSpread({}, state), {}, {
+        webtoons: className === "mainBanner" ? list : []
+      }),
+      $props: {
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
+        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+      }
+    });
+  });
+};
+
+BoyGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+  var _this$state, category, genre, _yield$getJson, section_containers, list;
+
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _this$state = this.state, category = _this$state.category, genre = _this$state.genre;
+          _context.next = 3;
+          return (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.getJson)((0,_constants_js__WEBPACK_IMPORTED_MODULE_6__.API_POINT)({
+            categoryId: _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__["default"][category],
+            genreId: _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__["default"][genre]
+          }));
+
+        case 3:
+          _yield$getJson = _context.sent;
+          section_containers = _yield$getJson.section_containers;
+          list = _yield$getJson.top_banner.list;
+          this.state = {
+            section_containers: section_containers,
+            contents: [{
+              elementId: "wtMainBanner",
+              className: "mainBanner",
+              state: {
+                list: list
+              }
+            }, {
+              elementId: "wtNavDetail",
+              className: "navDetail",
+              state: {}
+            }, {
+              elementId: "wtDateTop",
+              className: "dateTop",
+              state: {
+                title: "일간 소년 TOP"
+              }
+            }, {
+              elementId: "wtFullButton",
+              className: "fullButton",
+              state: {}
+            }]
+          };
+
+        case 7:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
 
 BoyGenre.prototype.template = function () {
-  return "<div>BoyGenre</div>";
+  var contents = this.state.contents;
+  return contents.reduce(function (tags, _ref2) {
+    var elementId = _ref2.elementId,
+        className = _ref2.className;
+    tags += "<li id=\"".concat(elementId, "\" class=\"mainBox main__").concat(className, "\"></li>");
+    return tags;
+  }, "");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BoyGenre);
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/genre/DaysGenre.js":
-/*!************************************************!*\
-  !*** ./src/screens/Webtoon/genre/DaysGenre.js ***!
-  \************************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/genre/DaysGenre.js":
+/*!***************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/genre/DaysGenre.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1447,41 +1894,128 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _Components_MainBanner_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Components/MainBanner.js */ "./src/screens/Components/MainBanner.js");
-/* harmony import */ var _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Components/FullButton.js */ "./src/screens/Components/FullButton.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
-/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../serviceUtils.js */ "./src/serviceUtils.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _components_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components.js */ "./src/screens/MainBox/Genres/components.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../enums/CategoryId.js */ "./src/enums/CategoryId.js");
+/* harmony import */ var _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../enums/GenreId.js */ "./src/enums/GenreId.js");
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 
 
 
 
 
-function DaysGenre(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-  var mainBanner = new _Components_MainBanner_js__WEBPACK_IMPORTED_MODULE_1__["default"](target, {
-    genre: "days"
-  });
-  this.setState({
-    contents: [mainBanner, new _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_2__["default"]()]
-  });
-  this.render();
+
+
+function DaysGenre(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, infoObject);
 }
 
-DaysGenre.prototype.template = function () {
-  return (0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_4__.getComponentsTemplate)(this.state.contents);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.createExtendsRelation)(DaysGenre, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+DaysGenre.prototype.mount = function () {
+  var _this = this;
+
+  var contents = this.state.contents;
+  contents.forEach(function (content) {
+    var elementId = content.elementId,
+        className = content.className,
+        state = content.state;
+    var list = state.list,
+        webtoons = state.webtoons;
+
+    var $content = _this.$target.querySelector("#".concat(elementId));
+
+    new _components_js__WEBPACK_IMPORTED_MODULE_5__["default"][className]({
+      $target: $content,
+      state: _objectSpread(_objectSpread({}, state), {}, {
+        webtoons: className === "mainBanner" ? list : webtoons
+      }),
+      $props: {
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
+        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+      }
+    });
+  });
 };
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.createExtendsRelation)(DaysGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+DaysGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+  var _this$state, category, genre, _yield$getJson, section_containers, list;
+
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _this$state = this.state, category = _this$state.category, genre = _this$state.genre;
+          _context.next = 3;
+          return (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.getJson)((0,_constants_js__WEBPACK_IMPORTED_MODULE_6__.API_POINT)({
+            categoryId: _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__["default"][category],
+            genreId: _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__["default"][genre]
+          }));
+
+        case 3:
+          _yield$getJson = _context.sent;
+          section_containers = _yield$getJson.section_containers;
+          list = _yield$getJson.top_banner.list;
+          this.state = {
+            section_containers: section_containers,
+            contents: [{
+              elementId: "wtMainBanner",
+              className: "mainBanner",
+              state: {
+                list: list
+              }
+            }, {
+              elementId: "wtDaysTop",
+              className: "daysTop",
+              state: {
+                title: "요일연재 TOP"
+              }
+            }, {
+              elementId: "wtFullButton",
+              className: "fullButton",
+              state: {}
+            }]
+          };
+
+        case 7:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
+
+DaysGenre.prototype.template = function () {
+  var contents = this.state.contents;
+  return contents.reduce(function (tags, _ref2) {
+    var elementId = _ref2.elementId,
+        className = _ref2.className;
+    tags += "<li id=\"".concat(elementId, "\" class=\"mainBox main__").concat(className, "\"></li>");
+    return tags;
+  }, "");
+};
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DaysGenre);
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/genre/DramaGenre.js":
-/*!*************************************************!*\
-  !*** ./src/screens/Webtoon/genre/DramaGenre.js ***!
-  \*************************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/genre/DramaGenre.js":
+/*!****************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/genre/DramaGenre.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1489,30 +2023,131 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _components_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components.js */ "./src/screens/MainBox/Genres/components.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../enums/CategoryId.js */ "./src/enums/CategoryId.js");
+/* harmony import */ var _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../enums/GenreId.js */ "./src/enums/GenreId.js");
 
 
 
-function DramaGenre(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-  this.render();
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+
+
+
+
+
+
+function DramaGenre(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(DramaGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.createExtendsRelation)(DramaGenre, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+DramaGenre.prototype.mount = function () {
+  var _this = this;
+
+  var contents = this.state.contents;
+  contents.forEach(function (content) {
+    var elementId = content.elementId,
+        className = content.className,
+        state = content.state;
+    var list = state.list;
+
+    var $content = _this.$target.querySelector("#".concat(elementId));
+
+    new _components_js__WEBPACK_IMPORTED_MODULE_5__["default"][className]({
+      $target: $content,
+      state: _objectSpread(_objectSpread({}, state), {}, {
+        webtoons: className === "mainBanner" ? list : []
+      }),
+      $props: {
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
+        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+      }
+    });
+  });
+};
+
+DramaGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+  var _this$state, category, genre, _yield$getJson, section_containers, list;
+
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _this$state = this.state, category = _this$state.category, genre = _this$state.genre;
+          _context.next = 3;
+          return (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.getJson)((0,_constants_js__WEBPACK_IMPORTED_MODULE_6__.API_POINT)({
+            categoryId: _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__["default"][category],
+            genreId: _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__["default"][genre]
+          }));
+
+        case 3:
+          _yield$getJson = _context.sent;
+          section_containers = _yield$getJson.section_containers;
+          list = _yield$getJson.top_banner.list;
+          this.state = {
+            section_containers: section_containers,
+            contents: [{
+              elementId: "wtMainBanner",
+              className: "mainBanner",
+              state: {
+                list: list
+              }
+            }, {
+              elementId: "wtNavDetail",
+              className: "navDetail",
+              state: {}
+            }, {
+              elementId: "wtDateTop",
+              className: "dateTop",
+              state: {
+                title: "일간 드라마 TOP"
+              }
+            }, {
+              elementId: "wtFullButton",
+              className: "fullButton",
+              state: {}
+            }]
+          };
+
+        case 7:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
 
 DramaGenre.prototype.template = function () {
-  return "<div>DramaGenre</div>";
+  var contents = this.state.contents;
+  return contents.reduce(function (tags, _ref2) {
+    var elementId = _ref2.elementId,
+        className = _ref2.className;
+    tags += "<li id=\"".concat(elementId, "\" class=\"mainBox main__").concat(className, "\"></li>");
+    return tags;
+  }, "");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DramaGenre);
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/genre/HomeGenre.js":
-/*!************************************************!*\
-  !*** ./src/screens/Webtoon/genre/HomeGenre.js ***!
-  \************************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/genre/HomeGenre.js":
+/*!***************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/genre/HomeGenre.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1520,20 +2155,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Components_BigCardList_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Components/BigCardList.js */ "./src/screens/Components/BigCardList.js");
-/* harmony import */ var _Components_DateTop_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Components/DateTop.js */ "./src/screens/Components/DateTop.js");
-/* harmony import */ var _Components_DaysTop_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Components/DaysTop.js */ "./src/screens/Components/DaysTop.js");
-/* harmony import */ var _Components_GenreTop_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Components/GenreTop.js */ "./src/screens/Components/GenreTop.js");
-/* harmony import */ var _Components_MainBanner_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Components/MainBanner.js */ "./src/screens/Components/MainBanner.js");
-/* harmony import */ var _Components_NavDetail_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Components/NavDetail.js */ "./src/screens/Components/NavDetail.js");
-/* harmony import */ var _Components_RecommendEvent_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../Components/RecommendEvent.js */ "./src/screens/Components/RecommendEvent.js");
-/* harmony import */ var _Components_SubBanner_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Components/SubBanner.js */ "./src/screens/Components/SubBanner.js");
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
-/* harmony import */ var _serviceUtils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../serviceUtils.js */ "./src/serviceUtils.js");
-/* harmony import */ var _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../Components/DaysList.js */ "./src/screens/Components/DaysList.js");
-/* harmony import */ var _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../Components/ContentsBox.js */ "./src/screens/Components/ContentsBox.js");
-/* harmony import */ var _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../Components/FullButton.js */ "./src/screens/Components/FullButton.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _components_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components.js */ "./src/screens/MainBox/Genres/components.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../enums/CategoryId.js */ "./src/enums/CategoryId.js");
+/* harmony import */ var _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../../enums/GenreId.js */ "./src/enums/GenreId.js");
+
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 
 
@@ -1542,143 +2182,177 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
-
-
-
-function HomeGenre(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_8__["default"].call(this, target);
-  var WEBTOONS_TOTAL_COUNT = 1318;
-  var DAYS_TOP_WEBTOON_PER_PAGE = 10;
-  /* 메인 배너 Component */
-  // const mainBanner = new MainBanner(target, { genre: "home" });
-
-  /* Nav Detail (Webtoon Status Nav) Component */
-
-  var navDetail = new _Components_NavDetail_js__WEBPACK_IMPORTED_MODULE_5__["default"](target);
-  /* 서브 배너 (promotion) Component */
-
-  var subBanner = new _Components_SubBanner_js__WEBPACK_IMPORTED_MODULE_7__["default"](target);
-  var day = new Date().getDay();
-  var days = ["일", "월", "화", "수", "목", "금", "토", "완결"];
-  var koreaDay = days[day];
-  /* 요일 연재 TOP Component */
-
-  var daysTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
-    title: "요일 연재 TOP",
-    contents: "daysTop",
-    titleNum: WEBTOONS_TOTAL_COUNT
-  });
-  var daysTopBoxTarget = daysTopBox.state.contentsBodyDiv;
-  var daysList = new _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_11__["default"]("_", {
-    koreaDay: koreaDay,
-    count: DAYS_TOP_WEBTOON_PER_PAGE
-  });
-  var daysTop = new _Components_DaysTop_js__WEBPACK_IMPORTED_MODULE_2__["default"](daysTopBoxTarget, {
-    days: days,
-    koreaDay: koreaDay,
-    daysList: daysList
-  });
-  daysTopBox.setState({
-    contentsBody: daysTop
-  });
-  /* 기대 신작 TOP Component */
-
-  var bigCardListBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
-    title: "기대 신작 TOP",
-    contents: "bigCardList",
-    contentsBody: new _Components_BigCardList_js__WEBPACK_IMPORTED_MODULE_0__["default"]()
-  });
-  /* 로판 TOP Component */
-
-  var rofanTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
-    title: "로판 TOP",
-    contents: "rofanTop",
-    contentsBody: new _Components_GenreTop_js__WEBPACK_IMPORTED_MODULE_3__["default"]("_", {
-      genre: "로판"
-    })
-  });
-  /* 드라마 TOP Component */
-
-  var dramaTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
-    title: "드라마 TOP",
-    contents: "dramaTop",
-    contentsBody: new _Components_GenreTop_js__WEBPACK_IMPORTED_MODULE_3__["default"]("_", {
-      genre: "드라마"
-    })
-  });
-  /* 일간 랭킹 TOP Component */
-
-  var dateTopBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
-    title: "일간 랭킹 TOP",
-    contents: "dateTop",
-    contentsBody: new _Components_DateTop_js__WEBPACK_IMPORTED_MODULE_1__["default"]("_", {
-      koreaDay: koreaDay
-    })
-  });
-  /* 추천 이벤트 Component */
-
-  var recommendEventBox = new _Components_ContentsBox_js__WEBPACK_IMPORTED_MODULE_12__["default"](target, {
-    title: "추천 이벤트",
-    contents: "recommendEvent",
-    classes: ["main__mainBanner"],
-    contentsBody: new _Components_RecommendEvent_js__WEBPACK_IMPORTED_MODULE_6__["default"]()
-  });
-  this.setState({
-    contents: [mainBanner, navDetail, subBanner, daysTopBox, bigCardListBox, rofanTopBox, dramaTopBox, dateTopBox, recommendEventBox, new _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_13__["default"]()]
-  });
+function HomeGenre(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_4__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.createExtendsRelation)(HomeGenre, _Component_js__WEBPACK_IMPORTED_MODULE_8__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.createExtendsRelation)(HomeGenre, _Component_js__WEBPACK_IMPORTED_MODULE_4__["default"]);
 
-HomeGenre.prototype.setEvent = function () {
+HomeGenre.prototype.mount = function () {
   var _this = this;
 
-  this.addEvent("click", ".daysNav-item", function (_ref) {
-    var target = _ref.target;
-    var eventTarget = target.closest(".daysNav-item");
-    updateNodeClasses(eventTarget, "selected");
-    var koreaDay = eventTarget.textContent;
+  var contents = this.state.contents;
+  contents.forEach(function (content) {
+    var elementId = content.elementId,
+        className = content.className,
+        state = content.state;
+    var list = state.list,
+        webtoons = state.webtoons;
 
-    var isDaysTopBox = function isDaysTopBox(content) {
-      return content.constructor.name === "ContentsBox" && content.state.contents === "daysTop";
-    };
+    var $content = _this.$target.querySelector("#".concat(elementId));
 
-    var daysTopBox = _this.state.contents.find(function (content) {
-      return isDaysTopBox(content);
+    new _components_js__WEBPACK_IMPORTED_MODULE_6__["default"][className]({
+      $target: $content,
+      state: _objectSpread(_objectSpread({}, state), {}, {
+        webtoons: className === "mainBanner" ? list : webtoons
+      }),
+      $props: {
+        sortRanking: _this.sortRanking,
+        filterContent: _this.filterContent,
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
+        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+      }
     });
-
-    var _daysTopBox$state = daysTopBox.state,
-        contentsBodyDiv = _daysTopBox$state.contentsBodyDiv,
-        contentsBody = _daysTopBox$state.contentsBody;
-    var daysList = new _Components_DaysList_js__WEBPACK_IMPORTED_MODULE_11__["default"](contentsBodyDiv, {
-      koreaDay: koreaDay,
-      count: DAYS_TOP_WEBTOON_PER_PAGE
-    });
-    contentsBody.setState({
-      koreaDay: koreaDay,
-      daysList: daysList
-    });
-
-    _this.render();
   });
 };
 
+HomeGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().mark(function _callee() {
+  var _this$state, category, genre, _yield$getJson, section_containers, list, _section_containers, _1, _2, _3, daysTopWt, newWorkTopWt, _4, romanceTopWt, rofanTopWt, dramaTopWt, blTopWt, boyTopWt, actionTopWt, dateTopWt, rcEventWt;
+
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_3___default().wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _this$state = this.state, category = _this$state.category, genre = _this$state.genre;
+          _context.next = 3;
+          return (0,_utils_js__WEBPACK_IMPORTED_MODULE_5__.getJson)((0,_constants_js__WEBPACK_IMPORTED_MODULE_7__.API_POINT)({
+            categoryId: _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_8__["default"][category],
+            genreId: _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_9__["default"][genre]
+          }));
+
+        case 3:
+          _yield$getJson = _context.sent;
+          section_containers = _yield$getJson.section_containers;
+          list = _yield$getJson.top_banner.list;
+          _section_containers = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(section_containers, 14), _1 = _section_containers[0], _2 = _section_containers[1], _3 = _section_containers[2], daysTopWt = _section_containers[3], newWorkTopWt = _section_containers[4], _4 = _section_containers[5], romanceTopWt = _section_containers[6], rofanTopWt = _section_containers[7], dramaTopWt = _section_containers[8], blTopWt = _section_containers[9], boyTopWt = _section_containers[10], actionTopWt = _section_containers[11], dateTopWt = _section_containers[12], rcEventWt = _section_containers[13];
+          this.state = {
+            contents: [{
+              elementId: "wtMainBanner",
+              className: "mainBanner",
+              state: {
+                list: list
+              }
+            }, {
+              elementId: "wtNavDetail",
+              className: "navDetail",
+              state: {}
+            }, {
+              elementId: "wtSubBanner",
+              className: "subBanner",
+              state: {}
+            }, {
+              elementId: "wtDaysTop",
+              className: "daysTop",
+              state: {
+                title: "요일연재 TOP",
+                webtoons: daysTopWt
+              }
+            }, {
+              elementId: "wtNewWorkTop",
+              className: "newWorkTop",
+              state: {
+                title: "기대신작 TOP",
+                webtoons: newWorkTopWt
+              }
+            }, {
+              elementId: "wtRomanceGenreTop",
+              className: "genreTop",
+              state: {
+                title: "로맨스 TOP",
+                webtoons: romanceTopWt
+              }
+            }, {
+              elementId: "wtRofanGenreTop",
+              className: "genreTop",
+              state: {
+                title: "로판 TOP",
+                webtoons: rofanTopWt
+              }
+            }, {
+              elementId: "wtDramaGenreTop",
+              className: "genreTop",
+              state: {
+                title: "드라마 TOP",
+                webtoons: dramaTopWt
+              }
+            }, {
+              elementId: "wtBLGenreTop",
+              className: "genreTop",
+              state: {
+                title: "BL TOP",
+                webtoons: blTopWt
+              }
+            }, {
+              elementId: "wtBoyGenreTop",
+              className: "genreTop",
+              state: {
+                title: "소년 TOP",
+                webtoons: boyTopWt
+              }
+            }, {
+              elementId: "wtActionGenreTop",
+              className: "genreTop",
+              state: {
+                title: "액션무협 TOP",
+                webtoons: actionTopWt
+              }
+            }, {
+              elementId: "wtDateTop",
+              className: "dateTop",
+              state: {
+                title: "일간 랭킹 TOP",
+                webtoons: dateTopWt
+              }
+            }, {
+              elementId: "wtRecommendEvent",
+              className: "recommendEvent",
+              state: {
+                title: "추천이벤트",
+                webtoons: rcEventWt
+              }
+            }, {
+              elementId: "wtFullButton",
+              className: "fullButton",
+              state: {}
+            }]
+          };
+
+        case 8:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
+
 HomeGenre.prototype.template = function () {
-  return (0,_serviceUtils_js__WEBPACK_IMPORTED_MODULE_10__.getComponentsTemplate)(this.state.contents);
+  var contents = this.state.contents;
+  return contents.reduce(function (tags, _ref2) {
+    var elementId = _ref2.elementId,
+        className = _ref2.className;
+    tags += "<li id=\"".concat(elementId, "\" class=\"mainBox main__").concat(className, "\"></li>");
+    return tags;
+  }, "");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HomeGenre);
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/genre/RofanGenre.js":
-/*!*************************************************!*\
-  !*** ./src/screens/Webtoon/genre/RofanGenre.js ***!
-  \*************************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/genre/RofanGenre.js":
+/*!****************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/genre/RofanGenre.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1686,30 +2360,131 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _components_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components.js */ "./src/screens/MainBox/Genres/components.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../enums/CategoryId.js */ "./src/enums/CategoryId.js");
+/* harmony import */ var _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../enums/GenreId.js */ "./src/enums/GenreId.js");
 
 
 
-function RofanGenre(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-  this.render();
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+
+
+
+
+
+
+function RofanGenre(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(RofanGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.createExtendsRelation)(RofanGenre, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+RofanGenre.prototype.mount = function () {
+  var _this = this;
+
+  var contents = this.state.contents;
+  contents.forEach(function (content) {
+    var elementId = content.elementId,
+        className = content.className,
+        state = content.state;
+    var list = state.list;
+
+    var $content = _this.$target.querySelector("#".concat(elementId));
+
+    new _components_js__WEBPACK_IMPORTED_MODULE_5__["default"][className]({
+      $target: $content,
+      state: _objectSpread(_objectSpread({}, state), {}, {
+        webtoons: className === "mainBanner" ? list : []
+      }),
+      $props: {
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
+        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+      }
+    });
+  });
+};
+
+RofanGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+  var _this$state, category, genre, _yield$getJson, section_containers, list;
+
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _this$state = this.state, category = _this$state.category, genre = _this$state.genre;
+          _context.next = 3;
+          return (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.getJson)((0,_constants_js__WEBPACK_IMPORTED_MODULE_6__.API_POINT)({
+            categoryId: _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__["default"][category],
+            genreId: _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__["default"][genre]
+          }));
+
+        case 3:
+          _yield$getJson = _context.sent;
+          section_containers = _yield$getJson.section_containers;
+          list = _yield$getJson.top_banner.list;
+          this.state = {
+            section_containers: section_containers,
+            contents: [{
+              elementId: "wtMainBanner",
+              className: "mainBanner",
+              state: {
+                list: list
+              }
+            }, {
+              elementId: "wtNavDetail",
+              className: "navDetail",
+              state: {}
+            }, {
+              elementId: "wtDateTop",
+              className: "dateTop",
+              state: {
+                title: "일간 로맨스판타지 TOP"
+              }
+            }, {
+              elementId: "wtFullButton",
+              className: "fullButton",
+              state: {}
+            }]
+          };
+
+        case 7:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
 
 RofanGenre.prototype.template = function () {
-  return "<div>RofanGenre</div>";
+  var contents = this.state.contents;
+  return contents.reduce(function (tags, _ref2) {
+    var elementId = _ref2.elementId,
+        className = _ref2.className;
+    tags += "<li id=\"".concat(elementId, "\" class=\"mainBox main__").concat(className, "\"></li>");
+    return tags;
+  }, "");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RofanGenre);
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/genre/RomanceGenre.js":
-/*!***************************************************!*\
-  !*** ./src/screens/Webtoon/genre/RomanceGenre.js ***!
-  \***************************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/genre/RomanceGenre.js":
+/*!******************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/genre/RomanceGenre.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1717,30 +2492,131 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _components_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components.js */ "./src/screens/MainBox/Genres/components.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../enums/CategoryId.js */ "./src/enums/CategoryId.js");
+/* harmony import */ var _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../enums/GenreId.js */ "./src/enums/GenreId.js");
 
 
 
-function RomanceGenre(target) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, target);
-  this.render();
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+
+
+
+
+
+
+function RomanceGenre(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(RomanceGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.createExtendsRelation)(RomanceGenre, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+RomanceGenre.prototype.mount = function () {
+  var _this = this;
+
+  var contents = this.state.contents;
+  contents.forEach(function (content) {
+    var elementId = content.elementId,
+        className = content.className,
+        state = content.state;
+    var list = state.list;
+
+    var $content = _this.$target.querySelector("#".concat(elementId));
+
+    new _components_js__WEBPACK_IMPORTED_MODULE_5__["default"][className]({
+      $target: $content,
+      state: _objectSpread(_objectSpread({}, state), {}, {
+        webtoons: className === "mainBanner" ? list : []
+      }),
+      $props: {
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
+        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+      }
+    });
+  });
+};
+
+RomanceGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+  var _this$state, category, genre, _yield$getJson, section_containers, list;
+
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _this$state = this.state, category = _this$state.category, genre = _this$state.genre;
+          _context.next = 3;
+          return (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.getJson)((0,_constants_js__WEBPACK_IMPORTED_MODULE_6__.API_POINT)({
+            categoryId: _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__["default"][category],
+            genreId: _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__["default"][genre]
+          }));
+
+        case 3:
+          _yield$getJson = _context.sent;
+          section_containers = _yield$getJson.section_containers;
+          list = _yield$getJson.top_banner.list;
+          this.state = {
+            section_containers: section_containers,
+            contents: [{
+              elementId: "wtMainBanner",
+              className: "mainBanner",
+              state: {
+                list: list
+              }
+            }, {
+              elementId: "wtNavDetail",
+              className: "navDetail",
+              state: {}
+            }, {
+              elementId: "wtDateTop",
+              className: "dateTop",
+              state: {
+                title: "일간 로맨스 TOP"
+              }
+            }, {
+              elementId: "wtFullButton",
+              className: "fullButton",
+              state: {}
+            }]
+          };
+
+        case 7:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
 
 RomanceGenre.prototype.template = function () {
-  return "<div>RomanceGenre</div>";
+  var contents = this.state.contents;
+  return contents.reduce(function (tags, _ref2) {
+    var elementId = _ref2.elementId,
+        className = _ref2.className;
+    tags += "<li id=\"".concat(elementId, "\" class=\"mainBox main__").concat(className, "\"></li>");
+    return tags;
+  }, "");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RomanceGenre);
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/genre/WebtoonGenre.js":
-/*!***************************************************!*\
-  !*** ./src/screens/Webtoon/genre/WebtoonGenre.js ***!
-  \***************************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/genre/WebtoonGenre.js":
+/*!******************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/genre/WebtoonGenre.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1748,70 +2624,115 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component.js */ "./src/screens/Component.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../utils.js */ "./src/utils.js");
+/* harmony import */ var _components_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components.js */ "./src/screens/MainBox/Genres/components.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../../constants.js */ "./src/constants.js");
+/* harmony import */ var _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../../enums/CategoryId.js */ "./src/enums/CategoryId.js");
+/* harmony import */ var _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../../../enums/GenreId.js */ "./src/enums/GenreId.js");
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+
+
+
 
 
 
 function WebtoonGenre(infoObject) {
-  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
+  _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"].call(this, infoObject);
 }
 
-(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(WebtoonGenre, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.createExtendsRelation)(WebtoonGenre, _Component_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
 WebtoonGenre.prototype.mount = function () {
   var _this = this;
 
   var contents = this.state.contents;
   contents.forEach(function (content) {
-    var $content = _this.$target.querySelector(".main__".concat(content.className)); // new 어쩌고를 위한 object 만들기
+    var elementId = content.elementId,
+        className = content.className,
+        state = content.state;
+    var list = state.list;
 
+    var $content = _this.$target.querySelector("#".concat(elementId));
 
-    console.log($content);
+    new _components_js__WEBPACK_IMPORTED_MODULE_5__["default"][className]({
+      $target: $content,
+      state: _objectSpread(_objectSpread({}, state), {}, {
+        webtoons: className === "mainBanner" ? list : []
+      }),
+      $props: {
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
+        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+      }
+    });
   });
 };
 
-WebtoonGenre.prototype.setup = function () {
-  this.state = {
-    contents: [{
-      className: "mainBanner",
-      state: {}
-    }, {
-      className: "navDetail",
-      state: {}
-    }, {
-      className: "subBanner",
-      state: {}
-    }, {
-      className: "daysTop",
-      state: {}
-    }, {
-      className: "bigCardList",
-      state: {}
-    }, {
-      className: "genreTop",
-      state: {}
-    }, {
-      className: "genreTop",
-      state: {}
-    }, {
-      className: "dateTop",
-      state: {}
-    }, {
-      className: "recommendEvent",
-      state: {}
-    }, {
-      className: "button",
-      state: {}
-    }]
-  };
-};
+WebtoonGenre.prototype.setup = /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+  var _this$state, category, genre, _yield$getJson, section_containers, list;
+
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _this$state = this.state, category = _this$state.category, genre = _this$state.genre;
+          _context.next = 3;
+          return (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__.getJson)((0,_constants_js__WEBPACK_IMPORTED_MODULE_6__.API_POINT)({
+            categoryId: _enums_CategoryId_js__WEBPACK_IMPORTED_MODULE_7__["default"][category],
+            genreId: _enums_GenreId_js__WEBPACK_IMPORTED_MODULE_8__["default"][genre]
+          }));
+
+        case 3:
+          _yield$getJson = _context.sent;
+          section_containers = _yield$getJson.section_containers;
+          list = _yield$getJson.top_banner.list;
+          this.state = {
+            section_containers: section_containers,
+            contents: [{
+              elementId: "wtMainBanner",
+              className: "mainBanner",
+              state: {
+                list: list
+              }
+            }, {
+              elementId: "wtDaysTop",
+              className: "daysTop",
+              state: {
+                title: "웹툰 TOP"
+              }
+            }, {
+              elementId: "wtFullButton",
+              className: "fullButton",
+              state: {}
+            }]
+          };
+
+        case 7:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _callee, this);
+}));
 
 WebtoonGenre.prototype.template = function () {
   var contents = this.state.contents;
-  return contents.reduce(function (tags, _ref) {
-    var className = _ref.className;
-    tags += "<li class=\"mainBox main__".concat(className, "\"></li>");
+  return contents.reduce(function (tags, _ref2) {
+    var elementId = _ref2.elementId,
+        className = _ref2.className;
+    tags += "<li id=\"".concat(elementId, "\" class=\"mainBox main__").concat(className, "\"></li>");
     return tags;
   }, "");
 };
@@ -1820,10 +2741,10 @@ WebtoonGenre.prototype.template = function () {
 
 /***/ }),
 
-/***/ "./src/screens/Webtoon/webtoonGenres.js":
-/*!**********************************************!*\
-  !*** ./src/screens/Webtoon/webtoonGenres.js ***!
-  \**********************************************/
+/***/ "./src/screens/MainBox/Genres/Webtoon/webtoonGenres.js":
+/*!*************************************************************!*\
+  !*** ./src/screens/MainBox/Genres/Webtoon/webtoonGenres.js ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1831,15 +2752,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _genre_ActionGenre_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./genre/ActionGenre.js */ "./src/screens/Webtoon/genre/ActionGenre.js");
-/* harmony import */ var _genre_BLGenre_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./genre/BLGenre.js */ "./src/screens/Webtoon/genre/BLGenre.js");
-/* harmony import */ var _genre_BoyGenre_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./genre/BoyGenre.js */ "./src/screens/Webtoon/genre/BoyGenre.js");
-/* harmony import */ var _genre_DaysGenre_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./genre/DaysGenre.js */ "./src/screens/Webtoon/genre/DaysGenre.js");
-/* harmony import */ var _genre_DramaGenre_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./genre/DramaGenre.js */ "./src/screens/Webtoon/genre/DramaGenre.js");
-/* harmony import */ var _genre_HomeGenre_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./genre/HomeGenre.js */ "./src/screens/Webtoon/genre/HomeGenre.js");
-/* harmony import */ var _genre_RofanGenre_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./genre/RofanGenre.js */ "./src/screens/Webtoon/genre/RofanGenre.js");
-/* harmony import */ var _genre_RomanceGenre_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./genre/RomanceGenre.js */ "./src/screens/Webtoon/genre/RomanceGenre.js");
-/* harmony import */ var _genre_WebtoonGenre_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./genre/WebtoonGenre.js */ "./src/screens/Webtoon/genre/WebtoonGenre.js");
+/* harmony import */ var _genre_ActionGenre_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./genre/ActionGenre.js */ "./src/screens/MainBox/Genres/Webtoon/genre/ActionGenre.js");
+/* harmony import */ var _genre_BLGenre_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./genre/BLGenre.js */ "./src/screens/MainBox/Genres/Webtoon/genre/BLGenre.js");
+/* harmony import */ var _genre_BoyGenre_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./genre/BoyGenre.js */ "./src/screens/MainBox/Genres/Webtoon/genre/BoyGenre.js");
+/* harmony import */ var _genre_DaysGenre_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./genre/DaysGenre.js */ "./src/screens/MainBox/Genres/Webtoon/genre/DaysGenre.js");
+/* harmony import */ var _genre_DramaGenre_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./genre/DramaGenre.js */ "./src/screens/MainBox/Genres/Webtoon/genre/DramaGenre.js");
+/* harmony import */ var _genre_HomeGenre_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./genre/HomeGenre.js */ "./src/screens/MainBox/Genres/Webtoon/genre/HomeGenre.js");
+/* harmony import */ var _genre_RofanGenre_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./genre/RofanGenre.js */ "./src/screens/MainBox/Genres/Webtoon/genre/RofanGenre.js");
+/* harmony import */ var _genre_RomanceGenre_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./genre/RomanceGenre.js */ "./src/screens/MainBox/Genres/Webtoon/genre/RomanceGenre.js");
+/* harmony import */ var _genre_WebtoonGenre_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./genre/WebtoonGenre.js */ "./src/screens/MainBox/Genres/Webtoon/genre/WebtoonGenre.js");
 
 
 
@@ -1864,30 +2785,170 @@ var webtoonGenres = {
 
 /***/ }),
 
-/***/ "./src/serviceUtils.js":
-/*!*****************************!*\
-  !*** ./src/serviceUtils.js ***!
-  \*****************************/
+/***/ "./src/screens/MainBox/Genres/components.js":
+/*!**************************************************!*\
+  !*** ./src/screens/MainBox/Genres/components.js ***!
+  \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "formatUserCount": () => (/* binding */ formatUserCount),
-/* harmony export */   "getComponentsTemplate": () => (/* binding */ getComponentsTemplate)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-var formatUserCount = function formatUserCount(userCount) {
-  return (userCount / 10000).toFixed(1) + "만명";
+/* harmony import */ var _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Components/FullButton.js */ "./src/screens/MainBox/Genres/Components/FullButton.js");
+/* harmony import */ var _Components_MainBanner_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Components/MainBanner.js */ "./src/screens/MainBox/Genres/Components/MainBanner.js");
+/* harmony import */ var _Components_NavDetail__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/NavDetail */ "./src/screens/MainBox/Genres/Components/NavDetail.js");
+/* harmony import */ var _Components_SubBanner_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/SubBanner.js */ "./src/screens/MainBox/Genres/Components/SubBanner.js");
+/* harmony import */ var _Components_ContentsBox_NewWorkTop_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Components/ContentsBox/NewWorkTop.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/NewWorkTop.js");
+/* harmony import */ var _Components_ContentsBox_DaysTop_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Components/ContentsBox/DaysTop.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/DaysTop.js");
+/* harmony import */ var _Components_ContentsBox_DateTop_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Components/ContentsBox/DateTop.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/DateTop.js");
+/* harmony import */ var _Components_ContentsBox_GenreTop_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Components/ContentsBox/GenreTop.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/GenreTop.js");
+/* harmony import */ var _Components_ContentsBox_RecommendEvent_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Components/ContentsBox/RecommendEvent.js */ "./src/screens/MainBox/Genres/Components/ContentsBox/RecommendEvent.js");
+
+
+
+
+
+
+
+
+
+var components = {
+  mainBanner: _Components_MainBanner_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  navDetail: _Components_NavDetail__WEBPACK_IMPORTED_MODULE_2__["default"],
+  subBanner: _Components_SubBanner_js__WEBPACK_IMPORTED_MODULE_3__["default"],
+  daysTop: _Components_ContentsBox_DaysTop_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+  newWorkTop: _Components_ContentsBox_NewWorkTop_js__WEBPACK_IMPORTED_MODULE_4__["default"],
+  genreTop: _Components_ContentsBox_GenreTop_js__WEBPACK_IMPORTED_MODULE_7__["default"],
+  dateTop: _Components_ContentsBox_DateTop_js__WEBPACK_IMPORTED_MODULE_6__["default"],
+  recommendEvent: _Components_ContentsBox_RecommendEvent_js__WEBPACK_IMPORTED_MODULE_8__["default"],
+  fullButton: _Components_FullButton_js__WEBPACK_IMPORTED_MODULE_0__["default"]
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (components);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/MainBox.js":
+/*!****************************************!*\
+  !*** ./src/screens/MainBox/MainBox.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Component.js */ "./src/screens/Component.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./src/utils.js");
+/* harmony import */ var _categories_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./categories.js */ "./src/screens/MainBox/categories.js");
+/* harmony import */ var _Genres_GenreList_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Genres/GenreList.js */ "./src/screens/MainBox/Genres/GenreList.js");
+
+
+
+
+
+function MainBox(infoObject) {
+  _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"].call(this, infoObject);
+}
+
+(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.createExtendsRelation)(MainBox, _Component_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+MainBox.prototype.mount = function () {
+  var $navGenre = this.$target.querySelector(".main__navGenre");
+  var $contentsBox = this.$target.querySelector(".main__contentsBox");
+  var _this$state = this.state,
+      genres = _this$state.genres,
+      selected = _this$state.selected,
+      category = _this$state.category;
+  this.selected = selected;
+
+  if (category !== "home") {
+    new _Genres_GenreList_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+      $target: $navGenre,
+      state: {
+        genres: genres,
+        selected: selected
+      },
+      $props: {
+        updateGenre: this.updateGenre.bind(this)
+      }
+    });
+  }
+
+  new _categories_js__WEBPACK_IMPORTED_MODULE_2__["default"][category][selected]({
+    $target: $contentsBox,
+    state: {
+      category: category,
+      genre: selected
+    },
+    $props: {
+      setCarousel: this.setCarousel.bind(this),
+      clearCarousel: this.clearCarousel.bind(this)
+    }
+  });
 };
 
-var getComponentsTemplate = function getComponentsTemplate(components) {
-  return components === null || components === void 0 ? void 0 : components.reduce(function (tags, component) {
-    tags += component.template();
-    return tags;
-  }, "");
+MainBox.prototype.template = function () {
+  var category = this.state.category;
+  return "\n    ".concat(category !== "home" ? '<ul class="mainBox mainNav main__navGenre"></ul>' : "", "\n    <ul class=\"main__contentsBox\"></ul>\n    ");
 };
 
+MainBox.prototype.updateGenre = function (genre) {
+  this.setState({
+    selected: genre
+  });
+};
 
+MainBox.prototype.setCarousel = function (getInterval) {
+  var interval = getInterval();
+  this.state.interval = interval;
+};
+
+MainBox.prototype.clearCarousel = function () {
+  if (this.state.interval) {
+    clearInterval(this.state.interval);
+    this.state.interval = "";
+  }
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainBox);
+
+/***/ }),
+
+/***/ "./src/screens/MainBox/categories.js":
+/*!*******************************************!*\
+  !*** ./src/screens/MainBox/categories.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Genres_Webtoon_webtoonGenres_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Genres/Webtoon/webtoonGenres.js */ "./src/screens/MainBox/Genres/Webtoon/webtoonGenres.js");
+/* harmony import */ var _Genres_Webnovel_webnovelGenres_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Genres/Webnovel/webnovelGenres.js */ "./src/screens/MainBox/Genres/Webnovel/webnovelGenres.js");
+/* harmony import */ var _Genres_Home_homeGenres_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Genres/Home/homeGenres.js */ "./src/screens/MainBox/Genres/Home/homeGenres.js");
+/* harmony import */ var _Genres_Movie_movieGenres_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Genres/Movie/movieGenres.js */ "./src/screens/MainBox/Genres/Movie/movieGenres.js");
+/* harmony import */ var _Genres_Broadcast_broadcastGenres_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Genres/Broadcast/broadcastGenres.js */ "./src/screens/MainBox/Genres/Broadcast/broadcastGenres.js");
+/* harmony import */ var _Genres_Book_bookGenres_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Genres/Book/bookGenres.js */ "./src/screens/MainBox/Genres/Book/bookGenres.js");
+
+
+
+
+
+
+var categories = {
+  home: _Genres_Home_homeGenres_js__WEBPACK_IMPORTED_MODULE_2__["default"],
+  webtoon: _Genres_Webtoon_webtoonGenres_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  webnovel: _Genres_Webnovel_webnovelGenres_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  movie: _Genres_Movie_movieGenres_js__WEBPACK_IMPORTED_MODULE_3__["default"],
+  broadcast: _Genres_Broadcast_broadcastGenres_js__WEBPACK_IMPORTED_MODULE_4__["default"],
+  book: _Genres_Book_bookGenres_js__WEBPACK_IMPORTED_MODULE_5__["default"]
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (categories);
 
 /***/ }),
 
@@ -2061,7 +3122,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n.contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n.main__mainBanner .imgBox__order {\n  position: absolute;\n  bottom: 60px;\n  right: 20px;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__button {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__button button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n}\n\n.contents {\n  margin: 20px 15px;\n}\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contentsCard {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contentsCard .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 15px;\n  padding: 5px;\n  margin: 0px 5px;\n  color: #808e9b;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.card__info .info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  height: 100%;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n.contents .imgBox__order {\n  left: 20px;\n  bottom: 30px;\n  opacity: 0.6;\n}\n", "",{"version":3,"sources":["webpack://./styles/main.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,sBAAsB;EACtB,mBAAmB;EACnB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,iBAAiB;EACjB,YAAY;AACd;;AAEA;EACE,yBAAyB;EACzB,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,cAAc;EACd,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;AACjB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,YAAY;EACZ,aAAa;AACf;AACA;EACE,YAAY;AACd;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,cAAc;AAChB;AACA;EACE,UAAU;EACV,YAAY;AACd;AACA;EACE,UAAU;EACV,WAAW;AACb;AACA;EACE,uBAAuB;EACvB,yBAAyB;EACzB,kBAAkB;EAClB,cAAc;EACd,gBAAgB;EAChB,gBAAgB;EAChB,iBAAiB;AACnB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;AACrB;AACA;EACE,eAAe;EACf,kBAAkB;AACpB;AACA;EACE,kBAAkB;EAClB,YAAY;EACZ,WAAW;EACX,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,iBAAiB;EACjB,WAAW;AACb;AACA;EACE,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,kBAAkB;EAClB,WAAW;EACX,SAAS;EACT,WAAW;EACX,eAAe;EACf,YAAY;AACd;AACA;EACE,eAAe;EACf,WAAW;EACX,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,eAAe;EACf,WAAW;EACX,yBAAyB;EACzB,YAAY;AACd;;AAEA;EACE,aAAa;EACb,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;EACd,UAAU;EACV,YAAY;EACZ,WAAW;EACX,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,yBAAyB;EACzB,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,2BAA2B;AAC7B;AACA;EACE,4BAA4B;AAC9B;AACA;EACE,8BAA8B;AAChC;AACA;EACE,+BAA+B;AACjC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,aAAa;AACf;;AAEA;EACE,eAAe;EACf,UAAU;EACV,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,gBAAgB;EAChB,mBAAmB;EACnB,eAAe;EACf,cAAc;EACd,yBAAyB;AAC3B;;AAEA;EACE,aAAa;EACb,sBAAsB;AACxB;;AAEA;EACE,iBAAiB;AACnB;AACA;EACE,aAAa;EACb,8BAA8B;EAC9B,YAAY;AACd;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,eAAe;EACf,cAAc;AAChB;AACA;EACE,aAAa;EACb,sBAAsB;AACxB;AACA;EACE,aAAa;EACb,6BAA6B;EAC7B,YAAY;EACZ,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,UAAU;EACV,gCAAgC;AAClC;AACA;EACE,cAAc;EACd,gCAAgC;AAClC;AACA;EACE,aAAa;EACb,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;EACf,UAAU;EACV,aAAa;EACb,WAAW;EACX,YAAY;AACd;;AAEA;EACE,mBAAmB;EACnB,yBAAyB;EACzB,aAAa;AACf;AACA;EACE,gCAAgC;EAChC,WAAW;EACX,aAAa;EACb,gBAAgB;AAClB;AACA;EACE,aAAa;EACb,8BAA8B;EAC9B,eAAe;EACf,YAAY;EACZ,eAAe;EACf,cAAc;AAChB;AACA;EACE,cAAc;AAChB;AACA;EACE,eAAe;EACf,eAAe;EACf,mBAAmB;EACnB,uBAAuB;EACvB,gBAAgB;AAClB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,cAAc;AAChB;AACA;EACE,iBAAiB;AACnB;AACA;EACE,eAAe;AACjB;;AAEA;EACE,aAAa;EACb,8BAA8B;EAC9B,WAAW;AACb;;AAEA;EACE,UAAU;EACV,aAAa;EACb,YAAY;AACd;AACA;EACE,eAAe;AACjB;AACA;;;EAGE,eAAe;AACjB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,WAAW;AACb;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,kBAAkB;EAClB,WAAW;AACb;AACA;EACE,kBAAkB;EAClB,QAAQ;EACR,SAAS;EACT,YAAY;EACZ,eAAe;EACf,cAAc;EACd,oCAAoC;EACpC,2BAA2B;AAC7B;AACA;EACE,WAAW;EACX,kBAAkB;AACpB;AACA;EACE,aAAa;EACb,sBAAsB;EACtB,cAAc;AAChB;AACA;;EAEE,eAAe;AACjB;;AAEA;EACE,cAAc;EACd,eAAe;AACjB;AACA;EACE,eAAe;AACjB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,yBAAyB;EACzB,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;AACA;EACE,UAAU;EACV,YAAY;EACZ,YAAY;AACd","sourcesContent":[".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n.contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n.main__mainBanner .imgBox__order {\n  position: absolute;\n  bottom: 60px;\n  right: 20px;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__button {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__button button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n}\n\n.contents {\n  margin: 20px 15px;\n}\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contentsCard {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contentsCard .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 15px;\n  padding: 5px;\n  margin: 0px 5px;\n  color: #808e9b;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.card__info .info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentsBigCard {\n  height: 100%;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n.contents .imgBox__order {\n  left: 20px;\n  bottom: 30px;\n  opacity: 0.6;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n\n.main__contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__fullButton {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__fullButton button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n  padding: 20px 15px;\n}\n\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contents__card {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contents__card .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 16px;\n  padding: 5px;\n  margin: 0px 6px;\n  color: #808e9b;\n  line-height: normal;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contents__bigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n\n.imgBox__order {\n  position: absolute;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n.main__mainBanner .imgBox__order {\n  bottom: 60px;\n  right: 20px;\n}\n.main__contents .imgBox__order {\n  bottom: 20px;\n  left: 20px;\n  opacity: 0.6;\n}\n", "",{"version":3,"sources":["webpack://./styles/main.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,sBAAsB;EACtB,mBAAmB;EACnB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,iBAAiB;EACjB,YAAY;AACd;;AAEA;EACE,yBAAyB;EACzB,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,cAAc;EACd,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;AACjB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,cAAc;AAChB;AACA;EACE,UAAU;EACV,YAAY;AACd;AACA;EACE,UAAU;EACV,WAAW;AACb;AACA;EACE,uBAAuB;EACvB,yBAAyB;EACzB,kBAAkB;EAClB,cAAc;EACd,gBAAgB;EAChB,gBAAgB;EAChB,iBAAiB;AACnB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;AACrB;AACA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,iBAAiB;EACjB,WAAW;AACb;AACA;EACE,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,kBAAkB;EAClB,WAAW;EACX,SAAS;EACT,WAAW;EACX,eAAe;EACf,YAAY;AACd;AACA;EACE,eAAe;EACf,WAAW;EACX,gCAAgC;AAClC;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,eAAe;EACf,WAAW;EACX,yBAAyB;EACzB,YAAY;AACd;;AAEA;EACE,aAAa;EACb,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,YAAY;EACZ,YAAY;EACZ,WAAW;AACb;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,yBAAyB;EACzB,cAAc;EACd,UAAU;EACV,YAAY;EACZ,WAAW;EACX,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,yBAAyB;EACzB,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,2BAA2B;AAC7B;AACA;EACE,4BAA4B;AAC9B;AACA;EACE,8BAA8B;AAChC;AACA;EACE,+BAA+B;AACjC;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,aAAa;AACf;;AAEA;EACE,eAAe;EACf,UAAU;EACV,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,gBAAgB;EAChB,mBAAmB;EACnB,eAAe;EACf,cAAc;EACd,yBAAyB;AAC3B;;AAEA;EACE,aAAa;EACb,sBAAsB;EACtB,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,8BAA8B;EAC9B,YAAY;AACd;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,eAAe;EACf,cAAc;AAChB;AACA;EACE,aAAa;EACb,sBAAsB;AACxB;AACA;EACE,aAAa;EACb,6BAA6B;EAC7B,YAAY;EACZ,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,UAAU;EACV,gCAAgC;AAClC;AACA;EACE,cAAc;EACd,gCAAgC;AAClC;AACA;EACE,aAAa;EACb,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,eAAe;EACf,UAAU;EACV,aAAa;EACb,WAAW;EACX,YAAY;AACd;;AAEA;EACE,mBAAmB;EACnB,yBAAyB;EACzB,aAAa;AACf;AACA;EACE,gCAAgC;EAChC,WAAW;EACX,aAAa;EACb,gBAAgB;AAClB;AACA;EACE,aAAa;EACb,8BAA8B;EAC9B,eAAe;EACf,YAAY;EACZ,eAAe;EACf,cAAc;EACd,mBAAmB;AACrB;AACA;EACE,cAAc;AAChB;AACA;EACE,eAAe;EACf,eAAe;EACf,mBAAmB;EACnB,uBAAuB;EACvB,gBAAgB;AAClB;AACA;EACE,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,yBAAyB;EACzB,cAAc;AAChB;AACA;EACE,cAAc;AAChB;AACA;EACE,iBAAiB;AACnB;AACA;EACE,eAAe;AACjB;;AAEA;EACE,aAAa;EACb,8BAA8B;EAC9B,WAAW;EACX,YAAY;AACd;;AAEA;EACE,UAAU;EACV,aAAa;EACb,YAAY;AACd;AACA;EACE,eAAe;AACjB;AACA;;;EAGE,eAAe;AACjB;;AAEA;EACE,eAAe;EACf,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,WAAW;AACb;AACA;EACE,eAAe;EACf,gBAAgB;AAClB;AACA;EACE,kBAAkB;EAClB,WAAW;AACb;AACA;EACE,kBAAkB;EAClB,QAAQ;EACR,SAAS;EACT,YAAY;EACZ,eAAe;EACf,cAAc;EACd,oCAAoC;EACpC,2BAA2B;AAC7B;AACA;EACE,WAAW;EACX,kBAAkB;AACpB;AACA;EACE,aAAa;EACb,sBAAsB;EACtB,cAAc;AAChB;AACA;;EAEE,eAAe;AACjB;;AAEA;EACE,cAAc;EACd,eAAe;AACjB;AACA;EACE,eAAe;AACjB;AACA;EACE,eAAe;EACf,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;AACA;EACE,eAAe;EACf,yBAAyB;EACzB,gBAAgB;EAChB,cAAc;EACd,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,cAAc;AAChB;AACA;EACE,YAAY;EACZ,WAAW;AACb;AACA;EACE,YAAY;EACZ,UAAU;EACV,YAAY;AACd","sourcesContent":[".app {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n\n.main {\n  margin-top: 140px;\n  width: 720px;\n}\n\n.mainBox {\n  background-color: #ffffff;\n  width: 100%;\n  margin: 10px 0px;\n}\n\n.mainNav {\n  height: 60px;\n}\n\n.main__navGenre {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  color: #bbbbbb;\n  font-size: 17px;\n  font-weight: 500;\n}\n.navGenre-item {\n  cursor: pointer;\n}\n.main__navGenre .selected {\n  color: #333333;\n}\n\n.main__mainBanner {\n  position: relative;\n  cursor: pointer;\n  width: 720px;\n  height: 480px;\n}\n\n.main__contents .main__mainBanner {\n  height: auto;\n}\n\n.banner__imgBox {\n  position: relative;\n}\n\n.bigCard .banner__imgBox {\n  height: 90%;\n}\n\n.imgBox__info {\n  position: absolute;\n  color: #ffffff;\n}\n.main__mainBanner .imgBox__info {\n  left: 20px;\n  bottom: 60px;\n}\n.bigCard .imgBox__info {\n  left: 15px;\n  bottom: 5px;\n}\n.info-event {\n  background-color: black;\n  border: 1px solid #fecc2e;\n  border-radius: 4px;\n  color: #fecc2e;\n  font-weight: 600;\n  padding: 0px 4px;\n  margin-right: 2px;\n}\n.infoTitle {\n  font-size: 28px;\n  font-weight: 500;\n  margin-bottom: 10px;\n}\n.infoBody {\n  font-size: 15px;\n  margin-bottom: 5px;\n}\n\n.banner__imgBox img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  z-index: -1;\n}\n.bigCard .banner__imgBox img {\n  border-radius: 10px 10px 0px 0px;\n}\n\n.banner__message {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #fecc2e;\n  color: #333333;\n}\n.main__mainBanner .banner__message {\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100%;\n  font-size: 15px;\n  height: 40px;\n}\n.bigCard .banner__message {\n  font-size: 12px;\n  height: 10%;\n  border-radius: 0px 0px 10px 10px;\n}\n\n.main__fullButton {\n  display: flex;\n  height: 70px;\n  width: 100%;\n}\n\n.main__fullButton button {\n  cursor: pointer;\n  font-size: 19px;\n  width: 100%;\n  background-color: #fecc2e;\n  border: none;\n}\n\n.main__navDetail {\n  height: 140px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n}\n\n.nav_detailBox {\n  display: flex;\n  width: 680px;\n  height: 50px;\n  margin: 1px;\n}\n\n.detailBox {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f3f3f3;\n  color: #3a3a3a;\n  width: 33%;\n  height: 100%;\n  margin: 1px;\n  font-size: 15px;\n  font-weight: 500;\n}\n\n.detailBox .detailNum {\n  margin-left: 5px;\n  background-color: #fecc2e;\n  padding: 2px 6px;\n  border-radius: 10px;\n}\n\n.border-top-left {\n  border-top-left-radius: 9px;\n}\n.border-top-right {\n  border-top-right-radius: 9px;\n}\n.border-bottom-left {\n  border-bottom-left-radius: 9px;\n}\n.border-bottom-right {\n  border-bottom-right-radius: 9px;\n}\n\n.main__subBanner {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 120px;\n}\n\n.subImg {\n  cursor: pointer;\n  width: 65%;\n  border-radius: 5px;\n}\n.arrow {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 4px 9px;\n  border-radius: 20px;\n  font-size: 25px;\n  color: #808e9b;\n  border: 1px solid #bbbbbb;\n}\n\n.main__contents {\n  display: flex;\n  flex-direction: column;\n  padding: 20px 15px;\n}\n\n.contents__header {\n  display: flex;\n  justify-content: space-between;\n  height: 40px;\n}\n.contents__header .contents__title {\n  font-size: 16px;\n  font-weight: 500;\n}\n\n.contents__title > .titleNum {\n  font-size: 13px;\n  color: #bbbbbb;\n}\n\n.contents__more {\n  cursor: pointer;\n  font-size: 14px;\n  color: #999999;\n}\n.contents__body {\n  display: flex;\n  flex-direction: column;\n}\n.contents__daysNav {\n  display: flex;\n  justify-content: space-around;\n  height: 30px;\n  font-size: 16px;\n  font-weight: 400;\n  color: #bbbbbb;\n}\n\n.contents__daysNav li {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 12%;\n  border-bottom: 2px solid #f1f1f1;\n}\n.contents__daysNav .selected {\n  color: #333333;\n  border-bottom: 2px solid #ffd200;\n}\n.contents__card {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 15px;\n}\n.contents__card .card {\n  cursor: pointer;\n  width: 18%;\n  height: 190px;\n  margin: 3px;\n  padding: 3px;\n}\n\n.card__imgBox {\n  border-radius: 10px;\n  background-color: #242526;\n  height: 150px;\n}\n.cardImg {\n  border-radius: 10px 10px 0px 0px;\n  width: 100%;\n  height: 120px;\n  object-fit: fill;\n}\n.card .imgInfo {\n  display: flex;\n  justify-content: space-between;\n  font-size: 16px;\n  padding: 5px;\n  margin: 0px 6px;\n  color: #808e9b;\n  line-height: normal;\n}\n.imgInfo .rank {\n  color: #ffd200;\n}\n.card__title {\n  font-size: 15px;\n  margin: 9px 0px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.card__info {\n  font-size: 5px;\n}\n\n.info-status {\n  border-radius: 2px;\n  padding: 1px 2px;\n  color: #f1f1f1;\n}\n\n.card__info .info-age {\n  border-radius: 2px;\n  padding: 1px 2px;\n  background-color: #bbbbbb;\n  color: #f1f1f1;\n}\n.card__info .info-user {\n  color: #999999;\n}\n.card__info .info-user i {\n  margin-right: 3px;\n}\n.card__info .info-user span {\n  font-size: 12px;\n}\n\n.contents__bigCard {\n  display: flex;\n  justify-content: space-between;\n  width: 100%;\n  height: 100%;\n}\n\n.bigCard {\n  width: 50%;\n  height: 223px;\n  padding: 5px;\n}\n.bigCard .infoTitle {\n  font-size: 18px;\n}\n.bigCard .info-event,\n.info-category,\n.info-users {\n  font-size: 12px;\n}\n\n.contentRow {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n}\n.contentRow div {\n  margin: 9px;\n}\n.contentRow .dateRank {\n  font-size: 20px;\n  font-weight: 700;\n}\n.contentRow .contentImgBox {\n  position: relative;\n  width: 70px;\n}\n.contentImgBox .content-waitFreeIcon {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  padding: 3px;\n  font-size: 15px;\n  color: #fecc2e;\n  background-color: rgba(0, 0, 0, 0.8);\n  border-top-left-radius: 5px;\n}\n.contentImgBox img {\n  width: 100%;\n  border-radius: 5px;\n}\n.contentInfo {\n  display: flex;\n  flex-direction: column;\n  color: #999999;\n}\n.contentInfo .infoBody,\n.contentInfo .info__titleInfo {\n  margin: 3px 9px;\n}\n\n.contentInfo .info__titleInfo {\n  color: #333333;\n  font-size: 14px;\n}\n.contentInfo .infoBody {\n  font-size: 12px;\n}\n.info__title-status {\n  font-size: 12px;\n  padding: 1px 3px;\n  color: #f3f3f3;\n  border-radius: 2px;\n}\n.info__title-age {\n  font-size: 12px;\n  background-color: #999999;\n  padding: 1px 2px;\n  color: #f3f3f3;\n  border-radius: 1px;\n}\n\n.imgBox__order {\n  position: absolute;\n  font-size: 17px;\n  font-weight: 600;\n  color: #bbbbbb;\n}\n.main__mainBanner .imgBox__order {\n  bottom: 60px;\n  right: 20px;\n}\n.main__contents .imgBox__order {\n  bottom: 20px;\n  left: 20px;\n  opacity: 0.6;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
