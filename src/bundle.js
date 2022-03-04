@@ -1558,8 +1558,8 @@ SubBanner.prototype.mount = function () {
   var $subBanner = this.$target;
   var $bannerElems = list.map(function (_ref) {
     var bg_img = _ref.bg_img,
-        webtoon = _ref.webtoon;
-    var wtTpl = "\n    <img class=\"subImg\" src=\n    \"".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.KAKAO_DATA_URL + bg_img, "\" alt=\"").concat(webtoon, "\" />");
+        title = _ref.title;
+    var wtTpl = "\n    <img class=\"subImg\" src=\n    \"".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.KAKAO_DATA_URL + bg_img, "\" alt=\"").concat(title, "\" />");
     var div = document.createElement("div");
     div.innerHTML = wtTpl;
     return div;
