@@ -1,9 +1,5 @@
 import { createExtendsRelation } from "../../../../../utils.js";
-import {
-  getKoreaDays,
-  getKoreaDay,
-  getDay,
-} from "../../../../../modules/serviceUtils.js";
+import { getKoreaDays, getDay } from "../../../../../modules/serviceUtils.js";
 import ContentsBox from "../ContentsBox.js";
 import CardList from "./Components/CardList.js";
 import DaysList from "./Components/DaysList.js";
@@ -35,14 +31,7 @@ DaysTop.prototype.mount = function () {
   } = this.state;
   const FIRST_ELEMENT = 0;
   const { list } = section_week_top[FIRST_ELEMENT];
-  console.log(selectedDay);
   const filteredWebtoons = list.find(({ day }) => day === +selectedDay).list;
-
-  // const filteredWebtoons = this.$props.filterContent(
-  //   webtoons,
-  //   "days",
-  //   selected
-  // );
 
   new DaysList({
     $target: $contentNav,
