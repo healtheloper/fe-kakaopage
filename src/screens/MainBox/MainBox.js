@@ -13,7 +13,7 @@ MainBox.prototype.mount = function () {
   const $navGenre = this.$target.querySelector(".main__navGenre");
   const $contentsBox = this.$target.querySelector(".main__contentsBox");
   const { genres, selected, category } = this.state;
-  this.selected = selected;
+
   if (category !== "home") {
     new GenreList({
       $target: $navGenre,

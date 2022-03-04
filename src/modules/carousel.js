@@ -99,7 +99,7 @@ const createArrowBox = ({ carouselBox, elemWidth, elemUnit, css }) => {
   const arrowBox = createElement({
     tag: "div",
     classes: ["arrow-box"],
-    children: [...$arrows],
+    children: $arrows,
     css: css.arrowBoxCss,
   });
   return arrowBox;
@@ -127,7 +127,7 @@ const createCarouselOrder = ({ elems, css }) => {
   const carouselOrder = createElement({
     tag: "div",
     classes: ["carousel-order"],
-    children: [...orderInfos.map((info) => createElement(info))],
+    children: orderInfos.map((info) => createElement(info)),
     css,
   });
 
