@@ -328,7 +328,8 @@ App.prototype.mount = function () {
       categories: categories
     },
     $props: {
-      updateCategory: this.updateCategory.bind(this)
+      updateCategory: this.updateCategory.bind(this),
+      clearCarousel: this.clearCarousel.bind(this)
     }
   });
   new _MainBox_MainBox_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
@@ -337,6 +338,10 @@ App.prototype.mount = function () {
       category: category,
       genres: genres[category],
       selected: "home"
+    },
+    $props: {
+      setCarousel: this.setCarousel.bind(this),
+      clearCarousel: this.clearCarousel.bind(this)
     }
   });
   new _Footer_Footer_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
@@ -348,6 +353,18 @@ App.prototype.updateCategory = function (category) {
   this.setState({
     category: category
   });
+};
+
+App.prototype.setCarousel = function (getInterval) {
+  var interval = getInterval();
+  this.state.interval = interval;
+};
+
+App.prototype.clearCarousel = function () {
+  if (this.state.interval) {
+    clearInterval(this.state.interval);
+    this.state.interval = "";
+  }
 };
 
 App.prototype.template = function () {
@@ -565,10 +582,13 @@ Header.prototype.setEvent = function () {
 
   var handleAddEvent = function handleAddEvent(_ref) {
     var target = _ref.target;
-    var updateCategory = _this.$props.updateCategory;
+    var _this$$props = _this.$props,
+        updateCategory = _this$$props.updateCategory,
+        clearCarousel = _this$$props.clearCarousel;
     var $eventTarget = target.closest(".header__nav-item");
     var category = $eventTarget.dataset.category;
     updateCategory(category);
+    clearCarousel();
 
     _this.setState({
       selected: category
@@ -1236,7 +1256,6 @@ __webpack_require__.r(__webpack_exports__);
 
 function MainBanner(infoObject) {
   _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, infoObject);
-  this.$props.clearCarousel();
 }
 
 (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(MainBanner, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -1387,12 +1406,15 @@ function GenreList(infoObject) {
 (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createExtendsRelation)(GenreList, _Component_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
 GenreList.prototype.setEvent = function () {
-  var updateGenre = this.$props.updateGenre;
+  var _this$$props = this.$props,
+      updateGenre = _this$$props.updateGenre,
+      clearCarousel = _this$$props.clearCarousel;
 
   var handleAddEvent = function handleAddEvent(_ref) {
     var target = _ref.target;
     var $eventTarget = target.closest(".navGenre-item");
     updateGenre($eventTarget.dataset.genre);
+    clearCarousel();
   };
 
   this.addEvent("click", ".navGenre-item", handleAddEvent);
@@ -1547,8 +1569,7 @@ ActionGenre.prototype.mount = function () {
         webtoons: className === "mainBanner" ? list : []
       }),
       $props: {
-        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
-        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
   });
@@ -1679,8 +1700,7 @@ BLGenre.prototype.mount = function () {
         webtoons: className === "mainBanner" ? list : []
       }),
       $props: {
-        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
-        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
   });
@@ -1811,8 +1831,7 @@ BoyGenre.prototype.mount = function () {
         webtoons: className === "mainBanner" ? list : []
       }),
       $props: {
-        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
-        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
   });
@@ -1944,8 +1963,7 @@ DaysGenre.prototype.mount = function () {
         webtoons: className === "mainBanner" ? list : webtoons
       }),
       $props: {
-        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
-        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
   });
@@ -2072,8 +2090,7 @@ DramaGenre.prototype.mount = function () {
         webtoons: className === "mainBanner" ? list : []
       }),
       $props: {
-        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
-        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
   });
@@ -2209,8 +2226,7 @@ HomeGenre.prototype.mount = function () {
       $props: {
         sortRanking: _this.sortRanking,
         filterContent: _this.filterContent,
-        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
-        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
   });
@@ -2409,8 +2425,7 @@ RofanGenre.prototype.mount = function () {
         webtoons: className === "mainBanner" ? list : []
       }),
       $props: {
-        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
-        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
   });
@@ -2541,8 +2556,7 @@ RomanceGenre.prototype.mount = function () {
         webtoons: className === "mainBanner" ? list : []
       }),
       $props: {
-        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
-        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
   });
@@ -2673,8 +2687,7 @@ WebtoonGenre.prototype.mount = function () {
         webtoons: className === "mainBanner" ? list : []
       }),
       $props: {
-        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null,
-        clearCarousel: className === "mainBanner" ? _this.$props.clearCarousel : null
+        setCarousel: className === "mainBanner" ? _this.$props.setCarousel : null
       }
     });
   });
@@ -2872,7 +2885,8 @@ MainBox.prototype.mount = function () {
         selected: selected
       },
       $props: {
-        updateGenre: this.updateGenre.bind(this)
+        updateGenre: this.updateGenre.bind(this),
+        clearCarousel: this.$props.clearCarousel
       }
     });
   }
@@ -2884,8 +2898,7 @@ MainBox.prototype.mount = function () {
       genre: selected
     },
     $props: {
-      setCarousel: this.setCarousel.bind(this),
-      clearCarousel: this.clearCarousel.bind(this)
+      setCarousel: this.$props.setCarousel
     }
   });
 };
@@ -2899,18 +2912,6 @@ MainBox.prototype.updateGenre = function (genre) {
   this.setState({
     selected: genre
   });
-};
-
-MainBox.prototype.setCarousel = function (getInterval) {
-  var interval = getInterval();
-  this.state.interval = interval;
-};
-
-MainBox.prototype.clearCarousel = function () {
-  if (this.state.interval) {
-    clearInterval(this.state.interval);
-    this.state.interval = "";
-  }
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainBox);
