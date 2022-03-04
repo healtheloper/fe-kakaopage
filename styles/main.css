@@ -301,7 +301,7 @@
   font-size: 5px;
 }
 
-.card__info .info-status {
+.info-status {
   border-radius: 2px;
   padding: 1px 2px;
   color: #f1f1f1;

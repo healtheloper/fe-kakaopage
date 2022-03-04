@@ -2,6 +2,7 @@ import { formatUserCount } from "../../../../../../modules/serviceUtils.js";
 import { createExtendsRelation } from "../../../../../../utils.js";
 import Component from "../../../../../Component.js";
 import { KAKAO_DATA_URL } from "../../../../../../constants";
+import badgeInfo from "./constants/badgeInfo.js";
 
 function CardList(infoObject) {
   Component.call(this, infoObject);
@@ -24,17 +25,8 @@ CardList.prototype.template = function () {
       waitfree,
     } = webtoon;
 
-    const badgeSpan = {
-      BT02: "UP",
-      BT03: "N",
-      BT99: "",
-    };
+    const { badgeSpan, badgeBgColor } = badgeInfo;
 
-    const badgeBgColor = {
-      BT02: "blue",
-      BT03: "red",
-      BT99: "",
-    };
     return `<li class="card">
       <div class="card__imgBox">
         <img
