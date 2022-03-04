@@ -11,35 +11,35 @@ function DaysGenre(infoObject) {
 
 createExtendsRelation(DaysGenre, Component);
 
-DaysGenre.prototype.sortRanking = function (items) {
-  return items.sort((i1, i2) => i2.rank - i1.rank);
-};
+// DaysGenre.prototype.sortRanking = function (items) {
+//   return items.sort((i1, i2) => i2.rank - i1.rank);
+// };
 
-DaysGenre.prototype.filterContent = function (webtoons, where, what) {
-  return webtoons.filter((webtoon) =>
-    typeof webtoon[where] === "object"
-      ? webtoon[where].includes(what)
-      : webtoon[where] === what
-  );
-};
+// DaysGenre.prototype.filterContent = function (webtoons, where, what) {
+//   return webtoons.filter((webtoon) =>
+//     typeof webtoon[where] === "object"
+//       ? webtoon[where].includes(what)
+//       : webtoon[where] === what
+//   );
+// };
 
 DaysGenre.prototype.mount = function () {
   const { contents } = this.state;
 
   contents.forEach((content) => {
     const { elementId, className, state } = content;
-    const { list } = state;
+    const { list, webtoons } = state;
     const $content = this.$target.querySelector(`#${elementId}`);
 
     new components[className]({
       $target: $content,
       state: {
         ...state,
-        webtoons: className === "mainBanner" ? list : [],
+        webtoons: className === "mainBanner" ? list : webtoons,
       },
       $props: {
-        sortRanking: this.sortRanking,
-        filterContent: this.filterContent,
+        // sortRanking: this.sortRanking,
+        // filterContent: this.filterContent,
         setCarousel:
           className === "mainBanner" ? this.$props.setCarousel : null,
         clearCarousel:

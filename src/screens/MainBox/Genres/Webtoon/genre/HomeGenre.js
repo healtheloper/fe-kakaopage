@@ -76,7 +76,6 @@ HomeGenre.prototype.setup = async function () {
     rcEventWt,
   ] = section_containers;
 
-  console.log(daysTopWt);
   this.state = {
     contents: [
       {
