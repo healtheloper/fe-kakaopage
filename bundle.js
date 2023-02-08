@@ -27,7 +27,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "API_POINT": () => (/* binding */ API_POINT)
 /* harmony export */ });
 var SERVER_FETCH_URL = 'http://127.0.0.1:3000/';
-var FRONT_SERVER_URL = 'https://healtheloper.github.io/fe-kakaopage/';
+var FRONT_SERVER_URL = '/fe-kakaopage/';
 var KAKAO_DATA_URL = 'https://dn-img-page.kakao.com/download/resource?kid=';
 
 var API_POINT = function API_POINT(_ref) {
