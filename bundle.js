@@ -33,7 +33,7 @@ var KAKAO_DATA_URL = 'https://dn-img-page.kakao.com/download/resource?kid=';
 var API_POINT = function API_POINT(_ref) {
   var categoryId = _ref.categoryId,
       genreId = _ref.genreId;
-  return "".concat(categoryId, "/").concat(genreId, ".json");
+  return "".concat(categoryId).concat(genreId ? "/".concat(genreId) : '');
 };
 
 
@@ -3238,7 +3238,7 @@ var getJson = /*#__PURE__*/function () {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return fetch("".concat( true ? _constants_js__WEBPACK_IMPORTED_MODULE_2__.FRONT_SERVER_URL : 0).concat(dataName));
+            return fetch("".concat( true ? _constants_js__WEBPACK_IMPORTED_MODULE_2__.FRONT_SERVER_URL : 0).concat(dataName, ".json"));
 
           case 3:
             response = _context.sent;
