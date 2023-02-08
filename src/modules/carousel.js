@@ -1,4 +1,4 @@
-import { throttle } from "throttle-debounce";
+import { throttle } from 'throttle-debounce';
 
 const createElement = ({ tag, classes, textContent, children, event, css }) => {
   const element = document.createElement(tag);
@@ -34,7 +34,7 @@ const handleArrowButton = ({
 
   const moveX = isPrev ? +curX + +elemWidth : +curX - +elemWidth;
 
-  carouselBox.style.transition = "transform 0.2s";
+  carouselBox.style.transition = 'transform 0.2s';
   carouselBox.style.transform = `translateX(${moveX}${elemUnit})`;
   if (css) {
     Object.keys(css).forEach((attr) => {
@@ -45,12 +45,12 @@ const handleArrowButton = ({
     const removeElem = isPrev ? carouselBox.lastChild : carouselBox.firstChild;
     carouselBox.removeChild(removeElem);
 
-    const cElems = carouselBox.querySelectorAll(".carousel-elem");
-    cElems.forEach((box) => box.classList.remove("main-elem"));
+    const cElems = carouselBox.querySelectorAll('.carousel-elem');
+    cElems.forEach((box) => box.classList.remove('main-elem'));
     const mainElem = isPrev ? cElems[0] : cElems[1];
-    mainElem.classList.add("main-elem");
+    mainElem.classList.add('main-elem');
 
-    const curNum = carouselBox.parentNode.querySelector(".curNum");
+    const curNum = carouselBox.parentNode.querySelector('.curNum');
     if (curNum) curNum.textContent = mainElem.dataset.index;
 
     if (isPrev) {
@@ -60,45 +60,60 @@ const handleArrowButton = ({
       carouselBox.appendChild(removeElem);
     }
 
-    carouselBox.style.transition = "none";
+    carouselBox.style.transition = 'none';
     carouselBox.style.transform = `translateX(${+curX}${elemUnit})`;
   }, 201);
 };
 
+const throttleArrowButtonHandler = ({
+  direction,
+  carouselBox,
+  elemWidth,
+  elemUnit,
+  css,
+}) =>
+  throttle(500, () => {
+    handleArrowButton({
+      isPrev: direction === 'prev' ? true : false,
+      carouselBox,
+      elemWidth,
+      elemUnit,
+      css: css?.elemCss,
+    });
+  });
+
 const createArrowBox = ({ carouselBox, elemWidth, elemUnit, css }) => {
   const arrows = [
     {
-      direction: "prev",
-      content: "<",
+      direction: 'prev',
+      content: '<',
     },
     {
-      direction: "next",
-      content: ">",
+      direction: 'next',
+      content: '>',
     },
   ];
   const $arrows = arrows.map(({ direction, content }) => {
     return createElement({
-      tag: "div",
-      classes: ["arrow", `arrow__${direction}`],
+      tag: 'div',
+      classes: ['arrow', `arrow__${direction}`],
       textContent: content,
       event: {
-        eventType: "click",
-        callback: throttle(500, () => {
-          handleArrowButton({
-            isPrev: direction === "prev" ? true : false,
-            carouselBox,
-            elemWidth,
-            elemUnit,
-            css: css.elemCss,
-          });
+        eventType: 'click',
+        callback: throttleArrowButtonHandler({
+          direction,
+          carouselBox,
+          elemWidth,
+          elemUnit,
+          css,
         }),
       },
       css: css.arrowCss,
     });
   });
   const arrowBox = createElement({
-    tag: "div",
-    classes: ["arrow-box"],
+    tag: 'div',
+    classes: ['arrow-box'],
     children: [...$arrows],
     css: css.arrowBoxCss,
   });
@@ -108,25 +123,25 @@ const createArrowBox = ({ carouselBox, elemWidth, elemUnit, css }) => {
 const createCarouselOrder = ({ elems, css }) => {
   const orderInfos = [
     {
-      tag: "span",
-      classes: ["orderNum", "curNum"],
+      tag: 'span',
+      classes: ['orderNum', 'curNum'],
       textContent: 1,
     },
     {
-      tag: "span",
-      classes: ["orderBar"],
-      textContent: "/",
+      tag: 'span',
+      classes: ['orderBar'],
+      textContent: '/',
     },
     {
-      tag: "span",
-      classes: ["orderNum"],
+      tag: 'span',
+      classes: ['orderNum'],
       textContent: elems.length,
     },
   ];
 
   const carouselOrder = createElement({
-    tag: "div",
-    classes: ["carousel-order"],
+    tag: 'div',
+    classes: ['carousel-order'],
     children: [...orderInfos.map((info) => createElement(info))],
     css,
   });
@@ -137,8 +152,8 @@ const createCarouselOrder = ({ elems, css }) => {
 const createCarouselElems = ({ elems, css }) => {
   return elems.map((elem, index) => {
     const cloneElem = elem.cloneNode(true);
-    cloneElem.classList.add("carousel-elem");
-    cloneElem.setAttribute("data-index", index === 0 ? elems.length : index);
+    cloneElem.classList.add('carousel-elem');
+    cloneElem.setAttribute('data-index', index === 0 ? elems.length : index);
     if (css) {
       Object.keys(css).forEach((attr) => {
         cloneElem.style[attr] = css[attr];
@@ -176,8 +191,8 @@ const carousel = ({ elems, unit, elemWidth, css }) => {
     : createCarouselElems({ elems: newElems, css: elemCss });
 
   const carouselBox = createElement({
-    tag: "div",
-    classes: ["carousel-box"],
+    tag: 'div',
+    classes: ['carousel-box'],
     children: carouselChildren,
   });
   carouselBox.style.width = `${
@@ -199,8 +214,8 @@ const carousel = ({ elems, unit, elemWidth, css }) => {
     ? createCarouselOrder({ elems: newElems, css: orderCss })
     : null;
   const carousel = createElement({
-    tag: "div",
-    classes: ["carousel"],
+    tag: 'div',
+    classes: ['carousel'],
     children: [carouselBox, arrowBox, carouselOrder],
   });
 
@@ -213,12 +228,12 @@ const carousel = ({ elems, unit, elemWidth, css }) => {
 
   const getInterval = () => {
     return setInterval(() => {
-      const carouselBox = document.querySelector(".carousel-box");
-      handleArrowButton({ carouselBox, elemWidth, elemUnit: unit });
-      carouselBox.addEventListener("transitionstart", handleTransitionStart, {
+      const carouselBox = document.querySelector('.carousel-box');
+      throttleArrowButtonHandler({ carouselBox, elemWidth, elemUnit: unit })();
+      carouselBox.addEventListener('transitionstart', handleTransitionStart, {
         once: true,
       });
-      carouselBox.addEventListener("transitionend", handleTransitionEnd, {
+      carouselBox.addEventListener('transitionend', handleTransitionEnd, {
         once: true,
       });
     }, 3000);
