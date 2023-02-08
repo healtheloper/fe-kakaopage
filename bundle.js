@@ -21,19 +21,19 @@ module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "HEROKU_SERVER_URL": () => (/* binding */ HEROKU_SERVER_URL),
+/* harmony export */   "FRONT_SERVER_URL": () => (/* binding */ FRONT_SERVER_URL),
 /* harmony export */   "SERVER_FETCH_URL": () => (/* binding */ SERVER_FETCH_URL),
 /* harmony export */   "KAKAO_DATA_URL": () => (/* binding */ KAKAO_DATA_URL),
 /* harmony export */   "API_POINT": () => (/* binding */ API_POINT)
 /* harmony export */ });
-var SERVER_FETCH_URL = "http://127.0.0.1:3000/";
-var HEROKU_SERVER_URL = "https://fe-kakaopage-back.herokuapp.com/";
-var KAKAO_DATA_URL = "https://dn-img-page.kakao.com/download/resource?kid=";
+var SERVER_FETCH_URL = 'http://127.0.0.1:3000/';
+var FRONT_SERVER_URL = '/';
+var KAKAO_DATA_URL = 'https://dn-img-page.kakao.com/download/resource?kid=';
 
 var API_POINT = function API_POINT(_ref) {
   var categoryId = _ref.categoryId,
       genreId = _ref.genreId;
-  return "v2/?categoryId=".concat(categoryId, "&genreId=").concat(genreId);
+  return "data/".concat(categoryId, "/").concat(genreId);
 };
 
 
@@ -155,7 +155,7 @@ var handleArrowButton = function handleArrowButton(_ref2) {
     curX: 1
   })).groups.curX;
   var moveX = isPrev ? +curX + +elemWidth : +curX - +elemWidth;
-  carouselBox.style.transition = "transform 0.2s";
+  carouselBox.style.transition = 'transform 0.2s';
   carouselBox.style.transform = "translateX(".concat(moveX).concat(elemUnit, ")");
 
   if (css) {
@@ -167,13 +167,13 @@ var handleArrowButton = function handleArrowButton(_ref2) {
   setTimeout(function () {
     var removeElem = isPrev ? carouselBox.lastChild : carouselBox.firstChild;
     carouselBox.removeChild(removeElem);
-    var cElems = carouselBox.querySelectorAll(".carousel-elem");
+    var cElems = carouselBox.querySelectorAll('.carousel-elem');
     cElems.forEach(function (box) {
-      return box.classList.remove("main-elem");
+      return box.classList.remove('main-elem');
     });
     var mainElem = isPrev ? cElems[0] : cElems[1];
-    mainElem.classList.add("main-elem");
-    var curNum = carouselBox.parentNode.querySelector(".curNum");
+    mainElem.classList.add('main-elem');
+    var curNum = carouselBox.parentNode.querySelector('.curNum');
     if (curNum) curNum.textContent = mainElem.dataset.index;
 
     if (isPrev) {
@@ -183,95 +183,103 @@ var handleArrowButton = function handleArrowButton(_ref2) {
       carouselBox.appendChild(removeElem);
     }
 
-    carouselBox.style.transition = "none";
+    carouselBox.style.transition = 'none';
     carouselBox.style.transform = "translateX(".concat(+curX).concat(elemUnit, ")");
-  }, 210);
+  }, 201);
 };
 
-var createArrowBox = function createArrowBox(_ref3) {
-  var carouselBox = _ref3.carouselBox,
+var throttleArrowButtonHandler = function throttleArrowButtonHandler(_ref3) {
+  var direction = _ref3.direction,
+      carouselBox = _ref3.carouselBox,
       elemWidth = _ref3.elemWidth,
       elemUnit = _ref3.elemUnit,
       css = _ref3.css;
-  var prevArrow = createElement({
-    tag: "div",
-    classes: ["arrow", "arrow__prev"],
-    textContent: "<",
-    event: {
-      eventType: "click",
-      callback: (0,throttle_debounce__WEBPACK_IMPORTED_MODULE_4__.throttle)(500, function () {
-        handleArrowButton({
-          isPrev: true,
-          carouselBox: carouselBox,
-          elemWidth: elemWidth,
-          elemUnit: elemUnit,
-          css: css.elemCss
-        });
-      })
-    },
-    css: css.arrowCss
+  return (0,throttle_debounce__WEBPACK_IMPORTED_MODULE_4__.throttle)(500, function () {
+    handleArrowButton({
+      isPrev: direction === 'prev' ? true : false,
+      carouselBox: carouselBox,
+      elemWidth: elemWidth,
+      elemUnit: elemUnit,
+      css: css === null || css === void 0 ? void 0 : css.elemCss
+    });
   });
-  var nextArrow = createElement({
-    tag: "div",
-    classes: ["arrow", "arrow__next"],
-    textContent: ">",
-    event: {
-      eventType: "click",
-      callback: (0,throttle_debounce__WEBPACK_IMPORTED_MODULE_4__.throttle)(500, function () {
-        handleArrowButton({
-          isPrev: false,
+};
+
+var createArrowBox = function createArrowBox(_ref4) {
+  var carouselBox = _ref4.carouselBox,
+      elemWidth = _ref4.elemWidth,
+      elemUnit = _ref4.elemUnit,
+      css = _ref4.css;
+  var arrows = [{
+    direction: 'prev',
+    content: '<'
+  }, {
+    direction: 'next',
+    content: '>'
+  }];
+  var $arrows = arrows.map(function (_ref5) {
+    var direction = _ref5.direction,
+        content = _ref5.content;
+    return createElement({
+      tag: 'div',
+      classes: ['arrow', "arrow__".concat(direction)],
+      textContent: content,
+      event: {
+        eventType: 'click',
+        callback: throttleArrowButtonHandler({
+          direction: direction,
           carouselBox: carouselBox,
           elemWidth: elemWidth,
           elemUnit: elemUnit,
-          css: css.elemCss
-        });
-      })
-    },
-    css: css.arrowCss
+          css: css
+        })
+      },
+      css: css.arrowCss
+    });
   });
   var arrowBox = createElement({
-    tag: "div",
-    classes: ["arrow-box"],
-    children: [prevArrow, nextArrow],
+    tag: 'div',
+    classes: ['arrow-box'],
+    children: (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])($arrows),
     css: css.arrowBoxCss
   });
   return arrowBox;
 };
 
-var createCarouselOrder = function createCarouselOrder(_ref4) {
-  var elems = _ref4.elems,
-      css = _ref4.css;
-  var carouselCurNum = createElement({
-    tag: "span",
-    classes: ["orderNum", "curNum"],
+var createCarouselOrder = function createCarouselOrder(_ref6) {
+  var elems = _ref6.elems,
+      css = _ref6.css;
+  var orderInfos = [{
+    tag: 'span',
+    classes: ['orderNum', 'curNum'],
     textContent: 1
-  });
-  var orderBar = createElement({
-    tag: "span",
-    classes: ["orderBar"],
-    textContent: "/"
-  });
-  var carouselTotalNum = createElement({
-    tag: "span",
-    classes: ["orderNum"],
+  }, {
+    tag: 'span',
+    classes: ['orderBar'],
+    textContent: '/'
+  }, {
+    tag: 'span',
+    classes: ['orderNum'],
     textContent: elems.length
-  });
+  }];
   var carouselOrder = createElement({
-    tag: "div",
-    classes: ["carousel-order"],
-    children: [carouselCurNum, orderBar, carouselTotalNum],
+    tag: 'div',
+    classes: ['carousel-order'],
+    children: (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__["default"])(orderInfos.map(function (info) {
+      return createElement(info);
+    })),
     css: css
   });
   return carouselOrder;
 };
 
-var createCarouselElems = function createCarouselElems(_ref5) {
-  var elems = _ref5.elems,
-      css = _ref5.css;
+var createCarouselElems = function createCarouselElems(_ref7) {
+  var elems = _ref7.elems,
+      css = _ref7.css;
   return elems.map(function (elem, index) {
     var cloneElem = elem.cloneNode(true);
-    cloneElem.classList.add("carousel-elem");
-    cloneElem.setAttribute("data-index", index === 0 ? elems.length : index);
+    cloneElem.classList.add('carousel-elem');
+    cloneElem.setAttribute('data-index', index === 0 ? elems.length : index);
 
     if (css) {
       Object.keys(css).forEach(function (attr) {
@@ -289,11 +297,11 @@ var createCarouselElems = function createCarouselElems(_ref5) {
  */
 
 
-var carousel = function carousel(_ref6) {
-  var elems = _ref6.elems,
-      unit = _ref6.unit,
-      elemWidth = _ref6.elemWidth,
-      css = _ref6.css;
+var carousel = function carousel(_ref8) {
+  var elems = _ref8.elems,
+      unit = _ref8.unit,
+      elemWidth = _ref8.elemWidth,
+      css = _ref8.css;
   var elemCss = css.elemCss,
       orderCss = css.orderCss,
       arrowBoxCss = css.arrowBoxCss,
@@ -319,8 +327,8 @@ var carousel = function carousel(_ref6) {
     css: elemCss
   });
   var carouselBox = createElement({
-    tag: "div",
-    classes: ["carousel-box"],
+    tag: 'div',
+    classes: ['carousel-box'],
     children: carouselChildren
   });
   carouselBox.style.width = "".concat(newElems.length * WIDTH_PER_ELEM * (isRequireClone ? 2 : 1)).concat(ELEM_UNIT);
@@ -340,33 +348,33 @@ var carousel = function carousel(_ref6) {
     css: orderCss
   }) : null;
   var carousel = createElement({
-    tag: "div",
-    classes: ["carousel"],
+    tag: 'div',
+    classes: ['carousel'],
     children: [carouselBox, arrowBox, carouselOrder]
   });
 
-  var handleTransitionStart = function handleTransitionStart(_ref7) {// next, prev 버튼의 비활성화? 어떻게?
+  var handleTransitionStart = function handleTransitionStart(_ref9) {// next, prev 버튼의 비활성화? 어떻게?
 
-    var target = _ref7.target;
+    var target = _ref9.target;
   };
 
-  var handleTransitionEnd = function handleTransitionEnd(_ref8) {// next, prev 버튼의 활성화? 어떻게?
+  var handleTransitionEnd = function handleTransitionEnd(_ref10) {// next, prev 버튼의 활성화? 어떻게?
 
-    var target = _ref8.target;
+    var target = _ref10.target;
   };
 
   var getInterval = function getInterval() {
     return setInterval(function () {
-      var carouselBox = document.querySelector(".carousel-box");
-      handleArrowButton({
+      var carouselBox = document.querySelector('.carousel-box');
+      throttleArrowButtonHandler({
         carouselBox: carouselBox,
         elemWidth: elemWidth,
         elemUnit: unit
-      });
-      carouselBox.addEventListener("transitionstart", handleTransitionStart, {
+      })();
+      carouselBox.addEventListener('transitionstart', handleTransitionStart, {
         once: true
       });
-      carouselBox.addEventListener("transitionend", handleTransitionEnd, {
+      carouselBox.addEventListener('transitionend', handleTransitionEnd, {
         once: true
       });
     }, 3000);
@@ -3230,7 +3238,7 @@ var getJson = /*#__PURE__*/function () {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return fetch("".concat( true ? _constants_js__WEBPACK_IMPORTED_MODULE_2__.HEROKU_SERVER_URL : 0).concat(dataName));
+            return fetch("".concat( true ? _constants_js__WEBPACK_IMPORTED_MODULE_2__.FRONT_SERVER_URL : 0).concat(dataName));
 
           case 3:
             response = _context.sent;
