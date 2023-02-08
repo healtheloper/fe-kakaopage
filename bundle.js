@@ -27,13 +27,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "API_POINT": () => (/* binding */ API_POINT)
 /* harmony export */ });
 var SERVER_FETCH_URL = 'http://127.0.0.1:3000/';
-var FRONT_SERVER_URL = '/fe-kakaopage/';
+var FRONT_SERVER_URL = '/fe-kakaopage/data/';
 var KAKAO_DATA_URL = 'https://dn-img-page.kakao.com/download/resource?kid=';
 
 var API_POINT = function API_POINT(_ref) {
   var categoryId = _ref.categoryId,
       genreId = _ref.genreId;
-  return "data/".concat(categoryId, "/").concat(genreId, ".json");
+  return "".concat(categoryId, "/").concat(genreId, ".json");
 };
 
 
@@ -3237,25 +3237,24 @@ var getJson = /*#__PURE__*/function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
-            console.log(_constants_js__WEBPACK_IMPORTED_MODULE_2__.FRONT_SERVER_URL, dataName);
-            _context.next = 4;
+            _context.next = 3;
             return fetch("".concat( true ? _constants_js__WEBPACK_IMPORTED_MODULE_2__.FRONT_SERVER_URL : 0).concat(dataName));
 
-          case 4:
+          case 3:
             response = _context.sent;
             return _context.abrupt("return", response.json());
 
-          case 8:
-            _context.prev = 8;
+          case 7:
+            _context.prev = 7;
             _context.t0 = _context["catch"](0);
             console.error(_context.t0);
 
-          case 11:
+          case 10:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 8]]);
+    }, _callee, null, [[0, 7]]);
   }));
 
   return function getJson(_x) {
