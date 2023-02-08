@@ -26,6 +26,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "KAKAO_DATA_URL": () => (/* binding */ KAKAO_DATA_URL),
 /* harmony export */   "API_POINT": () => (/* binding */ API_POINT)
 /* harmony export */ });
+var category_enum = {
+  10: 'webtoon',
+  11: 'webnovel',
+  21: 'movie',
+  22: 'broadcast',
+  16: 'book'
+};
+var genre_enum = {
+  10000: 'home',
+  1002: 'days',
+  1000: 'webtoon',
+  115: 'boy',
+  116: 'drama',
+  121: 'romance',
+  69: 'rofan',
+  112: 'action',
+  119: 'bl'
+};
 var SERVER_FETCH_URL = 'http://127.0.0.1:3000/';
 var FRONT_SERVER_URL = '/fe-kakaopage/data/';
 var KAKAO_DATA_URL = 'https://dn-img-page.kakao.com/download/resource?kid=';
@@ -33,7 +51,7 @@ var KAKAO_DATA_URL = 'https://dn-img-page.kakao.com/download/resource?kid=';
 var API_POINT = function API_POINT(_ref) {
   var categoryId = _ref.categoryId,
       genreId = _ref.genreId;
-  return "".concat(categoryId).concat(genreId ? "/".concat(genreId) : '');
+  return "".concat(category_enum[categoryId]).concat(genreId ? "/".concat(genre_enum[genreId]) : '');
 };
 
 
